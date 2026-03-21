@@ -42,5 +42,9 @@
             <label>API key (required when custom base URL is set)</label>
             <default></default>
         </entry>
+        <entry name="backgroundOpacity" type="Double">
+            <label>Background opacity (0.0 = transparent, 1.0 = opaque)</label>
+            <default>0.0</default>
+        </entry>
     </group>
 </kcfg>
