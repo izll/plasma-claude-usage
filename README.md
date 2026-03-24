@@ -53,16 +53,36 @@ kpackagetool6 -t Plasma/Applet -i .
 2. Add the widget to your panel
 3. Click the widget to see detailed usage statistics
 
+## Configuration
+
+Right-click the widget and select **Configure...** to open the settings.
+
+### Custom API Base URL (optional)
+
+By default the widget reads your OAuth credentials from `~/.claude/.credentials.json` and calls `https://api.anthropic.com` directly — no configuration needed.
+
+If you use a custom API proxy or gateway, you can override this:
+
+| Setting | Description |
+|---|---|
+| **Base URL** | Your proxy URL, e.g. `https://your-proxy.example.com` |
+| **API key** | Your `ANTHROPIC_API_KEY` |
+
+> **Note:** The widget calls `/api/oauth/usage`, not the standard `/v1/messages` endpoint. Use the root URL without any path suffix — e.g. `https://api.anthropic.com`, not `https://api.anthropic.com/v1`.
+
+When a base URL is configured, the widget authenticates with `x-api-key` instead of the OAuth token. Leave the Base URL field empty to go back to the default credentials file method.
+
 ## How It Works
 
-The widget reads your Claude Code OAuth credentials from `~/.claude/.credentials.json` and calls the Anthropic usage API directly. No data is stored or sent anywhere else.
+The widget calls the Anthropic usage API directly from QML. No data is stored or sent anywhere else.
 
 ### API Endpoint
 
 ```
 GET https://api.anthropic.com/api/oauth/usage
 Headers:
-  Authorization: Bearer <oauth-token>
+  Authorization: Bearer <oauth-token>   (default mode)
+  x-api-key: <api-key>                  (custom base URL mode)
   anthropic-beta: oauth-2025-04-20
 ```
 
@@ -81,6 +101,14 @@ Your OAuth token has expired. Run Claude Code again to refresh it:
 ```bash
 claude
 ```
+
+### "Invalid API key" error
+
+The API key in the widget settings is wrong or revoked. Open **Configure...** and update it.
+
+### "Endpoint not found — check base URL" error
+
+The base URL in the widget settings doesn't point to a valid API. Make sure you're using the root URL without `/v1`, e.g. `https://api.anthropic.com`.
 
 ### Widget shows 0%
 

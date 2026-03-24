@@ -14,5 +14,13 @@
             <label>Refresh interval in minutes</label>
             <default>1</default>
         </entry>
+        <entry name="baseUrl" type="String">
+            <label>Custom API base URL (leave empty to use ~/.claude/.credentials.json)</label>
+            <default></default>
+        </entry>
+        <entry name="apiKey" type="String">
+            <label>API key (required when custom base URL is set)</label>
+            <default></default>
+        </entry>
     </group>
 </kcfg>

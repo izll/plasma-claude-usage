@@ -39,7 +39,18 @@ QtObject {
             "h": "h",
             "m": "m",
             "Refresh interval:": "Refresh interval:",
-            "minutes": "minutes"
+            "minutes": "minutes",
+            "Open Claude": "Open Claude",
+            "Rate limited": "Rate limited",
+            "Auto-retry in 1 min": "Auto-retry in 1 min",
+            "Custom API (optional)": "Custom API (optional)",
+            "Base URL:": "Base URL:",
+            "API key:": "API key:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "Leave empty to use ~/.claude/.credentials.json (default)",
+            "Check base URL and API key in widget settings": "Check base URL and API key in widget settings",
+            "API key not configured": "API key not configured",
+            "Invalid API key": "Invalid API key",
+            "Endpoint not found": "Endpoint not found"
         },
         "hu_HU": {
             "Claude Usage": "Claude használat",
@@ -64,7 +75,18 @@ QtObject {
             "h": "ó",
             "m": "p",
             "Refresh interval:": "Frissítési gyakoriság:",
-            "minutes": "perc"
+            "minutes": "perc",
+            "Open Claude": "Claude megnyitása",
+            "Rate limited": "Korlát elérve",
+            "Auto-retry in 1 min": "Automatikus újrapróbálás 1 perc múlva",
+            "Custom API (optional)": "Egyéni API (opcionális)",
+            "Base URL:": "Alap URL:",
+            "API key:": "API kulcs:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "Hagyd üresen a ~/.claude/.credentials.json használatához (alapértelmezett)",
+            "Check base URL and API key in widget settings": "Ellenőrizd az alap URL-t és API kulcsot a widget beállításokban",
+            "API key not configured": "API kulcs nincs beállítva",
+            "Invalid API key": "Érvénytelen API kulcs",
+            "Endpoint not found": "Végpont nem található"
         },
         "de_DE": {
             "Claude Usage": "Claude Nutzung",
@@ -89,7 +111,18 @@ QtObject {
             "h": "Std",
             "m": "Min",
             "Refresh interval:": "Aktualisierungsintervall:",
-            "minutes": "Minuten"
+            "minutes": "Minuten",
+            "Open Claude": "Claude öffnen",
+            "Rate limited": "Rate-Limit erreicht",
+            "Auto-retry in 1 min": "Automatische Wiederholung in 1 Min",
+            "Custom API (optional)": "Benutzerdefinierte API (optional)",
+            "Base URL:": "Basis-URL:",
+            "API key:": "API-Schlüssel:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "Leer lassen für ~/.claude/.credentials.json (Standard)",
+            "Check base URL and API key in widget settings": "Überprüfen Sie Basis-URL und API-Schlüssel in den Widget-Einstellungen",
+            "API key not configured": "API-Schlüssel nicht konfiguriert",
+            "Invalid API key": "Ungültiger API-Schlüssel",
+            "Endpoint not found": "Endpunkt nicht gefunden"
         },
         "fr_FR": {
             "Claude Usage": "Utilisation Claude",
@@ -114,7 +147,18 @@ QtObject {
             "h": "h",
             "m": "min",
             "Refresh interval:": "Intervalle de rafraîchissement:",
-            "minutes": "minutes"
+            "minutes": "minutes",
+            "Open Claude": "Ouvrir Claude",
+            "Rate limited": "Limite atteinte",
+            "Auto-retry in 1 min": "Nouvel essai auto dans 1 min",
+            "Custom API (optional)": "API personnalisée (optionnel)",
+            "Base URL:": "URL de base:",
+            "API key:": "Clé API:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "Laisser vide pour utiliser ~/.claude/.credentials.json (par défaut)",
+            "Check base URL and API key in widget settings": "Vérifiez l'URL de base et la clé API dans les paramètres",
+            "API key not configured": "Clé API non configurée",
+            "Invalid API key": "Clé API invalide",
+            "Endpoint not found": "Point d'accès introuvable"
         },
         "es_ES": {
             "Claude Usage": "Uso de Claude",
@@ -139,7 +183,18 @@ QtObject {
             "h": "h",
             "m": "min",
             "Refresh interval:": "Intervalo de actualización:",
-            "minutes": "minutos"
+            "minutes": "minutos",
+            "Open Claude": "Abrir Claude",
+            "Rate limited": "Límite alcanzado",
+            "Auto-retry in 1 min": "Reintento automático en 1 min",
+            "Custom API (optional)": "API personalizada (opcional)",
+            "Base URL:": "URL base:",
+            "API key:": "Clave API:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "Dejar vacío para usar ~/.claude/.credentials.json (predeterminado)",
+            "Check base URL and API key in widget settings": "Verifica la URL base y la clave API en la configuración del widget",
+            "API key not configured": "Clave API no configurada",
+            "Invalid API key": "Clave API inválida",
+            "Endpoint not found": "Punto de acceso no encontrado"
         },
         "it_IT": {
             "Claude Usage": "Utilizzo Claude",
@@ -164,7 +219,18 @@ QtObject {
             "h": "h",
             "m": "min",
             "Refresh interval:": "Intervallo di aggiornamento:",
-            "minutes": "minuti"
+            "minutes": "minuti",
+            "Open Claude": "Apri Claude",
+            "Rate limited": "Limite raggiunto",
+            "Auto-retry in 1 min": "Riprova automatica tra 1 min",
+            "Custom API (optional)": "API personalizzata (opzionale)",
+            "Base URL:": "URL base:",
+            "API key:": "Chiave API:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "Lasciare vuoto per usare ~/.claude/.credentials.json (predefinito)",
+            "Check base URL and API key in widget settings": "Controlla URL base e chiave API nelle impostazioni del widget",
+            "API key not configured": "Chiave API non configurata",
+            "Invalid API key": "Chiave API non valida",
+            "Endpoint not found": "Endpoint non trovato"
         },
         "pt_BR": {
             "Claude Usage": "Uso do Claude",
@@ -189,7 +255,18 @@ QtObject {
             "h": "h",
             "m": "min",
             "Refresh interval:": "Intervalo de atualização:",
-            "minutes": "minutos"
+            "minutes": "minutos",
+            "Open Claude": "Abrir Claude",
+            "Rate limited": "Limite atingido",
+            "Auto-retry in 1 min": "Tentativa automática em 1 min",
+            "Custom API (optional)": "API personalizada (opcional)",
+            "Base URL:": "URL base:",
+            "API key:": "Chave API:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "Deixe vazio para usar ~/.claude/.credentials.json (padrão)",
+            "Check base URL and API key in widget settings": "Verifique a URL base e a chave API nas configurações do widget",
+            "API key not configured": "Chave API não configurada",
+            "Invalid API key": "Chave API inválida",
+            "Endpoint not found": "Endpoint não encontrado"
         },
         "ru_RU": {
             "Claude Usage": "Использование Claude",
@@ -214,7 +291,18 @@ QtObject {
             "h": "ч",
             "m": "мин",
             "Refresh interval:": "Интервал обновления:",
-            "minutes": "минут"
+            "minutes": "минут",
+            "Open Claude": "Открыть Claude",
+            "Rate limited": "Лимит достигнут",
+            "Auto-retry in 1 min": "Автоповтор через 1 мин",
+            "Custom API (optional)": "Пользовательский API (необязательно)",
+            "Base URL:": "Базовый URL:",
+            "API key:": "API ключ:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "Оставьте пустым для ~/.claude/.credentials.json (по умолчанию)",
+            "Check base URL and API key in widget settings": "Проверьте базовый URL и API ключ в настройках виджета",
+            "API key not configured": "API ключ не настроен",
+            "Invalid API key": "Неверный API ключ",
+            "Endpoint not found": "Конечная точка не найдена"
         },
         "pl_PL": {
             "Claude Usage": "Użycie Claude",
@@ -239,7 +327,18 @@ QtObject {
             "h": "g",
             "m": "min",
             "Refresh interval:": "Częstotliwość odświeżania:",
-            "minutes": "minut"
+            "minutes": "minut",
+            "Open Claude": "Otwórz Claude",
+            "Rate limited": "Limit osiągnięty",
+            "Auto-retry in 1 min": "Automatyczne ponowienie za 1 min",
+            "Custom API (optional)": "Własne API (opcjonalne)",
+            "Base URL:": "Bazowy URL:",
+            "API key:": "Klucz API:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "Pozostaw puste aby użyć ~/.claude/.credentials.json (domyślne)",
+            "Check base URL and API key in widget settings": "Sprawdź bazowy URL i klucz API w ustawieniach widgetu",
+            "API key not configured": "Klucz API nie skonfigurowany",
+            "Invalid API key": "Nieprawidłowy klucz API",
+            "Endpoint not found": "Punkt końcowy nie znaleziony"
         },
         "nl_NL": {
             "Claude Usage": "Claude Gebruik",
@@ -264,7 +363,18 @@ QtObject {
             "h": "u",
             "m": "min",
             "Refresh interval:": "Vernieuwingsinterval:",
-            "minutes": "minuten"
+            "minutes": "minuten",
+            "Open Claude": "Claude openen",
+            "Rate limited": "Limiet bereikt",
+            "Auto-retry in 1 min": "Automatisch opnieuw over 1 min",
+            "Custom API (optional)": "Aangepaste API (optioneel)",
+            "Base URL:": "Basis-URL:",
+            "API key:": "API-sleutel:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "Laat leeg om ~/.claude/.credentials.json te gebruiken (standaard)",
+            "Check base URL and API key in widget settings": "Controleer basis-URL en API-sleutel in de widgetinstellingen",
+            "API key not configured": "API-sleutel niet geconfigureerd",
+            "Invalid API key": "Ongeldige API-sleutel",
+            "Endpoint not found": "Eindpunt niet gevonden"
         },
         "tr_TR": {
             "Claude Usage": "Claude Kullanımı",
@@ -289,7 +399,18 @@ QtObject {
             "h": "sa",
             "m": "dk",
             "Refresh interval:": "Yenileme aralığı:",
-            "minutes": "dakika"
+            "minutes": "dakika",
+            "Open Claude": "Claude'u Aç",
+            "Rate limited": "Limit aşıldı",
+            "Auto-retry in 1 min": "1 dk sonra otomatik yeniden deneme",
+            "Custom API (optional)": "Özel API (isteğe bağlı)",
+            "Base URL:": "Temel URL:",
+            "API key:": "API anahtarı:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "Varsayılan ~/.claude/.credentials.json için boş bırakın",
+            "Check base URL and API key in widget settings": "Widget ayarlarında temel URL ve API anahtarını kontrol edin",
+            "API key not configured": "API anahtarı yapılandırılmadı",
+            "Invalid API key": "Geçersiz API anahtarı",
+            "Endpoint not found": "Uç nokta bulunamadı"
         },
         "ja_JP": {
             "Claude Usage": "Claude 使用状況",
@@ -314,7 +435,18 @@ QtObject {
             "h": "時",
             "m": "分",
             "Refresh interval:": "更新間隔:",
-            "minutes": "分"
+            "minutes": "分",
+            "Open Claude": "Claudeを開く",
+            "Rate limited": "レート制限",
+            "Auto-retry in 1 min": "1分後に自動リトライ",
+            "Custom API (optional)": "カスタムAPI（オプション）",
+            "Base URL:": "ベースURL:",
+            "API key:": "APIキー:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "空欄で ~/.claude/.credentials.json を使用（デフォルト）",
+            "Check base URL and API key in widget settings": "ウィジェット設定でベースURLとAPIキーを確認",
+            "API key not configured": "APIキー未設定",
+            "Invalid API key": "無効なAPIキー",
+            "Endpoint not found": "エンドポイントが見つかりません"
         },
         "ko_KR": {
             "Claude Usage": "Claude 사용량",
@@ -339,7 +471,18 @@ QtObject {
             "h": "시",
             "m": "분",
             "Refresh interval:": "새로고침 간격:",
-            "minutes": "분"
+            "minutes": "분",
+            "Open Claude": "Claude 열기",
+            "Rate limited": "속도 제한",
+            "Auto-retry in 1 min": "1분 후 자동 재시도",
+            "Custom API (optional)": "사용자 정의 API (선택사항)",
+            "Base URL:": "기본 URL:",
+            "API key:": "API 키:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "기본값 ~/.claude/.credentials.json 사용 시 비워두세요",
+            "Check base URL and API key in widget settings": "위젯 설정에서 기본 URL과 API 키를 확인하세요",
+            "API key not configured": "API 키 미설정",
+            "Invalid API key": "잘못된 API 키",
+            "Endpoint not found": "엔드포인트를 찾을 수 없음"
         },
         "zh_CN": {
             "Claude Usage": "Claude 使用情况",
@@ -364,7 +507,18 @@ QtObject {
             "h": "时",
             "m": "分",
             "Refresh interval:": "刷新间隔:",
-            "minutes": "分钟"
+            "minutes": "分钟",
+            "Open Claude": "打开 Claude",
+            "Rate limited": "速率限制",
+            "Auto-retry in 1 min": "1分钟后自动重试",
+            "Custom API (optional)": "自定义API（可选）",
+            "Base URL:": "基础URL:",
+            "API key:": "API密钥:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "留空以使用 ~/.claude/.credentials.json（默认）",
+            "Check base URL and API key in widget settings": "请在小部件设置中检查基础URL和API密钥",
+            "API key not configured": "API密钥未配置",
+            "Invalid API key": "无效的API密钥",
+            "Endpoint not found": "端点未找到"
         },
         "zh_TW": {
             "Claude Usage": "Claude 使用狀況",
@@ -389,7 +543,18 @@ QtObject {
             "h": "時",
             "m": "分",
             "Refresh interval:": "重新整理間隔:",
-            "minutes": "分鐘"
+            "minutes": "分鐘",
+            "Open Claude": "開啟 Claude",
+            "Rate limited": "速率限制",
+            "Auto-retry in 1 min": "1分鐘後自動重試",
+            "Custom API (optional)": "自訂API（選填）",
+            "Base URL:": "基礎URL:",
+            "API key:": "API金鑰:",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "留空以使用 ~/.claude/.credentials.json（預設）",
+            "Check base URL and API key in widget settings": "請在小工具設定中檢查基礎URL和API金鑰",
+            "API key not configured": "API金鑰未設定",
+            "Invalid API key": "無效的API金鑰",
+            "Endpoint not found": "端點未找到"
         }
     })
 

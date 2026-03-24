@@ -14,6 +14,8 @@ KCM.SimpleKCM {
 
     property string cfg_language
     property int cfg_refreshInterval
+    property string cfg_baseUrl
+    property string cfg_apiKey
 
     // Translation helper
     Translations {
@@ -67,6 +69,38 @@ KCM.SimpleKCM {
             QQC2.Label {
                 text: tr("minutes")
             }
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: tr("Custom API (optional)")
+        }
+
+        QQC2.TextField {
+            id: baseUrlField
+            Kirigami.FormData.label: tr("Base URL:")
+            placeholderText: "https://api.anthropic.com"
+            text: cfg_baseUrl
+            onTextChanged: cfg_baseUrl = text
+            Layout.fillWidth: true
+        }
+
+        QQC2.Label {
+            text: tr("Leave empty to use ~/.claude/.credentials.json (default)")
+            font.italic: true
+            opacity: 0.7
+            Layout.fillWidth: true
+        }
+
+        QQC2.TextField {
+            id: apiKeyField
+            Kirigami.FormData.label: tr("API key:")
+            placeholderText: "sk-ant-..."
+            text: cfg_apiKey
+            echoMode: TextInput.Password
+            enabled: cfg_baseUrl !== ""
+            onTextChanged: cfg_apiKey = text
+            Layout.fillWidth: true
         }
     }
 }
