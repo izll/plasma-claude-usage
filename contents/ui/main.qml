@@ -621,7 +621,7 @@ PlasmoidItem {
                     }
                     Item { Layout.fillWidth: true }
                     PlasmaComponents.Label {
-                        text: root.sessionUsagePercent.toFixed(1) + "%"
+                        text: Math.round(root.sessionUsagePercent) + "%"
                         color: getUsageColor(root.sessionUsagePercent)
                         font.bold: true
                     }
@@ -663,7 +663,7 @@ PlasmoidItem {
                     }
                     Item { Layout.fillWidth: true }
                     PlasmaComponents.Label {
-                        text: root.weeklyUsagePercent.toFixed(1) + "%"
+                        text: Math.round(root.weeklyUsagePercent) + "%"
                         color: getUsageColor(root.weeklyUsagePercent)
                         font.bold: true
                     }
