@@ -731,7 +731,7 @@ PlasmoidItem {
                     }
                 }
                 PlasmaComponents.Label {
-                    text: root.sonnetWeeklyPercent.toFixed(0) + "%"
+                    text: Math.round(root.sonnetWeeklyPercent) + "%"
                     Layout.preferredWidth: 40
                     horizontalAlignment: Text.AlignRight
                 }
@@ -761,7 +761,7 @@ PlasmoidItem {
                     }
                 }
                 PlasmaComponents.Label {
-                    text: root.opusWeeklyPercent.toFixed(0) + "%"
+                    text: Math.round(root.opusWeeklyPercent) + "%"
                     Layout.preferredWidth: 40
                     horizontalAlignment: Text.AlignRight
                 }
