@@ -14,8 +14,13 @@ A KDE Plasma 6 widget that displays your Claude Code usage statistics in the tas
   - Reset times for both limits
   - Per-model breakdown (Sonnet/Opus)
   - Your subscription plan badge
-- **Auto-refresh**: Updates every minute automatically
-- **Error Handling**: Clear messages when not logged in or token expired
+- **Configurable Refresh**: Default 5 min polling (adjustable in settings)
+- **Smart Rate Limit Handling**: Uses `retry-after` header, exponential backoff, and token watcher for automatic recovery
+- **Local Cache**: Remembers last data on restart (up to 24h)
+- **Stale Detection**: Widget dims when data is outdated
+- **Error Handling**: Clear messages when not logged in, token expired, or rate limited
+- **Custom API Support**: Optional proxy/gateway with custom base URL and API key
+- **15 Languages**: EN, HU, DE, FR, ES, IT, PT, RU, PL, NL, TR, JA, KO, ZH-CN, ZH-TW
 - **No Dependencies**: Pure QML, no Python or external tools required
 
 ## Requirements
@@ -42,7 +47,7 @@ kpackagetool6 -t Plasma/Applet -i claude-usage-widget.plasmoid
 ### From Source
 
 ```bash
-git clone https://github.com/anthropics/claude-usage-widget.git
+git clone https://github.com/izll/plasma-claude-usage.git
 cd claude-usage-widget
 kpackagetool6 -t Plasma/Applet -i .
 ```
@@ -101,6 +106,16 @@ Your OAuth token has expired. Run Claude Code again to refresh it:
 ```bash
 claude
 ```
+The widget also has an "Open Claude" button for this.
+
+### "Rate limited" error
+
+The API allows ~4 requests per 5-minute window. The widget handles this automatically:
+- Reads the `retry-after` header and waits the specified time
+- Falls back to exponential backoff (5/10/15 min)
+- Monitors for token refresh and recovers instantly
+
+To avoid rate limiting, keep the refresh interval at 5 minutes or higher.
 
 ### "Invalid API key" error
 
@@ -120,9 +135,14 @@ The base URL in the widget settings doesn't point to a valid API. Make sure you'
 ```
 claude-usage-widget/
 ├── metadata.json           # Widget metadata
+├── install.sh              # Installation script
 ├── contents/
+│   ├── config/
+│   │   └── main.xml        # Configuration schema
 │   ├── ui/
-│   │   └── main.qml        # Widget implementation
+│   │   ├── main.qml        # Widget implementation
+│   │   ├── configGeneral.qml # Settings UI
+│   │   └── Translations.qml # i18n (15 languages)
 │   └── icons/
 │       └── claude.svg      # Claude logo (orange)
 └── screenshots/            # Preview images
@@ -138,9 +158,26 @@ izll
 
 ## Version History
 
+### 1.2.0 (2026)
+- Smart rate limit handling with `retry-after` header support
+- Exponential backoff with automatic recovery
+- Token watcher: instantly recovers when Claude Code refreshes the token
+- Local data cache: shows last known values on restart (up to 24h)
+- Stale detection: widget dims when data is outdated
+- Default refresh interval changed to 5 min to prevent rate limiting
+- Rate limit warning in popup and settings for intervals under 5 min
+
+### 1.1.0 (2026)
+- Custom API base URL and API key support for proxy/gateway users
+- 429 rate limit handling with auto-retry
+- Token expired state with "Open Claude" button
+- Dynamic Claude Code version detection for User-Agent
+- All strings translated across 15 languages
+- Install script added
+
 ### 1.0.0 (2025)
 - Initial release
 - Session and weekly usage display
 - Per-model breakdown (Sonnet/Opus)
-- Auto-refresh every minute
+- Configurable refresh interval
 - Error handling for login issues
