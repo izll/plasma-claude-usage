@@ -426,9 +426,9 @@ PlasmoidItem {
                 color: Kirigami.Theme.negativeTextColor
             }
 
-            // Normal state or token error state (show percentages)
+            // Session usage
             Rectangle {
-                visible: root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError
+                visible: (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 10
                 Layout.preferredHeight: 10
                 radius: 5
@@ -437,22 +437,24 @@ PlasmoidItem {
             }
 
             PlasmaComponents.Label {
-                visible: root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError
+                visible: (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: Math.round(root.sessionUsagePercent) + "%"
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.bold: true
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
             }
 
+            // Separator between session and weekly
             PlasmaComponents.Label {
-                visible: root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError
+                visible: (Plasmoid.configuration.showSession !== false) && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: "|"
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.25 : root.isStale ? 0.35 : 0.5
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
             }
 
+            // Weekly usage
             Rectangle {
-                visible: root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError
+                visible: (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 10
                 Layout.preferredHeight: 10
                 radius: 5
@@ -461,8 +463,34 @@ PlasmoidItem {
             }
 
             PlasmaComponents.Label {
-                visible: root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError
+                visible: (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: Math.round(root.weeklyUsagePercent) + "%"
+                font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
+                font.bold: true
+                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
+            }
+
+            // Separator before sonnet
+            PlasmaComponents.Label {
+                visible: (Plasmoid.configuration.showSonnet === true) && ((Plasmoid.configuration.showSession !== false) || (Plasmoid.configuration.showWeekly !== false)) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                text: "|"
+                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.25 : root.isStale ? 0.35 : 0.5
+                font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
+            }
+
+            // Sonnet weekly usage
+            Rectangle {
+                visible: (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                Layout.preferredWidth: 10
+                Layout.preferredHeight: 10
+                radius: 5
+                color: getUsageColor(root.sonnetWeeklyPercent)
+                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
+            }
+
+            PlasmaComponents.Label {
+                visible: (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                text: Math.round(root.sonnetWeeklyPercent) + "%"
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.bold: true
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0

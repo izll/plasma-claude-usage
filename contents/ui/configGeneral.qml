@@ -14,6 +14,9 @@ KCM.SimpleKCM {
 
     property string cfg_language
     property int cfg_refreshInterval
+    property bool cfg_showSession
+    property bool cfg_showWeekly
+    property bool cfg_showSonnet
     property string cfg_baseUrl
     property string cfg_apiKey
 
@@ -77,6 +80,30 @@ KCM.SimpleKCM {
             color: Kirigami.Theme.negativeTextColor
             font.italic: true
             Layout.fillWidth: true
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: tr("Panel display")
+        }
+
+        QQC2.CheckBox {
+            Kirigami.FormData.label: tr("Show in panel:")
+            text: tr("Session (5hr)")
+            checked: cfg_showSession
+            onCheckedChanged: cfg_showSession = checked
+        }
+
+        QQC2.CheckBox {
+            text: tr("Weekly (7day)")
+            checked: cfg_showWeekly
+            onCheckedChanged: cfg_showWeekly = checked
+        }
+
+        QQC2.CheckBox {
+            text: tr("Sonnet")
+            checked: cfg_showSonnet
+            onCheckedChanged: cfg_showSonnet = checked
         }
 
         Kirigami.Separator {

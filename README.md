@@ -158,6 +158,10 @@ izll
 
 ## Version History
 
+### 1.2.5 (2026)
+- Configurable panel display: choose which metrics to show (Session, Weekly, Sonnet)
+- Sonnet weekly usage can now be displayed in the panel (off by default)
+
 ### 1.2.1 (2026)
 - Remove false decimal precision from percentage displays (thanks @robinpie)
 

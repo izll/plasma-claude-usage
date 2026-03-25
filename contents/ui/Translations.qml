@@ -51,7 +51,9 @@ QtObject {
             "API key not configured": "API key not configured",
             "Invalid API key": "Invalid API key",
             "Endpoint not found": "Endpoint not found",
-            "Values under 5 min may cause rate limiting": "Values under 5 min may cause rate limiting"
+            "Values under 5 min may cause rate limiting": "Values under 5 min may cause rate limiting",
+            "Panel display": "Panel display",
+            "Show in panel:": "Show in panel:"
         },
         "hu_HU": {
             "Claude Usage": "Claude használat",
@@ -88,7 +90,9 @@ QtObject {
             "API key not configured": "API kulcs nincs beállítva",
             "Invalid API key": "Érvénytelen API kulcs",
             "Endpoint not found": "Végpont nem található",
-            "Values under 5 min may cause rate limiting": "5 perc alatti értékek rate limitet okozhatnak"
+            "Values under 5 min may cause rate limiting": "5 perc alatti értékek rate limitet okozhatnak",
+            "Panel display": "Panel megjelenítés",
+            "Show in panel:": "Megjelenítés a panelen:"
         },
         "de_DE": {
             "Claude Usage": "Claude Nutzung",
@@ -125,7 +129,9 @@ QtObject {
             "API key not configured": "API-Schlüssel nicht konfiguriert",
             "Invalid API key": "Ungültiger API-Schlüssel",
             "Endpoint not found": "Endpunkt nicht gefunden",
-            "Values under 5 min may cause rate limiting": "Werte unter 5 Min können Rate-Limiting verursachen"
+            "Values under 5 min may cause rate limiting": "Werte unter 5 Min können Rate-Limiting verursachen",
+            "Panel display": "Panel-Anzeige",
+            "Show in panel:": "Im Panel anzeigen:"
         },
         "fr_FR": {
             "Claude Usage": "Utilisation Claude",
@@ -162,7 +168,9 @@ QtObject {
             "API key not configured": "Clé API non configurée",
             "Invalid API key": "Clé API invalide",
             "Endpoint not found": "Point d'accès introuvable",
-            "Values under 5 min may cause rate limiting": "Les valeurs inférieures à 5 min peuvent causer un rate limiting"
+            "Values under 5 min may cause rate limiting": "Les valeurs inférieures à 5 min peuvent causer un rate limiting",
+            "Panel display": "Affichage du panneau",
+            "Show in panel:": "Afficher dans le panneau:"
         },
         "es_ES": {
             "Claude Usage": "Uso de Claude",
@@ -199,7 +207,9 @@ QtObject {
             "API key not configured": "Clave API no configurada",
             "Invalid API key": "Clave API inválida",
             "Endpoint not found": "Punto de acceso no encontrado",
-            "Values under 5 min may cause rate limiting": "Valores menores a 5 min pueden causar rate limiting"
+            "Values under 5 min may cause rate limiting": "Valores menores a 5 min pueden causar rate limiting",
+            "Panel display": "Visualización del panel",
+            "Show in panel:": "Mostrar en el panel:"
         },
         "it_IT": {
             "Claude Usage": "Utilizzo Claude",
@@ -236,7 +246,9 @@ QtObject {
             "API key not configured": "Chiave API non configurata",
             "Invalid API key": "Chiave API non valida",
             "Endpoint not found": "Endpoint non trovato",
-            "Values under 5 min may cause rate limiting": "Valori sotto 5 min possono causare rate limiting"
+            "Values under 5 min may cause rate limiting": "Valori sotto 5 min possono causare rate limiting",
+            "Panel display": "Visualizzazione pannello",
+            "Show in panel:": "Mostra nel pannello:"
         },
         "pt_BR": {
             "Claude Usage": "Uso do Claude",
@@ -273,7 +285,9 @@ QtObject {
             "API key not configured": "Chave API não configurada",
             "Invalid API key": "Chave API inválida",
             "Endpoint not found": "Endpoint não encontrado",
-            "Values under 5 min may cause rate limiting": "Valores abaixo de 5 min podem causar rate limiting"
+            "Values under 5 min may cause rate limiting": "Valores abaixo de 5 min podem causar rate limiting",
+            "Panel display": "Exibição do painel",
+            "Show in panel:": "Mostrar no painel:"
         },
         "ru_RU": {
             "Claude Usage": "Использование Claude",
@@ -310,7 +324,9 @@ QtObject {
             "API key not configured": "API ключ не настроен",
             "Invalid API key": "Неверный API ключ",
             "Endpoint not found": "Конечная точка не найдена",
-            "Values under 5 min may cause rate limiting": "Значения менее 5 мин могут вызвать ограничение запросов"
+            "Values under 5 min may cause rate limiting": "Значения менее 5 мин могут вызвать ограничение запросов",
+            "Panel display": "Отображение панели",
+            "Show in panel:": "Показывать в панели:"
         },
         "pl_PL": {
             "Claude Usage": "Użycie Claude",
@@ -347,7 +363,9 @@ QtObject {
             "API key not configured": "Klucz API nie skonfigurowany",
             "Invalid API key": "Nieprawidłowy klucz API",
             "Endpoint not found": "Punkt końcowy nie znaleziony",
-            "Values under 5 min may cause rate limiting": "Wartości poniżej 5 min mogą powodować rate limiting"
+            "Values under 5 min may cause rate limiting": "Wartości poniżej 5 min mogą powodować rate limiting",
+            "Panel display": "Wyświetlanie panelu",
+            "Show in panel:": "Pokaż w panelu:"
         },
         "nl_NL": {
             "Claude Usage": "Claude Gebruik",
@@ -384,7 +402,9 @@ QtObject {
             "API key not configured": "API-sleutel niet geconfigureerd",
             "Invalid API key": "Ongeldige API-sleutel",
             "Endpoint not found": "Eindpunt niet gevonden",
-            "Values under 5 min may cause rate limiting": "Waarden onder 5 min kunnen rate limiting veroorzaken"
+            "Values under 5 min may cause rate limiting": "Waarden onder 5 min kunnen rate limiting veroorzaken",
+            "Panel display": "Panelweergave",
+            "Show in panel:": "Tonen in paneel:"
         },
         "tr_TR": {
             "Claude Usage": "Claude Kullanımı",
@@ -421,7 +441,9 @@ QtObject {
             "API key not configured": "API anahtarı yapılandırılmadı",
             "Invalid API key": "Geçersiz API anahtarı",
             "Endpoint not found": "Uç nokta bulunamadı",
-            "Values under 5 min may cause rate limiting": "5 dk altındaki değerler rate limiting'e neden olabilir"
+            "Values under 5 min may cause rate limiting": "5 dk altındaki değerler rate limiting'e neden olabilir",
+            "Panel display": "Panel görünümü",
+            "Show in panel:": "Panelde göster:"
         },
         "ja_JP": {
             "Claude Usage": "Claude 使用状況",
@@ -458,7 +480,9 @@ QtObject {
             "API key not configured": "APIキー未設定",
             "Invalid API key": "無効なAPIキー",
             "Endpoint not found": "エンドポイントが見つかりません",
-            "Values under 5 min may cause rate limiting": "5分未満の値はレート制限を引き起こす可能性があります"
+            "Values under 5 min may cause rate limiting": "5分未満の値はレート制限を引き起こす可能性があります",
+            "Panel display": "パネル表示",
+            "Show in panel:": "パネルに表示:"
         },
         "ko_KR": {
             "Claude Usage": "Claude 사용량",
@@ -495,7 +519,9 @@ QtObject {
             "API key not configured": "API 키 미설정",
             "Invalid API key": "잘못된 API 키",
             "Endpoint not found": "엔드포인트를 찾을 수 없음",
-            "Values under 5 min may cause rate limiting": "5분 미만의 값은 속도 제한을 유발할 수 있습니다"
+            "Values under 5 min may cause rate limiting": "5분 미만의 값은 속도 제한을 유발할 수 있습니다",
+            "Panel display": "패널 표시",
+            "Show in panel:": "패널에 표시:"
         },
         "zh_CN": {
             "Claude Usage": "Claude 使用情况",
@@ -532,7 +558,9 @@ QtObject {
             "API key not configured": "API密钥未配置",
             "Invalid API key": "无效的API密钥",
             "Endpoint not found": "端点未找到",
-            "Values under 5 min may cause rate limiting": "低于5分钟的值可能导致速率限制"
+            "Values under 5 min may cause rate limiting": "低于5分钟的值可能导致速率限制",
+            "Panel display": "面板显示",
+            "Show in panel:": "在面板中显示:"
         },
         "zh_TW": {
             "Claude Usage": "Claude 使用狀況",
@@ -569,7 +597,9 @@ QtObject {
             "API key not configured": "API金鑰未設定",
             "Invalid API key": "無效的API金鑰",
             "Endpoint not found": "端點未找到",
-            "Values under 5 min may cause rate limiting": "低於5分鐘的值可能導致速率限制"
+            "Values under 5 min may cause rate limiting": "低於5分鐘的值可能導致速率限制",
+            "Panel display": "面板顯示",
+            "Show in panel:": "在面板中顯示:"
         }
     })
 

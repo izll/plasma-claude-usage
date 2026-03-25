@@ -14,6 +14,18 @@
             <label>Refresh interval in minutes</label>
             <default>5</default>
         </entry>
+        <entry name="showSession" type="Bool">
+            <label>Show session (5hr) usage in panel</label>
+            <default>true</default>
+        </entry>
+        <entry name="showWeekly" type="Bool">
+            <label>Show weekly (7day) usage in panel</label>
+            <default>true</default>
+        </entry>
+        <entry name="showSonnet" type="Bool">
+            <label>Show Sonnet weekly usage in panel</label>
+            <default>false</default>
+        </entry>
         <entry name="baseUrl" type="String">
             <label>Custom API base URL (leave empty to use ~/.claude/.credentials.json)</label>
             <default></default>

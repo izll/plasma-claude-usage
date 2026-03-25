@@ -13,7 +13,7 @@
         "Id": "org.kde.plasma.claudeusage",
         "License": "GPL-3.0-or-later",
         "Name": "Claude Usage",
-        "Version": "1.2.1",
+        "Version": "1.2.5",
         "Website": "https://github.com/izll/plasma-claude-usage"
     },
     "X-Plasma-API-Minimum-Version": "6.0",
