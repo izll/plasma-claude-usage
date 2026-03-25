@@ -158,6 +158,9 @@ izll
 
 ## Version History
 
+### 1.2.1 (2026)
+- Remove false decimal precision from percentage displays (thanks @robinpie)
+
 ### 1.2.0 (2026)
 - Smart rate limit handling with `retry-after` header support
 - Exponential backoff with automatic recovery
