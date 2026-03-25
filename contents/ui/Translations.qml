@@ -53,7 +53,13 @@ QtObject {
             "Endpoint not found": "Endpoint not found",
             "Values under 5 min may cause rate limiting": "Values under 5 min may cause rate limiting",
             "Panel display": "Panel display",
-            "Show in panel:": "Show in panel:"
+            "Show in panel:": "Show in panel:",
+            "Icon:": "Icon:",
+            "Show Claude icon": "Show Claude icon",
+            "Style:": "Style:",
+            "Text": "Text",
+            "Circular": "Circular",
+            "Bar": "Bar"
         },
         "hu_HU": {
             "Claude Usage": "Claude használat",
@@ -92,7 +98,13 @@ QtObject {
             "Endpoint not found": "Végpont nem található",
             "Values under 5 min may cause rate limiting": "5 perc alatti értékek rate limitet okozhatnak",
             "Panel display": "Panel megjelenítés",
-            "Show in panel:": "Megjelenítés a panelen:"
+            "Show in panel:": "Megjelenítés a panelen:",
+            "Icon:": "Ikon:",
+            "Show Claude icon": "Claude ikon megjelenítése",
+            "Style:": "Stílus:",
+            "Text": "Szöveges",
+            "Circular": "Kördiagram",
+            "Bar": "Sávdiagram"
         },
         "de_DE": {
             "Claude Usage": "Claude Nutzung",
@@ -131,7 +143,13 @@ QtObject {
             "Endpoint not found": "Endpunkt nicht gefunden",
             "Values under 5 min may cause rate limiting": "Werte unter 5 Min können Rate-Limiting verursachen",
             "Panel display": "Panel-Anzeige",
-            "Show in panel:": "Im Panel anzeigen:"
+            "Show in panel:": "Im Panel anzeigen:",
+            "Icon:": "Symbol:",
+            "Show Claude icon": "Claude-Symbol anzeigen",
+            "Style:": "Stil:",
+            "Text": "Text",
+            "Circular": "Kreisförmig",
+            "Bar": "Balken"
         },
         "fr_FR": {
             "Claude Usage": "Utilisation Claude",
@@ -170,7 +188,13 @@ QtObject {
             "Endpoint not found": "Point d'accès introuvable",
             "Values under 5 min may cause rate limiting": "Les valeurs inférieures à 5 min peuvent causer un rate limiting",
             "Panel display": "Affichage du panneau",
-            "Show in panel:": "Afficher dans le panneau:"
+            "Show in panel:": "Afficher dans le panneau:",
+            "Icon:": "Icône:",
+            "Show Claude icon": "Afficher l'icône Claude",
+            "Style:": "Style:",
+            "Text": "Texte",
+            "Circular": "Circulaire",
+            "Bar": "Barre"
         },
         "es_ES": {
             "Claude Usage": "Uso de Claude",
@@ -209,7 +233,13 @@ QtObject {
             "Endpoint not found": "Punto de acceso no encontrado",
             "Values under 5 min may cause rate limiting": "Valores menores a 5 min pueden causar rate limiting",
             "Panel display": "Visualización del panel",
-            "Show in panel:": "Mostrar en el panel:"
+            "Show in panel:": "Mostrar en el panel:",
+            "Icon:": "Icono:",
+            "Show Claude icon": "Mostrar icono de Claude",
+            "Style:": "Estilo:",
+            "Text": "Texto",
+            "Circular": "Circular",
+            "Bar": "Barra"
         },
         "it_IT": {
             "Claude Usage": "Utilizzo Claude",
@@ -248,7 +278,13 @@ QtObject {
             "Endpoint not found": "Endpoint non trovato",
             "Values under 5 min may cause rate limiting": "Valori sotto 5 min possono causare rate limiting",
             "Panel display": "Visualizzazione pannello",
-            "Show in panel:": "Mostra nel pannello:"
+            "Show in panel:": "Mostra nel pannello:",
+            "Icon:": "Icona:",
+            "Show Claude icon": "Mostra icona Claude",
+            "Style:": "Stile:",
+            "Text": "Testo",
+            "Circular": "Circolare",
+            "Bar": "Barra"
         },
         "pt_BR": {
             "Claude Usage": "Uso do Claude",
@@ -287,7 +323,13 @@ QtObject {
             "Endpoint not found": "Endpoint não encontrado",
             "Values under 5 min may cause rate limiting": "Valores abaixo de 5 min podem causar rate limiting",
             "Panel display": "Exibição do painel",
-            "Show in panel:": "Mostrar no painel:"
+            "Show in panel:": "Mostrar no painel:",
+            "Icon:": "Ícone:",
+            "Show Claude icon": "Mostrar ícone do Claude",
+            "Style:": "Estilo:",
+            "Text": "Texto",
+            "Circular": "Circular",
+            "Bar": "Barra"
         },
         "ru_RU": {
             "Claude Usage": "Использование Claude",
@@ -326,7 +368,13 @@ QtObject {
             "Endpoint not found": "Конечная точка не найдена",
             "Values under 5 min may cause rate limiting": "Значения менее 5 мин могут вызвать ограничение запросов",
             "Panel display": "Отображение панели",
-            "Show in panel:": "Показывать в панели:"
+            "Show in panel:": "Показывать в панели:",
+            "Icon:": "Иконка:",
+            "Show Claude icon": "Показать иконку Claude",
+            "Style:": "Стиль:",
+            "Text": "Текст",
+            "Circular": "Круговой",
+            "Bar": "Столбик"
         },
         "pl_PL": {
             "Claude Usage": "Użycie Claude",
@@ -365,7 +413,13 @@ QtObject {
             "Endpoint not found": "Punkt końcowy nie znaleziony",
             "Values under 5 min may cause rate limiting": "Wartości poniżej 5 min mogą powodować rate limiting",
             "Panel display": "Wyświetlanie panelu",
-            "Show in panel:": "Pokaż w panelu:"
+            "Show in panel:": "Pokaż w panelu:",
+            "Icon:": "Ikona:",
+            "Show Claude icon": "Pokaż ikonę Claude",
+            "Style:": "Styl:",
+            "Text": "Tekst",
+            "Circular": "Kołowy",
+            "Bar": "Pasek"
         },
         "nl_NL": {
             "Claude Usage": "Claude Gebruik",
@@ -404,7 +458,13 @@ QtObject {
             "Endpoint not found": "Eindpunt niet gevonden",
             "Values under 5 min may cause rate limiting": "Waarden onder 5 min kunnen rate limiting veroorzaken",
             "Panel display": "Panelweergave",
-            "Show in panel:": "Tonen in paneel:"
+            "Show in panel:": "Tonen in paneel:",
+            "Icon:": "Pictogram:",
+            "Show Claude icon": "Claude-pictogram tonen",
+            "Style:": "Stijl:",
+            "Text": "Tekst",
+            "Circular": "Circulair",
+            "Bar": "Balk"
         },
         "tr_TR": {
             "Claude Usage": "Claude Kullanımı",
@@ -443,7 +503,13 @@ QtObject {
             "Endpoint not found": "Uç nokta bulunamadı",
             "Values under 5 min may cause rate limiting": "5 dk altındaki değerler rate limiting'e neden olabilir",
             "Panel display": "Panel görünümü",
-            "Show in panel:": "Panelde göster:"
+            "Show in panel:": "Panelde göster:",
+            "Icon:": "Simge:",
+            "Show Claude icon": "Claude simgesini göster",
+            "Style:": "Stil:",
+            "Text": "Metin",
+            "Circular": "Dairesel",
+            "Bar": "Çubuk"
         },
         "ja_JP": {
             "Claude Usage": "Claude 使用状況",
@@ -482,7 +548,13 @@ QtObject {
             "Endpoint not found": "エンドポイントが見つかりません",
             "Values under 5 min may cause rate limiting": "5分未満の値はレート制限を引き起こす可能性があります",
             "Panel display": "パネル表示",
-            "Show in panel:": "パネルに表示:"
+            "Show in panel:": "パネルに表示:",
+            "Icon:": "アイコン:",
+            "Show Claude icon": "Claudeアイコンを表示",
+            "Style:": "スタイル:",
+            "Text": "テキスト",
+            "Circular": "サークル",
+            "Bar": "バー"
         },
         "ko_KR": {
             "Claude Usage": "Claude 사용량",
@@ -521,7 +593,13 @@ QtObject {
             "Endpoint not found": "엔드포인트를 찾을 수 없음",
             "Values under 5 min may cause rate limiting": "5분 미만의 값은 속도 제한을 유발할 수 있습니다",
             "Panel display": "패널 표시",
-            "Show in panel:": "패널에 표시:"
+            "Show in panel:": "패널에 표시:",
+            "Icon:": "아이콘:",
+            "Show Claude icon": "Claude 아이콘 표시",
+            "Style:": "스타일:",
+            "Text": "텍스트",
+            "Circular": "원형",
+            "Bar": "바"
         },
         "zh_CN": {
             "Claude Usage": "Claude 使用情况",
@@ -560,7 +638,13 @@ QtObject {
             "Endpoint not found": "端点未找到",
             "Values under 5 min may cause rate limiting": "低于5分钟的值可能导致速率限制",
             "Panel display": "面板显示",
-            "Show in panel:": "在面板中显示:"
+            "Show in panel:": "在面板中显示:",
+            "Icon:": "图标:",
+            "Show Claude icon": "显示Claude图标",
+            "Style:": "样式:",
+            "Text": "文本",
+            "Circular": "圆形",
+            "Bar": "柱状"
         },
         "zh_TW": {
             "Claude Usage": "Claude 使用狀況",
@@ -599,7 +683,13 @@ QtObject {
             "Endpoint not found": "端點未找到",
             "Values under 5 min may cause rate limiting": "低於5分鐘的值可能導致速率限制",
             "Panel display": "面板顯示",
-            "Show in panel:": "在面板中顯示:"
+            "Show in panel:": "在面板中顯示:",
+            "Icon:": "圖標:",
+            "Show Claude icon": "顯示Claude圖標",
+            "Style:": "樣式:",
+            "Text": "文字",
+            "Circular": "圓形",
+            "Bar": "柱狀"
         }
     })
 

@@ -14,6 +14,8 @@ KCM.SimpleKCM {
 
     property string cfg_language
     property int cfg_refreshInterval
+    property bool cfg_showIcon
+    property string cfg_panelStyle
     property bool cfg_showSession
     property bool cfg_showWeekly
     property bool cfg_showSonnet
@@ -85,6 +87,23 @@ KCM.SimpleKCM {
         Kirigami.Separator {
             Kirigami.FormData.isSection: true
             Kirigami.FormData.label: tr("Panel display")
+        }
+
+        QQC2.CheckBox {
+            Kirigami.FormData.label: tr("Icon:")
+            text: tr("Show Claude icon")
+            checked: cfg_showIcon
+            onCheckedChanged: cfg_showIcon = checked
+        }
+
+        QQC2.ComboBox {
+            Kirigami.FormData.label: tr("Style:")
+            model: [tr("Text"), tr("Circular"), tr("Bar")]
+            currentIndex: cfg_panelStyle === "circular" ? 1 : cfg_panelStyle === "bar" ? 2 : 0
+            onCurrentIndexChanged: {
+                var styles = ["text", "circular", "bar"]
+                cfg_panelStyle = styles[currentIndex]
+            }
         }
 
         QQC2.CheckBox {

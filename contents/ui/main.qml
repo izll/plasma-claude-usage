@@ -395,6 +395,7 @@ PlasmoidItem {
 
             // Claude icon with error indicator
             Item {
+                visible: Plasmoid.configuration.showIcon !== false
                 Layout.preferredWidth: Kirigami.Units.iconSizes.smallMedium
                 Layout.preferredHeight: Kirigami.Units.iconSizes.smallMedium
                 Layout.rightMargin: Kirigami.Units.smallSpacing
@@ -426,9 +427,11 @@ PlasmoidItem {
                 color: Kirigami.Theme.negativeTextColor
             }
 
-            // Session usage
+            // === TEXT STYLE ===
+
+            // Session usage (text)
             Rectangle {
-                visible: (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 10
                 Layout.preferredHeight: 10
                 radius: 5
@@ -437,24 +440,24 @@ PlasmoidItem {
             }
 
             PlasmaComponents.Label {
-                visible: (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: Math.round(root.sessionUsagePercent) + "%"
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.bold: true
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
             }
 
-            // Separator between session and weekly
+            // Separator session-weekly (text)
             PlasmaComponents.Label {
-                visible: (Plasmoid.configuration.showSession !== false) && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSession !== false) && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: "|"
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.25 : root.isStale ? 0.35 : 0.5
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
             }
 
-            // Weekly usage
+            // Weekly usage (text)
             Rectangle {
-                visible: (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 10
                 Layout.preferredHeight: 10
                 radius: 5
@@ -463,24 +466,24 @@ PlasmoidItem {
             }
 
             PlasmaComponents.Label {
-                visible: (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: Math.round(root.weeklyUsagePercent) + "%"
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.bold: true
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
             }
 
-            // Separator before sonnet
+            // Separator before sonnet (text)
             PlasmaComponents.Label {
-                visible: (Plasmoid.configuration.showSonnet === true) && ((Plasmoid.configuration.showSession !== false) || (Plasmoid.configuration.showWeekly !== false)) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && ((Plasmoid.configuration.showSession !== false) || (Plasmoid.configuration.showWeekly !== false)) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: "|"
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.25 : root.isStale ? 0.35 : 0.5
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
             }
 
-            // Sonnet weekly usage
+            // Sonnet usage (text)
             Rectangle {
-                visible: (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 10
                 Layout.preferredHeight: 10
                 radius: 5
@@ -489,11 +492,192 @@ PlasmoidItem {
             }
 
             PlasmaComponents.Label {
-                visible: (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: Math.round(root.sonnetWeeklyPercent) + "%"
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.bold: true
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
+            }
+
+            // === CIRCULAR STYLE ===
+
+            // Session (circular)
+            Item {
+                visible: Plasmoid.configuration.panelStyle === "circular" && (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                Layout.preferredWidth: 28
+                Layout.preferredHeight: 28
+                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
+
+                Canvas {
+                    anchors.fill: parent
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        drawCircularProgress(ctx, width, height, root.sessionUsagePercent)
+                    }
+                    property real _percent: root.sessionUsagePercent
+                    on_PercentChanged: requestPaint()
+                    Component.onCompleted: requestPaint()
+                }
+
+                PlasmaComponents.Label {
+                    anchors.centerIn: parent
+                    text: Math.round(root.sessionUsagePercent)
+                    font.pixelSize: 9
+                    font.bold: true
+                }
+            }
+
+            // Weekly (circular)
+            Item {
+                visible: Plasmoid.configuration.panelStyle === "circular" && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                Layout.preferredWidth: 28
+                Layout.preferredHeight: 28
+                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
+
+                Canvas {
+                    anchors.fill: parent
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        drawCircularProgress(ctx, width, height, root.weeklyUsagePercent)
+                    }
+                    property real _percent: root.weeklyUsagePercent
+                    on_PercentChanged: requestPaint()
+                    Component.onCompleted: requestPaint()
+                }
+
+                PlasmaComponents.Label {
+                    anchors.centerIn: parent
+                    text: Math.round(root.weeklyUsagePercent)
+                    font.pixelSize: 9
+                    font.bold: true
+                }
+            }
+
+            // Sonnet (circular)
+            Item {
+                visible: Plasmoid.configuration.panelStyle === "circular" && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                Layout.preferredWidth: 28
+                Layout.preferredHeight: 28
+                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
+
+                Canvas {
+                    anchors.fill: parent
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        drawCircularProgress(ctx, width, height, root.sonnetWeeklyPercent)
+                    }
+                    property real _percent: root.sonnetWeeklyPercent
+                    on_PercentChanged: requestPaint()
+                    Component.onCompleted: requestPaint()
+                }
+
+                PlasmaComponents.Label {
+                    anchors.centerIn: parent
+                    text: Math.round(root.sonnetWeeklyPercent)
+                    font.pixelSize: 9
+                    font.bold: true
+                }
+            }
+
+            // === BAR STYLE ===
+
+            // Session (bar)
+            Item {
+                visible: Plasmoid.configuration.panelStyle === "bar" && (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                Layout.preferredWidth: 32
+                Layout.preferredHeight: parent.height
+                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
+
+                Rectangle {
+                    anchors.fill: parent
+                    radius: 3
+                    color: Kirigami.Theme.backgroundColor
+                    border.color: Kirigami.Theme.disabledTextColor
+                    border.width: 1
+
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: 1
+                        height: Math.max((parent.height - 2) * Math.min(root.sessionUsagePercent / 100, 1), 1)
+                        radius: 2
+                        color: getUsageColor(root.sessionUsagePercent)
+                    }
+                }
+
+                PlasmaComponents.Label {
+                    anchors.centerIn: parent
+                    text: Math.round(root.sessionUsagePercent)
+                    font.pixelSize: 9
+                    font.bold: true
+                }
+            }
+
+            // Weekly (bar)
+            Item {
+                visible: Plasmoid.configuration.panelStyle === "bar" && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                Layout.preferredWidth: 32
+                Layout.preferredHeight: parent.height
+                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
+
+                Rectangle {
+                    anchors.fill: parent
+                    radius: 3
+                    color: Kirigami.Theme.backgroundColor
+                    border.color: Kirigami.Theme.disabledTextColor
+                    border.width: 1
+
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: 1
+                        height: Math.max((parent.height - 2) * Math.min(root.weeklyUsagePercent / 100, 1), 1)
+                        radius: 2
+                        color: getUsageColor(root.weeklyUsagePercent)
+                    }
+                }
+
+                PlasmaComponents.Label {
+                    anchors.centerIn: parent
+                    text: Math.round(root.weeklyUsagePercent)
+                    font.pixelSize: 9
+                    font.bold: true
+                }
+            }
+
+            // Sonnet (bar)
+            Item {
+                visible: Plasmoid.configuration.panelStyle === "bar" && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                Layout.preferredWidth: 32
+                Layout.preferredHeight: parent.height
+                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
+
+                Rectangle {
+                    anchors.fill: parent
+                    radius: 3
+                    color: Kirigami.Theme.backgroundColor
+                    border.color: Kirigami.Theme.disabledTextColor
+                    border.width: 1
+
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: 1
+                        height: Math.max((parent.height - 2) * Math.min(root.sonnetWeeklyPercent / 100, 1), 1)
+                        radius: 2
+                        color: getUsageColor(root.sonnetWeeklyPercent)
+                    }
+                }
+
+                PlasmaComponents.Label {
+                    anchors.centerIn: parent
+                    text: Math.round(root.sonnetWeeklyPercent)
+                    font.pixelSize: 9
+                    font.bold: true
+                }
             }
 
             // Error text (non-token errors only)
@@ -866,6 +1050,36 @@ PlasmoidItem {
         onTriggered: loadCredentials()
     }
 
+    function drawCircularProgress(ctx, w, h, percent) {
+        var centerX = w / 2
+        var centerY = h / 2
+        var radius = Math.min(w, h) / 2 - 2
+        var lineWidth = 3
+        var startAngle = -Math.PI / 2
+        var endAngle = startAngle + (2 * Math.PI * Math.min(percent, 100) / 100)
+
+        ctx.reset()
+
+        // Background circle
+        ctx.beginPath()
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI)
+        ctx.strokeStyle = Kirigami.Theme.disabledTextColor
+        ctx.globalAlpha = 0.3
+        ctx.lineWidth = lineWidth
+        ctx.stroke()
+
+        // Progress arc
+        if (percent > 0) {
+            ctx.beginPath()
+            ctx.arc(centerX, centerY, radius, startAngle, endAngle)
+            ctx.strokeStyle = getUsageColor(percent)
+            ctx.globalAlpha = 1.0
+            ctx.lineWidth = lineWidth
+            ctx.lineCap = "round"
+            ctx.stroke()
+        }
+    }
+
     function getUsageColor(percent) {
         if (percent < 50) return Kirigami.Theme.positiveTextColor
         if (percent < 80) return Kirigami.Theme.neutralTextColor
@@ -901,5 +1115,14 @@ PlasmoidItem {
 
     Plasmoid.icon: "claude-usage"
     toolTipMainText: i18n.tr("Claude Usage")
-    toolTipSubText: i18n.tr("Session (5hr)") + ": " + Math.round(root.sessionUsagePercent) + "% | " + i18n.tr("Weekly (7day)") + ": " + Math.round(root.weeklyUsagePercent) + "%"
+    toolTipSubText: {
+        var parts = []
+        if (Plasmoid.configuration.showSession !== false)
+            parts.push(i18n.tr("Session (5hr)") + ": " + Math.round(root.sessionUsagePercent) + "%")
+        if (Plasmoid.configuration.showWeekly !== false)
+            parts.push(i18n.tr("Weekly (7day)") + ": " + Math.round(root.weeklyUsagePercent) + "%")
+        if (Plasmoid.configuration.showSonnet === true)
+            parts.push(i18n.tr("Sonnet") + ": " + Math.round(root.sonnetWeeklyPercent) + "%")
+        return parts.join(" | ")
+    }
 }

@@ -158,8 +158,11 @@ izll
 
 ## Version History
 
-### 1.2.5 (2026)
-- Configurable panel display: choose which metrics to show (Session, Weekly, Sonnet)
+### 1.3.0 (2026)
+- Three panel display styles: Text (classic), Circular (ring charts), Bar (vertical bars)
+- Configurable panel metrics: choose Session, Weekly, Sonnet independently
+- Claude icon can be hidden in panel
+- Tooltip shows all enabled metrics
 - Sonnet weekly usage can now be displayed in the panel (off by default)
 
 ### 1.2.1 (2026)
