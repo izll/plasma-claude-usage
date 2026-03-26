@@ -44,7 +44,7 @@
         </entry>
         <entry name="backgroundOpacity" type="Double">
             <label>Background opacity (0.0 = transparent, 1.0 = opaque)</label>
-            <default>0.9</default>
+            <default>1.0</default>
         </entry>
     </group>
 </kcfg>

@@ -127,7 +127,7 @@ KCM.SimpleKCM {
         }
 
         RowLayout {
-            Kirigami.FormData.label: tr("Background opacity:")
+            Kirigami.FormData.label: tr("Background opacity (desktop):")
 
             QQC2.Slider {
                 id: opacitySlider

@@ -158,6 +158,11 @@ izll
 
 ## Version History
 
+### 1.3.1 (2026)
+- Configurable background opacity for desktop mode (thanks @Endle)
+- Background opacity only applies on desktop, panel keeps default Plasma theme
+- Default opacity set to 100% for consistent upgrade experience
+
 ### 1.3.0 (2026)
 - Three panel display styles: Text (classic), Circular (ring charts), Bar (vertical bars)
 - Claude icon can be hidden in panel

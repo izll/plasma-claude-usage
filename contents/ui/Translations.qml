@@ -59,7 +59,8 @@ QtObject {
             "Style:": "Style:",
             "Text": "Text",
             "Circular": "Circular",
-            "Bar": "Bar"
+            "Bar": "Bar",
+            "Background opacity (desktop):": "Background opacity (desktop):"
         },
         "hu_HU": {
             "Claude Usage": "Claude használat",
@@ -104,7 +105,8 @@ QtObject {
             "Style:": "Stílus:",
             "Text": "Szöveges",
             "Circular": "Kördiagram",
-            "Bar": "Sávdiagram"
+            "Bar": "Sávdiagram",
+            "Background opacity (desktop):": "Háttér átlátszóság (asztal):"
         },
         "de_DE": {
             "Claude Usage": "Claude Nutzung",
@@ -149,7 +151,8 @@ QtObject {
             "Style:": "Stil:",
             "Text": "Text",
             "Circular": "Kreisförmig",
-            "Bar": "Balken"
+            "Bar": "Balken",
+            "Background opacity (desktop):": "Hintergrund-Deckkraft (Desktop):"
         },
         "fr_FR": {
             "Claude Usage": "Utilisation Claude",
@@ -194,7 +197,8 @@ QtObject {
             "Style:": "Style:",
             "Text": "Texte",
             "Circular": "Circulaire",
-            "Bar": "Barre"
+            "Bar": "Barre",
+            "Background opacity (desktop):": "Opacité du fond (bureau):"
         },
         "es_ES": {
             "Claude Usage": "Uso de Claude",
@@ -239,7 +243,8 @@ QtObject {
             "Style:": "Estilo:",
             "Text": "Texto",
             "Circular": "Circular",
-            "Bar": "Barra"
+            "Bar": "Barra",
+            "Background opacity (desktop):": "Opacidad del fondo (escritorio):"
         },
         "it_IT": {
             "Claude Usage": "Utilizzo Claude",
@@ -284,7 +289,8 @@ QtObject {
             "Style:": "Stile:",
             "Text": "Testo",
             "Circular": "Circolare",
-            "Bar": "Barra"
+            "Bar": "Barra",
+            "Background opacity (desktop):": "Opacità sfondo (desktop):"
         },
         "pt_BR": {
             "Claude Usage": "Uso do Claude",
@@ -329,7 +335,8 @@ QtObject {
             "Style:": "Estilo:",
             "Text": "Texto",
             "Circular": "Circular",
-            "Bar": "Barra"
+            "Bar": "Barra",
+            "Background opacity (desktop):": "Opacidade do fundo (área de trabalho):"
         },
         "ru_RU": {
             "Claude Usage": "Использование Claude",
@@ -374,7 +381,8 @@ QtObject {
             "Style:": "Стиль:",
             "Text": "Текст",
             "Circular": "Круговой",
-            "Bar": "Столбик"
+            "Bar": "Столбик",
+            "Background opacity (desktop):": "Прозрачность фона (рабочий стол):"
         },
         "pl_PL": {
             "Claude Usage": "Użycie Claude",
@@ -419,7 +427,8 @@ QtObject {
             "Style:": "Styl:",
             "Text": "Tekst",
             "Circular": "Kołowy",
-            "Bar": "Pasek"
+            "Bar": "Pasek",
+            "Background opacity (desktop):": "Przezroczystość tła (pulpit):"
         },
         "nl_NL": {
             "Claude Usage": "Claude Gebruik",
@@ -464,7 +473,8 @@ QtObject {
             "Style:": "Stijl:",
             "Text": "Tekst",
             "Circular": "Circulair",
-            "Bar": "Balk"
+            "Bar": "Balk",
+            "Background opacity (desktop):": "Achtergrond dekking (bureaublad):"
         },
         "tr_TR": {
             "Claude Usage": "Claude Kullanımı",
@@ -509,7 +519,8 @@ QtObject {
             "Style:": "Stil:",
             "Text": "Metin",
             "Circular": "Dairesel",
-            "Bar": "Çubuk"
+            "Bar": "Çubuk",
+            "Background opacity (desktop):": "Arka plan opaklığı (masaüstü):"
         },
         "ja_JP": {
             "Claude Usage": "Claude 使用状況",
@@ -554,7 +565,8 @@ QtObject {
             "Style:": "スタイル:",
             "Text": "テキスト",
             "Circular": "サークル",
-            "Bar": "バー"
+            "Bar": "バー",
+            "Background opacity (desktop):": "背景の不透明度（デスクトップ）:"
         },
         "ko_KR": {
             "Claude Usage": "Claude 사용량",
@@ -599,7 +611,8 @@ QtObject {
             "Style:": "스타일:",
             "Text": "텍스트",
             "Circular": "원형",
-            "Bar": "바"
+            "Bar": "바",
+            "Background opacity (desktop):": "배경 불투명도 (데스크톱):"
         },
         "zh_CN": {
             "Claude Usage": "Claude 使用情况",
@@ -644,7 +657,8 @@ QtObject {
             "Style:": "样式:",
             "Text": "文本",
             "Circular": "圆形",
-            "Bar": "柱状"
+            "Bar": "柱状",
+            "Background opacity (desktop):": "背景不透明度（桌面）:"
         },
         "zh_TW": {
             "Claude Usage": "Claude 使用狀況",
@@ -689,7 +703,8 @@ QtObject {
             "Style:": "樣式:",
             "Text": "文字",
             "Circular": "圓形",
-            "Bar": "柱狀"
+            "Bar": "柱狀",
+            "Background opacity (desktop):": "背景不透明度（桌面）:"
         }
     })
 

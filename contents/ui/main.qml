@@ -1114,10 +1114,17 @@ PlasmoidItem {
         loadCredentials()
     }
 
-    Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
+    // Only use custom background on desktop, panel keeps default Plasma background
+    readonly property bool isOnPanel: Plasmoid.location === PlasmaCore.Types.TopEdge
+        || Plasmoid.location === PlasmaCore.Types.BottomEdge
+        || Plasmoid.location === PlasmaCore.Types.LeftEdge
+        || Plasmoid.location === PlasmaCore.Types.RightEdge
 
-    // Custom background with configurable opacity
+    Plasmoid.backgroundHints: isOnPanel ? PlasmaCore.Types.DefaultBackground : PlasmaCore.Types.NoBackground
+
+    // Custom background with configurable opacity (desktop only)
     Rectangle {
+        visible: !root.isOnPanel
         anchors.fill: parent
         color: Kirigami.Theme.backgroundColor
         opacity: Plasmoid.configuration.backgroundOpacity
