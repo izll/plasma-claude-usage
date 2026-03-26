@@ -1131,7 +1131,7 @@ PlasmoidItem {
         radius: Kirigami.Units.cornerRadius
     }
 
-    Plasmoid.icon: "claude-usage"
+    Plasmoid.icon: "claude"
     toolTipMainText: i18n.tr("Claude Usage")
     toolTipSubText: {
         var parts = []

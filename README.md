@@ -158,6 +158,9 @@ izll
 
 ## Version History
 
+### 1.3.2 (2026)
+- Fix widget icon not showing in panel widget picker dialog
+
 ### 1.3.1 (2026)
 - Configurable background opacity for desktop mode (thanks @Endle)
 - Background opacity only applies on desktop, panel keeps default Plasma theme
