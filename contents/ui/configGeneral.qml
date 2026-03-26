@@ -21,6 +21,7 @@ KCM.SimpleKCM {
     property bool cfg_showSonnet
     property string cfg_baseUrl
     property string cfg_apiKey
+    property double cfg_backgroundOpacity
 
     // Translation helper
     Translations {
@@ -123,6 +124,28 @@ KCM.SimpleKCM {
             text: tr("Sonnet")
             checked: cfg_showSonnet
             onCheckedChanged: cfg_showSonnet = checked
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: tr("Background opacity:")
+
+            QQC2.Slider {
+                id: opacitySlider
+                from: 0.0
+                to: 1.0
+                stepSize: 0.05
+                value: cfg_backgroundOpacity
+                Layout.preferredWidth: Kirigami.Units.gridUnit * 10
+
+                onMoved: {
+                    cfg_backgroundOpacity = value
+                }
+            }
+
+            QQC2.Label {
+                text: Math.round(opacitySlider.value * 100) + "%"
+                Layout.preferredWidth: Kirigami.Units.gridUnit * 2
+            }
         }
 
         Kirigami.Separator {

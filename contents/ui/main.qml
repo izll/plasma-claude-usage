@@ -4,6 +4,7 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.plasma5support as Plasma5Support
+import org.kde.plasma.core as PlasmaCore
 
 PlasmoidItem {
     id: root
@@ -1111,6 +1112,16 @@ PlasmoidItem {
         cacheReader.connectSource("cat $HOME/.local/share/claude-usage-cache.json 2>/dev/null")
         versionReader.connectSource("claude --version 2>/dev/null")
         loadCredentials()
+    }
+
+    Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
+
+    // Custom background with configurable opacity
+    Rectangle {
+        anchors.fill: parent
+        color: Kirigami.Theme.backgroundColor
+        opacity: Plasmoid.configuration.backgroundOpacity
+        radius: Kirigami.Units.cornerRadius
     }
 
     Plasmoid.icon: "claude-usage"
