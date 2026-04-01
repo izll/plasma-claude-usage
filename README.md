@@ -158,6 +158,10 @@ izll
 
 ## Version History
 
+### 1.3.6 (2026)
+- Vertical layout option for taller panels (thanks @nahall, issue #5)
+- Panel metrics can now be stacked vertically to save horizontal space
+
 ### 1.3.5 (2026)
 - Widget picker now shows proper preview image (progress ring + Claude logo + USAGE)
 - About page shows correct icon via auto-install to system icon theme

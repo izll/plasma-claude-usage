@@ -14,6 +14,7 @@ KCM.SimpleKCM {
 
     property string cfg_language
     property int cfg_refreshInterval
+    property string cfg_panelLayout
     property bool cfg_showIcon
     property string cfg_panelStyle
     property bool cfg_showSession
@@ -88,6 +89,13 @@ KCM.SimpleKCM {
         Kirigami.Separator {
             Kirigami.FormData.isSection: true
             Kirigami.FormData.label: tr("Panel display")
+        }
+
+        QQC2.ComboBox {
+            Kirigami.FormData.label: tr("Layout:")
+            model: [tr("Horizontal"), tr("Vertical")]
+            currentIndex: cfg_panelLayout === "vertical" ? 1 : 0
+            onCurrentIndexChanged: cfg_panelLayout = currentIndex === 1 ? "vertical" : "horizontal"
         }
 
         QQC2.CheckBox {

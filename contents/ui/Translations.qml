@@ -60,6 +60,9 @@ QtObject {
             "Text": "Text",
             "Circular": "Circular",
             "Bar": "Bar",
+            "Layout:": "Layout:",
+            "Horizontal": "Horizontal",
+            "Vertical": "Vertical",
             "Background opacity (desktop):": "Background opacity (desktop):"
         },
         "hu_HU": {
@@ -106,6 +109,9 @@ QtObject {
             "Text": "Szöveges",
             "Circular": "Kördiagram",
             "Bar": "Sávdiagram",
+            "Layout:": "Elrendezés:",
+            "Horizontal": "Vízszintes",
+            "Vertical": "Függőleges",
             "Background opacity (desktop):": "Háttér átlátszóság (asztal):"
         },
         "de_DE": {
@@ -152,6 +158,9 @@ QtObject {
             "Text": "Text",
             "Circular": "Kreisförmig",
             "Bar": "Balken",
+            "Layout:": "Layout:",
+            "Horizontal": "Horizontal",
+            "Vertical": "Vertikal",
             "Background opacity (desktop):": "Hintergrund-Deckkraft (Desktop):"
         },
         "fr_FR": {
@@ -198,6 +207,9 @@ QtObject {
             "Text": "Texte",
             "Circular": "Circulaire",
             "Bar": "Barre",
+            "Layout:": "Disposition:",
+            "Horizontal": "Horizontal",
+            "Vertical": "Vertical",
             "Background opacity (desktop):": "Opacité du fond (bureau):"
         },
         "es_ES": {
@@ -244,6 +256,9 @@ QtObject {
             "Text": "Texto",
             "Circular": "Circular",
             "Bar": "Barra",
+            "Layout:": "Disposición:",
+            "Horizontal": "Horizontal",
+            "Vertical": "Vertical",
             "Background opacity (desktop):": "Opacidad del fondo (escritorio):"
         },
         "it_IT": {
@@ -290,6 +305,9 @@ QtObject {
             "Text": "Testo",
             "Circular": "Circolare",
             "Bar": "Barra",
+            "Layout:": "Disposizione:",
+            "Horizontal": "Orizzontale",
+            "Vertical": "Verticale",
             "Background opacity (desktop):": "Opacità sfondo (desktop):"
         },
         "pt_BR": {
@@ -336,6 +354,9 @@ QtObject {
             "Text": "Texto",
             "Circular": "Circular",
             "Bar": "Barra",
+            "Layout:": "Layout:",
+            "Horizontal": "Horizontal",
+            "Vertical": "Vertical",
             "Background opacity (desktop):": "Opacidade do fundo (área de trabalho):"
         },
         "ru_RU": {
@@ -382,6 +403,9 @@ QtObject {
             "Text": "Текст",
             "Circular": "Круговой",
             "Bar": "Столбик",
+            "Layout:": "Расположение:",
+            "Horizontal": "Горизонтально",
+            "Vertical": "Вертикально",
             "Background opacity (desktop):": "Прозрачность фона (рабочий стол):"
         },
         "pl_PL": {
@@ -428,6 +452,9 @@ QtObject {
             "Text": "Tekst",
             "Circular": "Kołowy",
             "Bar": "Pasek",
+            "Layout:": "Układ:",
+            "Horizontal": "Poziomy",
+            "Vertical": "Pionowy",
             "Background opacity (desktop):": "Przezroczystość tła (pulpit):"
         },
         "nl_NL": {
@@ -474,6 +501,9 @@ QtObject {
             "Text": "Tekst",
             "Circular": "Circulair",
             "Bar": "Balk",
+            "Layout:": "Indeling:",
+            "Horizontal": "Horizontaal",
+            "Vertical": "Verticaal",
             "Background opacity (desktop):": "Achtergrond dekking (bureaublad):"
         },
         "tr_TR": {
@@ -520,6 +550,9 @@ QtObject {
             "Text": "Metin",
             "Circular": "Dairesel",
             "Bar": "Çubuk",
+            "Layout:": "Düzen:",
+            "Horizontal": "Yatay",
+            "Vertical": "Dikey",
             "Background opacity (desktop):": "Arka plan opaklığı (masaüstü):"
         },
         "ja_JP": {
@@ -566,6 +599,9 @@ QtObject {
             "Text": "テキスト",
             "Circular": "サークル",
             "Bar": "バー",
+            "Layout:": "レイアウト:",
+            "Horizontal": "横",
+            "Vertical": "縦",
             "Background opacity (desktop):": "背景の不透明度（デスクトップ）:"
         },
         "ko_KR": {
@@ -612,6 +648,9 @@ QtObject {
             "Text": "텍스트",
             "Circular": "원형",
             "Bar": "바",
+            "Layout:": "레이아웃:",
+            "Horizontal": "가로",
+            "Vertical": "세로",
             "Background opacity (desktop):": "배경 불투명도 (데스크톱):"
         },
         "zh_CN": {
@@ -658,6 +697,9 @@ QtObject {
             "Text": "文本",
             "Circular": "圆形",
             "Bar": "柱状",
+            "Layout:": "布局:",
+            "Horizontal": "水平",
+            "Vertical": "垂直",
             "Background opacity (desktop):": "背景不透明度（桌面）:"
         },
         "zh_TW": {
@@ -704,6 +746,9 @@ QtObject {
             "Text": "文字",
             "Circular": "圓形",
             "Bar": "柱狀",
+            "Layout:": "佈局:",
+            "Horizontal": "水平",
+            "Vertical": "垂直",
             "Background opacity (desktop):": "背景不透明度（桌面）:"
         }
     })

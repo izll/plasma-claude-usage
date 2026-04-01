@@ -378,21 +378,28 @@ PlasmoidItem {
         loadCredentials()
     }
 
-    // Compact representation (panel) - shows both percentages
+    // Compact representation (panel)
+    readonly property bool isVerticalLayout: Plasmoid.configuration.panelLayout === "vertical"
+
     compactRepresentation: Item {
         Layout.minimumWidth: usageRow.implicitWidth + Kirigami.Units.largeSpacing * 2
-        Layout.minimumHeight: Kirigami.Units.iconSizes.medium
+        Layout.minimumHeight: root.isVerticalLayout ? usageRow.implicitHeight + Kirigami.Units.largeSpacing * 2 : Kirigami.Units.iconSizes.medium
         Layout.preferredWidth: usageRow.implicitWidth + Kirigami.Units.largeSpacing * 2
+        Layout.preferredHeight: root.isVerticalLayout ? usageRow.implicitHeight + Kirigami.Units.largeSpacing * 2 : -1
 
         MouseArea {
             anchors.fill: parent
             onClicked: root.expanded = !root.expanded
         }
 
-        RowLayout {
+        GridLayout {
             id: usageRow
             anchors.centerIn: parent
-            spacing: Kirigami.Units.smallSpacing
+            columns: root.isVerticalLayout ? 1 : -1
+            rows: root.isVerticalLayout ? -1 : 1
+            flow: root.isVerticalLayout ? GridLayout.TopToBottom : GridLayout.LeftToRight
+            columnSpacing: Kirigami.Units.smallSpacing
+            rowSpacing: Kirigami.Units.smallSpacing / 2
 
             // Claude icon with error indicator
             Item {
@@ -450,7 +457,7 @@ PlasmoidItem {
 
             // Separator session-weekly (text)
             PlasmaComponents.Label {
-                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSession !== false) && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: !root.isVerticalLayout && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSession !== false) && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: "|"
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.25 : root.isStale ? 0.35 : 0.5
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
@@ -476,7 +483,7 @@ PlasmoidItem {
 
             // Separator before sonnet (text)
             PlasmaComponents.Label {
-                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && ((Plasmoid.configuration.showSession !== false) || (Plasmoid.configuration.showWeekly !== false)) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: !root.isVerticalLayout && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && ((Plasmoid.configuration.showSession !== false) || (Plasmoid.configuration.showWeekly !== false)) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: "|"
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.25 : root.isStale ? 0.35 : 0.5
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
