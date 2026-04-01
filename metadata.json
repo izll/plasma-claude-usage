@@ -9,11 +9,11 @@
         "Category": "System Information",
         "Description": "Display Claude Code usage statistics (session and weekly limits) in your taskbar. Shows real-time usage percentages with color-coded indicators.",
         "EnabledByDefault": true,
-        "Icon": "claude",
+        "Icon": "claude-usage-widget",
         "Id": "org.kde.plasma.claudeusage",
         "License": "GPL-3.0-or-later",
         "Name": "Claude Usage",
-        "Version": "1.3.2",
+        "Version": "1.3.5",
         "Website": "https://github.com/izll/plasma-claude-usage"
     },
     "X-Plasma-API-Minimum-Version": "6.0",

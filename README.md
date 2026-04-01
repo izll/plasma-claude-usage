@@ -158,6 +158,11 @@ izll
 
 ## Version History
 
+### 1.3.5 (2026)
+- Widget picker now shows proper preview image (progress ring + Claude logo + USAGE)
+- About page shows correct icon via auto-install to system icon theme
+- New `contents/screenshot.png` for KPackage widget picker preview
+
 ### 1.3.2 (2026)
 - Fix widget icon not showing in panel widget picker dialog
 

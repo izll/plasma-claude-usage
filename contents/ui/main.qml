@@ -1107,8 +1107,18 @@ PlasmoidItem {
         }
     }
 
+    // Install icon to system theme for about page
+    Plasma5Support.DataSource {
+        id: iconInstaller
+        engine: "executable"
+        connectedSources: []
+        onNewData: function(sourceName, data) { disconnectSource(sourceName) }
+    }
+
     Component.onCompleted: {
         console.log("Claude Usage: Widget loaded")
+        var iconSource = Qt.resolvedUrl("../icons/claude-usage-widget.svg").toString().replace("file://", "")
+        iconInstaller.connectSource("bash -c 'ICON_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/icons/hicolor/scalable/apps && mkdir -p $ICON_DIR && cp \"" + iconSource + "\" $ICON_DIR/claude-usage-widget.svg && chmod 644 $ICON_DIR/claude-usage-widget.svg 2>/dev/null'")
         cacheReader.connectSource("cat $HOME/.local/share/claude-usage-cache.json 2>/dev/null")
         versionReader.connectSource("claude --version 2>/dev/null")
         loadCredentials()
@@ -1131,7 +1141,7 @@ PlasmoidItem {
         radius: Kirigami.Units.cornerRadius
     }
 
-    Plasmoid.icon: "claude"
+    Plasmoid.icon: "claude-usage-widget"
     toolTipMainText: i18n.tr("Claude Usage")
     toolTipSubText: {
         var parts = []
