@@ -23,6 +23,8 @@ KCM.SimpleKCM {
     property string cfg_baseUrl
     property string cfg_apiKey
     property double cfg_backgroundOpacity
+    property string cfg_processVisibility
+    property int cfg_processCheckInterval
 
     // Translation helper
     Translations {
@@ -153,6 +155,43 @@ KCM.SimpleKCM {
             QQC2.Label {
                 text: Math.round(opacitySlider.value * 100) + "%"
                 Layout.preferredWidth: Kirigami.Units.gridUnit * 2
+            }
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: tr("Visibility")
+        }
+
+        QQC2.ComboBox {
+            id: processVisibilityCombo
+            Kirigami.FormData.label: tr("When Claude is not running:")
+            model: [tr("Always show full widget"), tr("Hide usage, only show icon"), tr("Fully hide widget")]
+            currentIndex: cfg_processVisibility === "hide_usage" ? 1 : cfg_processVisibility === "fully_hidden" ? 2 : 0
+            onCurrentIndexChanged: {
+                var values = ["always", "hide_usage", "fully_hidden"]
+                cfg_processVisibility = values[currentIndex]
+            }
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: tr("Process check interval:")
+            enabled: processVisibilityCombo.currentIndex > 0
+
+            QQC2.SpinBox {
+                id: processCheckSpinBox
+                from: 5
+                to: 300
+                stepSize: 5
+                value: cfg_processCheckInterval
+
+                onValueChanged: {
+                    cfg_processCheckInterval = value
+                }
+            }
+
+            QQC2.Label {
+                text: tr("seconds")
             }
         }
 
