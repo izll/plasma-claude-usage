@@ -50,5 +50,13 @@
             <label>Background opacity (0.0 = transparent, 1.0 = opaque)</label>
             <default>1.0</default>
         </entry>
+        <entry name="processVisibility" type="String">
+            <label>Visibility mode when Claude is not running (always, hide_usage, or fully_hidden)</label>
+            <default>always</default>
+        </entry>
+        <entry name="processCheckInterval" type="Int">
+            <label>Process check interval in seconds</label>
+            <default>30</default>
+        </entry>
     </group>
 </kcfg>

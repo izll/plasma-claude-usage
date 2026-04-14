@@ -34,6 +34,11 @@ PlasmoidItem {
     property bool hasOpusData: false
     property bool hasTokenError: false
     property bool hasRateLimitError: false
+    property bool claudeRunning: true
+    readonly property bool showUsageStats: {
+        var vis = Plasmoid.configuration.processVisibility || "always"
+        return vis === "always" || root.claudeRunning
+    }
     property int rateLimitRetryCount: 0
     property int rateLimitRetryMs: 0  // from retry-after header
     property double lastFetchTime: 0
@@ -159,6 +164,65 @@ PlasmoidItem {
         repeat: true
         onTriggered: {
             tokenWatcher.connectSource("cat $HOME/.claude/.credentials.json 2>/dev/null")
+        }
+    }
+
+    // Data source for checking whether a claude process is running
+    Plasma5Support.DataSource {
+        id: processChecker
+        engine: "executable"
+        connectedSources: []
+
+        onNewData: function(sourceName, data) {
+            var stdout = data["stdout"] || ""
+            disconnectSource(sourceName)
+
+            var wasRunning = root.claudeRunning
+            root.claudeRunning = stdout.trim().length > 0
+
+            var vis = Plasmoid.configuration.processVisibility || "always"
+            if (vis === "fully_hidden") {
+                Plasmoid.status = root.claudeRunning
+                    ? PlasmaCore.Types.ActiveStatus
+                    : PlasmaCore.Types.HiddenStatus
+            }
+
+            if (root.claudeRunning && !wasRunning) {
+                loadCredentials()
+            }
+        }
+    }
+
+    function checkClaudeProcess() {
+        processChecker.connectSource("pgrep -x claude 2>/dev/null")
+    }
+
+    function updateProcessVisibility() {
+        var vis = Plasmoid.configuration.processVisibility || "always"
+        if (vis === "always") {
+            root.claudeRunning = true
+            Plasmoid.status = PlasmaCore.Types.ActiveStatus
+        } else if (vis === "hide_usage") {
+            Plasmoid.status = PlasmaCore.Types.ActiveStatus
+            checkClaudeProcess()
+        } else { // fully_hidden
+            Plasmoid.status = PlasmaCore.Types.HiddenStatus
+            checkClaudeProcess()
+        }
+    }
+
+    Timer {
+        id: processCheckTimer
+        interval: Math.max(Plasmoid.configuration.processCheckInterval || 30, 5) * 1000
+        running: (Plasmoid.configuration.processVisibility || "always") !== "always"
+        repeat: true
+        onTriggered: checkClaudeProcess()
+    }
+
+    Connections {
+        target: Plasmoid.configuration
+        function onProcessVisibilityChanged() {
+            updateProcessVisibility()
         }
     }
 
@@ -429,7 +493,7 @@ PlasmoidItem {
 
             // Error state (non-token errors)
             PlasmaComponents.Label {
-                visible: root.errorMsg !== "" && !root.hasTokenError && !root.hasRateLimitError
+                visible: root.showUsageStats && root.errorMsg !== "" && !root.hasTokenError && !root.hasRateLimitError
                 text: "⚠"
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 color: Kirigami.Theme.negativeTextColor
@@ -439,7 +503,7 @@ PlasmoidItem {
 
             // Session usage (text)
             Rectangle {
-                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 10
                 Layout.preferredHeight: 10
                 radius: 5
@@ -448,7 +512,7 @@ PlasmoidItem {
             }
 
             PlasmaComponents.Label {
-                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: Math.round(root.sessionUsagePercent) + "%"
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.bold: true
@@ -457,7 +521,7 @@ PlasmoidItem {
 
             // Separator session-weekly (text)
             PlasmaComponents.Label {
-                visible: !root.isVerticalLayout && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSession !== false) && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && !root.isVerticalLayout && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSession !== false) && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: "|"
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.25 : root.isStale ? 0.35 : 0.5
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
@@ -465,7 +529,7 @@ PlasmoidItem {
 
             // Weekly usage (text)
             Rectangle {
-                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 10
                 Layout.preferredHeight: 10
                 radius: 5
@@ -474,7 +538,7 @@ PlasmoidItem {
             }
 
             PlasmaComponents.Label {
-                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: Math.round(root.weeklyUsagePercent) + "%"
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.bold: true
@@ -483,7 +547,7 @@ PlasmoidItem {
 
             // Separator before sonnet (text)
             PlasmaComponents.Label {
-                visible: !root.isVerticalLayout && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && ((Plasmoid.configuration.showSession !== false) || (Plasmoid.configuration.showWeekly !== false)) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && !root.isVerticalLayout && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && ((Plasmoid.configuration.showSession !== false) || (Plasmoid.configuration.showWeekly !== false)) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: "|"
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.25 : root.isStale ? 0.35 : 0.5
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
@@ -491,7 +555,7 @@ PlasmoidItem {
 
             // Sonnet usage (text)
             Rectangle {
-                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 10
                 Layout.preferredHeight: 10
                 radius: 5
@@ -500,7 +564,7 @@ PlasmoidItem {
             }
 
             PlasmaComponents.Label {
-                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: Math.round(root.sonnetWeeklyPercent) + "%"
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.bold: true
@@ -511,7 +575,7 @@ PlasmoidItem {
 
             // Session (circular)
             Item {
-                visible: Plasmoid.configuration.panelStyle === "circular" && (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && Plasmoid.configuration.panelStyle === "circular" && (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 28
                 Layout.preferredHeight: 28
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
@@ -537,7 +601,7 @@ PlasmoidItem {
 
             // Weekly (circular)
             Item {
-                visible: Plasmoid.configuration.panelStyle === "circular" && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && Plasmoid.configuration.panelStyle === "circular" && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 28
                 Layout.preferredHeight: 28
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
@@ -563,7 +627,7 @@ PlasmoidItem {
 
             // Sonnet (circular)
             Item {
-                visible: Plasmoid.configuration.panelStyle === "circular" && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && Plasmoid.configuration.panelStyle === "circular" && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 28
                 Layout.preferredHeight: 28
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
@@ -591,7 +655,7 @@ PlasmoidItem {
 
             // Session (bar)
             Item {
-                visible: Plasmoid.configuration.panelStyle === "bar" && (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && Plasmoid.configuration.panelStyle === "bar" && (Plasmoid.configuration.showSession !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 32
                 Layout.preferredHeight: parent.height
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
@@ -624,7 +688,7 @@ PlasmoidItem {
 
             // Weekly (bar)
             Item {
-                visible: Plasmoid.configuration.panelStyle === "bar" && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && Plasmoid.configuration.panelStyle === "bar" && (Plasmoid.configuration.showWeekly !== false) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 32
                 Layout.preferredHeight: parent.height
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
@@ -657,7 +721,7 @@ PlasmoidItem {
 
             // Sonnet (bar)
             Item {
-                visible: Plasmoid.configuration.panelStyle === "bar" && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: root.showUsageStats && Plasmoid.configuration.panelStyle === "bar" && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 32
                 Layout.preferredHeight: parent.height
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
@@ -690,7 +754,7 @@ PlasmoidItem {
 
             // Error text (non-token errors only)
             PlasmaComponents.Label {
-                visible: root.errorMsg !== "" && !root.hasTokenError && !root.hasRateLimitError
+                visible: root.showUsageStats && root.errorMsg !== "" && !root.hasTokenError && !root.hasRateLimitError
                 text: root.errorMsg
                 font.pixelSize: Kirigami.Theme.smallFont.pixelSize
                 color: Kirigami.Theme.negativeTextColor
@@ -1129,6 +1193,7 @@ PlasmoidItem {
         cacheReader.connectSource("cat $HOME/.local/share/claude-usage-cache.json 2>/dev/null")
         versionReader.connectSource("claude --version 2>/dev/null")
         loadCredentials()
+        updateProcessVisibility()
     }
 
     // Only use custom background on desktop, panel keeps default Plasma background
