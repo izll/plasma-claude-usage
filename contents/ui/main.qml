@@ -343,8 +343,15 @@ PlasmoidItem {
                     } else {
                         console.log("Claude Usage: 401 Unauthorized - token expired")
                         root.hasTokenError = true
+                        root.hasRateLimitError = false
                         root.errorMsg = ""
                     }
+                } else if (xhr.status === 403) {
+                    console.log("Claude Usage: 403 Permission error - token lacks required scope (re-login needed)")
+                    root.hasTokenError = true
+                    root.hasRateLimitError = false
+                    root.rateLimitRetryCount = 0
+                    root.errorMsg = ""
                 } else if (xhr.status === 404) {
                     root.errorMsg = root.baseUrl
                         ? i18n.tr("Endpoint not found")
@@ -777,7 +784,7 @@ PlasmoidItem {
                     spacing: Kirigami.Units.smallSpacing
 
                     PlasmaComponents.Label {
-                        text: "⚠ " + i18n.tr("Token expired")
+                        text: "⚠ " + i18n.tr("Re-login required")
                         color: Kirigami.Theme.negativeTextColor
                         font.bold: true
                     }
