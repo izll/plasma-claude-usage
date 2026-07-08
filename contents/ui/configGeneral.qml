@@ -151,7 +151,7 @@ KCM.SimpleKCM {
             }
 
             QQC2.Label {
-                text: Math.round(opacitySlider.value * 100) + "%"
+                text: opacitySlider.value >= 1.0 ? tr("Theme") : Math.round(opacitySlider.value * 100) + "%"
                 Layout.preferredWidth: Kirigami.Units.gridUnit * 2
             }
         }

@@ -701,7 +701,7 @@ PlasmoidItem {
     // Full representation (popup)
     fullRepresentation: Item {
         Layout.minimumWidth: Kirigami.Units.gridUnit * 14
-        Layout.minimumHeight: Kirigami.Units.gridUnit * 16
+        Layout.minimumHeight: Kirigami.Units.gridUnit * 8
         Layout.preferredWidth: Kirigami.Units.gridUnit * 16
         Layout.preferredHeight: Kirigami.Units.gridUnit * 18
 
@@ -1137,11 +1137,19 @@ PlasmoidItem {
         || Plasmoid.location === PlasmaCore.Types.LeftEdge
         || Plasmoid.location === PlasmaCore.Types.RightEdge
 
-    Plasmoid.backgroundHints: isOnPanel ? PlasmaCore.Types.DefaultBackground : PlasmaCore.Types.NoBackground
+    // At full opacity use the standard theme background (translucency, blur,
+    // margins and shadow come from the theme SVG); only swap in the custom
+    // flat rectangle when the user has lowered the opacity setting.
+    readonly property bool useCustomBackground: !isOnPanel
+        && Plasmoid.configuration.backgroundOpacity < 1.0
+
+    Plasmoid.backgroundHints: useCustomBackground
+        ? PlasmaCore.Types.NoBackground
+        : PlasmaCore.Types.DefaultBackground
 
     // Custom background with configurable opacity (desktop only)
     Rectangle {
-        visible: !root.isOnPanel
+        visible: root.useCustomBackground
         anchors.fill: parent
         color: Kirigami.Theme.backgroundColor
         opacity: Plasmoid.configuration.backgroundOpacity
