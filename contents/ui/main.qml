@@ -705,330 +705,341 @@ PlasmoidItem {
         Layout.preferredWidth: Kirigami.Units.gridUnit * 16
         Layout.preferredHeight: Kirigami.Units.gridUnit * 18
 
-        ColumnLayout {
+        Flickable {
+            id: contentFlickable
             anchors.fill: parent
             anchors.margins: Kirigami.Units.largeSpacing
-            spacing: Kirigami.Units.mediumSpacing
+            contentWidth: width
+            contentHeight: Math.max(contentColumn.implicitHeight, height)
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
 
-            // Header
-            RowLayout {
-                Layout.fillWidth: true
-                PlasmaComponents.Label {
-                    text: i18n.tr("Claude Usage")
-                    font.bold: true
-                    font.pixelSize: Kirigami.Theme.defaultFont.pixelSize * 1.3
-                }
-                Item { Layout.fillWidth: true }
-                Rectangle {
-                    Layout.preferredWidth: planLabel.implicitWidth + Kirigami.Units.smallSpacing * 2
-                    Layout.preferredHeight: planLabel.implicitHeight + Kirigami.Units.smallSpacing
-                    radius: 3
-                    color: Kirigami.Theme.highlightColor
+            ColumnLayout {
+                id: contentColumn
+                width: contentFlickable.width
+                height: contentFlickable.contentHeight
+                spacing: Kirigami.Units.mediumSpacing
+
+                // Header
+                RowLayout {
+                    Layout.fillWidth: true
                     PlasmaComponents.Label {
-                        id: planLabel
-                        anchors.centerIn: parent
-                        text: root.planName
-                        font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                        color: Kirigami.Theme.highlightedTextColor
-                    }
-                }
-            }
-
-            // Error message (regular errors)
-            Rectangle {
-                visible: root.errorMsg !== "" && !root.hasTokenError && !root.hasRateLimitError
-                Layout.fillWidth: true
-                Layout.preferredHeight: errorColumn.implicitHeight + Kirigami.Units.largeSpacing
-                radius: 5
-                color: Kirigami.Theme.negativeBackgroundColor
-
-                ColumnLayout {
-                    id: errorColumn
-                    anchors.fill: parent
-                    anchors.margins: Kirigami.Units.smallSpacing
-
-                    PlasmaComponents.Label {
-                        text: "⚠ " + root.errorMsg
-                        color: Kirigami.Theme.negativeTextColor
+                        text: i18n.tr("Claude Usage")
                         font.bold: true
+                        font.pixelSize: Kirigami.Theme.defaultFont.pixelSize * 1.3
                     }
-                    PlasmaComponents.Label {
-                        text: root.baseUrl
-                            ? i18n.tr("Check base URL and API key in widget settings")
-                            : i18n.tr("Run 'claude' to log in")
-                        font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                        color: Kirigami.Theme.negativeTextColor
-                    }
-                }
-            }
-
-            // Token error message
-            Rectangle {
-                visible: root.hasTokenError
-                Layout.fillWidth: true
-                Layout.preferredHeight: tokenErrorColumn.implicitHeight + Kirigami.Units.largeSpacing
-                radius: 5
-                color: Kirigami.Theme.negativeBackgroundColor
-
-                ColumnLayout {
-                    id: tokenErrorColumn
-                    anchors.fill: parent
-                    anchors.margins: Kirigami.Units.smallSpacing
-                    spacing: Kirigami.Units.smallSpacing
-
-                    PlasmaComponents.Label {
-                        text: "⚠ " + i18n.tr("Token expired")
-                        color: Kirigami.Theme.negativeTextColor
-                        font.bold: true
-                    }
-
-                    PlasmaComponents.Button {
-                        text: i18n.tr("Open Claude")
-                        icon.name: "utilities-terminal"
-                        onClicked: {
-                            claudeLauncher.connectSource("bash -c 'cd $HOME && if command -v konsole >/dev/null; then konsole --hold -e env -u CLAUDECODE bash -lc claude; elif command -v gnome-terminal >/dev/null; then gnome-terminal -- env -u CLAUDECODE bash -lc \"claude; exec bash\"; elif command -v xfce4-terminal >/dev/null; then xfce4-terminal --hold -e \"env -u CLAUDECODE bash -lc claude\"; elif command -v xterm >/dev/null; then xterm -hold -e env -u CLAUDECODE bash -lc claude; fi &'")
+                    Item { Layout.fillWidth: true }
+                    Rectangle {
+                        Layout.preferredWidth: planLabel.implicitWidth + Kirigami.Units.smallSpacing * 2
+                        Layout.preferredHeight: planLabel.implicitHeight + Kirigami.Units.smallSpacing
+                        radius: 3
+                        color: Kirigami.Theme.highlightColor
+                        PlasmaComponents.Label {
+                            id: planLabel
+                            anchors.centerIn: parent
+                            text: root.planName
+                            font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                            color: Kirigami.Theme.highlightedTextColor
                         }
                     }
                 }
-            }
 
-            // Rate limit error message
-            Rectangle {
-                visible: root.hasRateLimitError
-                Layout.fillWidth: true
-                Layout.preferredHeight: rateLimitErrorColumn.implicitHeight + Kirigami.Units.largeSpacing
-                radius: 5
-                color: Kirigami.Theme.negativeBackgroundColor
+                // Error message (regular errors)
+                Rectangle {
+                    visible: root.errorMsg !== "" && !root.hasTokenError && !root.hasRateLimitError
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: errorColumn.implicitHeight + Kirigami.Units.largeSpacing
+                    radius: 5
+                    color: Kirigami.Theme.negativeBackgroundColor
 
+                    ColumnLayout {
+                        id: errorColumn
+                        anchors.fill: parent
+                        anchors.margins: Kirigami.Units.smallSpacing
+
+                        PlasmaComponents.Label {
+                            text: "⚠ " + root.errorMsg
+                            color: Kirigami.Theme.negativeTextColor
+                            font.bold: true
+                        }
+                        PlasmaComponents.Label {
+                            text: root.baseUrl
+                                ? i18n.tr("Check base URL and API key in widget settings")
+                                : i18n.tr("Run 'claude' to log in")
+                            font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                            color: Kirigami.Theme.negativeTextColor
+                        }
+                    }
+                }
+
+                // Token error message
+                Rectangle {
+                    visible: root.hasTokenError
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: tokenErrorColumn.implicitHeight + Kirigami.Units.largeSpacing
+                    radius: 5
+                    color: Kirigami.Theme.negativeBackgroundColor
+
+                    ColumnLayout {
+                        id: tokenErrorColumn
+                        anchors.fill: parent
+                        anchors.margins: Kirigami.Units.smallSpacing
+                        spacing: Kirigami.Units.smallSpacing
+
+                        PlasmaComponents.Label {
+                            text: "⚠ " + i18n.tr("Token expired")
+                            color: Kirigami.Theme.negativeTextColor
+                            font.bold: true
+                        }
+
+                        PlasmaComponents.Button {
+                            text: i18n.tr("Open Claude")
+                            icon.name: "utilities-terminal"
+                            onClicked: {
+                                claudeLauncher.connectSource("bash -c 'cd $HOME && if command -v konsole >/dev/null; then konsole --hold -e env -u CLAUDECODE bash -lc claude; elif command -v gnome-terminal >/dev/null; then gnome-terminal -- env -u CLAUDECODE bash -lc \"claude; exec bash\"; elif command -v xfce4-terminal >/dev/null; then xfce4-terminal --hold -e \"env -u CLAUDECODE bash -lc claude\"; elif command -v xterm >/dev/null; then xterm -hold -e env -u CLAUDECODE bash -lc claude; fi &'")
+                            }
+                        }
+                    }
+                }
+
+                // Rate limit error message
+                Rectangle {
+                    visible: root.hasRateLimitError
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: rateLimitErrorColumn.implicitHeight + Kirigami.Units.largeSpacing
+                    radius: 5
+                    color: Kirigami.Theme.negativeBackgroundColor
+
+                    ColumnLayout {
+                        id: rateLimitErrorColumn
+                        anchors.fill: parent
+                        anchors.margins: Kirigami.Units.smallSpacing
+                        spacing: Kirigami.Units.smallSpacing
+
+                        PlasmaComponents.Label {
+                            text: "⚠ " + i18n.tr("Rate limited")
+                            color: Kirigami.Theme.negativeTextColor
+                            font.bold: true
+                        }
+
+                        PlasmaComponents.Label {
+                            text: i18n.tr("Auto-retry in") + " " + Math.round(root.rateLimitBackoffMs / 60000) + " min"
+                            font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                            color: Kirigami.Theme.negativeTextColor
+                        }
+                    }
+                }
+
+                // Separator
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 1
+                    color: Kirigami.Theme.disabledTextColor
+                    opacity: 0.3
+                }
+
+                // Session Usage
                 ColumnLayout {
-                    id: rateLimitErrorColumn
-                    anchors.fill: parent
-                    anchors.margins: Kirigami.Units.smallSpacing
+                    Layout.fillWidth: true
                     spacing: Kirigami.Units.smallSpacing
 
-                    PlasmaComponents.Label {
-                        text: "⚠ " + i18n.tr("Rate limited")
-                        color: Kirigami.Theme.negativeTextColor
-                        font.bold: true
+                    RowLayout {
+                        Layout.fillWidth: true
+                        PlasmaComponents.Label {
+                            text: i18n.tr("Session (5hr)")
+                            font.bold: true
+                        }
+                        Item { Layout.fillWidth: true }
+                        PlasmaComponents.Label {
+                            text: Math.round(root.sessionUsagePercent) + "%"
+                            color: getUsageColor(root.sessionUsagePercent)
+                            font.bold: true
+                        }
+                    }
+
+                    Rectangle {
+                        Layout.fillWidth: true
+                        height: 10
+                        radius: 5
+                        color: Kirigami.Theme.backgroundColor
+                        border.color: Kirigami.Theme.disabledTextColor
+                        border.width: 1
+                        Rectangle {
+                            width: parent.width * Math.min(root.sessionUsagePercent / 100, 1)
+                            height: parent.height
+                            radius: 5
+                            color: getUsageColor(root.sessionUsagePercent)
+                        }
                     }
 
                     PlasmaComponents.Label {
-                        text: i18n.tr("Auto-retry in") + " " + Math.round(root.rateLimitBackoffMs / 60000) + " min"
+                        visible: root.sessionReset !== ""
+                        text: i18n.tr("Resets at:") + " " + root.sessionReset + (root.sessionResetTime ? " (" + formatTimeRemaining(root.sessionResetTime) + ")" : "")
                         font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                        color: Kirigami.Theme.negativeTextColor
+                        color: Kirigami.Theme.disabledTextColor
                     }
                 }
-            }
 
-            // Separator
-            Rectangle {
-                Layout.fillWidth: true
-                height: 1
-                color: Kirigami.Theme.disabledTextColor
-                opacity: 0.3
-            }
+                // Weekly Usage
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: Kirigami.Units.smallSpacing
 
-            // Session Usage
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: Kirigami.Units.smallSpacing
+                    RowLayout {
+                        Layout.fillWidth: true
+                        PlasmaComponents.Label {
+                            text: i18n.tr("Weekly (7day)")
+                            font.bold: true
+                        }
+                        Item { Layout.fillWidth: true }
+                        PlasmaComponents.Label {
+                            text: Math.round(root.weeklyUsagePercent) + "%"
+                            color: getUsageColor(root.weeklyUsagePercent)
+                            font.bold: true
+                        }
+                    }
+
+                    Rectangle {
+                        Layout.fillWidth: true
+                        height: 10
+                        radius: 5
+                        color: Kirigami.Theme.backgroundColor
+                        border.color: Kirigami.Theme.disabledTextColor
+                        border.width: 1
+                        Rectangle {
+                            width: parent.width * Math.min(root.weeklyUsagePercent / 100, 1)
+                            height: parent.height
+                            radius: 5
+                            color: getUsageColor(root.weeklyUsagePercent)
+                        }
+                    }
+
+                    PlasmaComponents.Label {
+                        visible: root.weeklyReset !== ""
+                        text: i18n.tr("Resets:") + " " + root.weeklyReset + (root.weeklyResetTime ? " (" + formatTimeRemaining(root.weeklyResetTime) + ")" : "")
+                        font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                        color: Kirigami.Theme.disabledTextColor
+                    }
+                }
+
+                // Separator
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 1
+                    color: Kirigami.Theme.disabledTextColor
+                    opacity: 0.3
+                }
+
+                // Model breakdown
+                PlasmaComponents.Label {
+                    text: i18n.tr("By Model (Weekly)")
+                    font.bold: true
+                    font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                }
+
+                // Sonnet
+                RowLayout {
+                    Layout.fillWidth: true
+                    visible: root.hasSonnetData
+
+                    PlasmaComponents.Label {
+                        text: i18n.tr("Sonnet")
+                    }
+                    Item { Layout.fillWidth: true }
+                    Rectangle {
+                        Layout.preferredWidth: 60
+                        height: 8
+                        radius: 3
+                        color: Kirigami.Theme.backgroundColor
+                        border.color: Kirigami.Theme.disabledTextColor
+                        border.width: 1
+                        Rectangle {
+                            width: parent.width * Math.min(root.sonnetWeeklyPercent / 100, 1)
+                            height: parent.height
+                            radius: 3
+                            color: getUsageColor(root.sonnetWeeklyPercent)
+                        }
+                    }
+                    PlasmaComponents.Label {
+                        text: Math.round(root.sonnetWeeklyPercent) + "%"
+                        Layout.preferredWidth: 40
+                        horizontalAlignment: Text.AlignRight
+                    }
+                }
+
+                // Opus
+                RowLayout {
+                    Layout.fillWidth: true
+                    visible: root.hasOpusData
+
+                    PlasmaComponents.Label {
+                        text: i18n.tr("Opus")
+                    }
+                    Item { Layout.fillWidth: true }
+                    Rectangle {
+                        Layout.preferredWidth: 60
+                        height: 8
+                        radius: 3
+                        color: Kirigami.Theme.backgroundColor
+                        border.color: Kirigami.Theme.disabledTextColor
+                        border.width: 1
+                        Rectangle {
+                            width: parent.width * Math.min(root.opusWeeklyPercent / 100, 1)
+                            height: parent.height
+                            radius: 3
+                            color: getUsageColor(root.opusWeeklyPercent)
+                        }
+                    }
+                    PlasmaComponents.Label {
+                        text: Math.round(root.opusWeeklyPercent) + "%"
+                        Layout.preferredWidth: 40
+                        horizontalAlignment: Text.AlignRight
+                    }
+                }
+
+                // No model data message
+                PlasmaComponents.Label {
+                    visible: !root.hasSonnetData && !root.hasOpusData
+                    text: i18n.tr("No model breakdown available")
+                    font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                    color: Kirigami.Theme.disabledTextColor
+                    font.italic: true
+                }
+
+                // Rate limit warning
+                PlasmaComponents.Label {
+                    visible: (Plasmoid.configuration.refreshInterval || 5) < 5
+                    text: "⚠ " + i18n.tr("Values under 5 min may cause rate limiting")
+                    font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                    color: Kirigami.Theme.neutralTextColor
+                    font.italic: true
+                    Layout.fillWidth: true
+                    wrapMode: Text.WordWrap
+                }
+
+                Item { Layout.fillHeight: true }
+
+                // Footer
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 1
+                    color: Kirigami.Theme.disabledTextColor
+                    opacity: 0.3
+                }
 
                 RowLayout {
                     Layout.fillWidth: true
                     PlasmaComponents.Label {
-                        text: i18n.tr("Session (5hr)")
-                        font.bold: true
+                        text: root.lastUpdate !== "" ? i18n.tr("Updated:") + " " + root.lastUpdate : i18n.tr("Loading...")
+                        font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                        color: Kirigami.Theme.disabledTextColor
                     }
                     Item { Layout.fillWidth: true }
-                    PlasmaComponents.Label {
-                        text: Math.round(root.sessionUsagePercent) + "%"
-                        color: getUsageColor(root.sessionUsagePercent)
-                        font.bold: true
+                    PlasmaComponents.Button {
+                        icon.name: "view-refresh"
+                        text: i18n.tr("Refresh")
+                        onClicked: refresh()
                     }
-                }
-
-                Rectangle {
-                    Layout.fillWidth: true
-                    height: 10
-                    radius: 5
-                    color: Kirigami.Theme.backgroundColor
-                    border.color: Kirigami.Theme.disabledTextColor
-                    border.width: 1
-                    Rectangle {
-                        width: parent.width * Math.min(root.sessionUsagePercent / 100, 1)
-                        height: parent.height
-                        radius: 5
-                        color: getUsageColor(root.sessionUsagePercent)
-                    }
-                }
-
-                PlasmaComponents.Label {
-                    visible: root.sessionReset !== ""
-                    text: i18n.tr("Resets at:") + " " + root.sessionReset + (root.sessionResetTime ? " (" + formatTimeRemaining(root.sessionResetTime) + ")" : "")
-                    font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                    color: Kirigami.Theme.disabledTextColor
-                }
-            }
-
-            // Weekly Usage
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: Kirigami.Units.smallSpacing
-
-                RowLayout {
-                    Layout.fillWidth: true
-                    PlasmaComponents.Label {
-                        text: i18n.tr("Weekly (7day)")
-                        font.bold: true
-                    }
-                    Item { Layout.fillWidth: true }
-                    PlasmaComponents.Label {
-                        text: Math.round(root.weeklyUsagePercent) + "%"
-                        color: getUsageColor(root.weeklyUsagePercent)
-                        font.bold: true
-                    }
-                }
-
-                Rectangle {
-                    Layout.fillWidth: true
-                    height: 10
-                    radius: 5
-                    color: Kirigami.Theme.backgroundColor
-                    border.color: Kirigami.Theme.disabledTextColor
-                    border.width: 1
-                    Rectangle {
-                        width: parent.width * Math.min(root.weeklyUsagePercent / 100, 1)
-                        height: parent.height
-                        radius: 5
-                        color: getUsageColor(root.weeklyUsagePercent)
-                    }
-                }
-
-                PlasmaComponents.Label {
-                    visible: root.weeklyReset !== ""
-                    text: i18n.tr("Resets:") + " " + root.weeklyReset + (root.weeklyResetTime ? " (" + formatTimeRemaining(root.weeklyResetTime) + ")" : "")
-                    font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                    color: Kirigami.Theme.disabledTextColor
-                }
-            }
-
-            // Separator
-            Rectangle {
-                Layout.fillWidth: true
-                height: 1
-                color: Kirigami.Theme.disabledTextColor
-                opacity: 0.3
-            }
-
-            // Model breakdown
-            PlasmaComponents.Label {
-                text: i18n.tr("By Model (Weekly)")
-                font.bold: true
-                font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-            }
-
-            // Sonnet
-            RowLayout {
-                Layout.fillWidth: true
-                visible: root.hasSonnetData
-
-                PlasmaComponents.Label {
-                    text: i18n.tr("Sonnet")
-                }
-                Item { Layout.fillWidth: true }
-                Rectangle {
-                    Layout.preferredWidth: 60
-                    height: 8
-                    radius: 3
-                    color: Kirigami.Theme.backgroundColor
-                    border.color: Kirigami.Theme.disabledTextColor
-                    border.width: 1
-                    Rectangle {
-                        width: parent.width * Math.min(root.sonnetWeeklyPercent / 100, 1)
-                        height: parent.height
-                        radius: 3
-                        color: getUsageColor(root.sonnetWeeklyPercent)
-                    }
-                }
-                PlasmaComponents.Label {
-                    text: Math.round(root.sonnetWeeklyPercent) + "%"
-                    Layout.preferredWidth: 40
-                    horizontalAlignment: Text.AlignRight
-                }
-            }
-
-            // Opus
-            RowLayout {
-                Layout.fillWidth: true
-                visible: root.hasOpusData
-
-                PlasmaComponents.Label {
-                    text: i18n.tr("Opus")
-                }
-                Item { Layout.fillWidth: true }
-                Rectangle {
-                    Layout.preferredWidth: 60
-                    height: 8
-                    radius: 3
-                    color: Kirigami.Theme.backgroundColor
-                    border.color: Kirigami.Theme.disabledTextColor
-                    border.width: 1
-                    Rectangle {
-                        width: parent.width * Math.min(root.opusWeeklyPercent / 100, 1)
-                        height: parent.height
-                        radius: 3
-                        color: getUsageColor(root.opusWeeklyPercent)
-                    }
-                }
-                PlasmaComponents.Label {
-                    text: Math.round(root.opusWeeklyPercent) + "%"
-                    Layout.preferredWidth: 40
-                    horizontalAlignment: Text.AlignRight
-                }
-            }
-
-            // No model data message
-            PlasmaComponents.Label {
-                visible: !root.hasSonnetData && !root.hasOpusData
-                text: i18n.tr("No model breakdown available")
-                font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                color: Kirigami.Theme.disabledTextColor
-                font.italic: true
-            }
-
-            // Rate limit warning
-            PlasmaComponents.Label {
-                visible: (Plasmoid.configuration.refreshInterval || 5) < 5
-                text: "⚠ " + i18n.tr("Values under 5 min may cause rate limiting")
-                font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                color: Kirigami.Theme.neutralTextColor
-                font.italic: true
-                Layout.fillWidth: true
-                wrapMode: Text.WordWrap
-            }
-
-            Item { Layout.fillHeight: true }
-
-            // Footer
-            Rectangle {
-                Layout.fillWidth: true
-                height: 1
-                color: Kirigami.Theme.disabledTextColor
-                opacity: 0.3
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-                PlasmaComponents.Label {
-                    text: root.lastUpdate !== "" ? i18n.tr("Updated:") + " " + root.lastUpdate : i18n.tr("Loading...")
-                    font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                    color: Kirigami.Theme.disabledTextColor
-                }
-                Item { Layout.fillWidth: true }
-                PlasmaComponents.Button {
-                    icon.name: "view-refresh"
-                    text: i18n.tr("Refresh")
-                    onClicked: refresh()
                 }
             }
         }
