@@ -20,6 +20,7 @@ QtObject {
             "Claude Usage": "Claude Usage",
             "Session (5hr)": "Session (5hr)",
             "Weekly (7day)": "Weekly (7day)",
+            "Model (weekly)": "Model (weekly)",
             "By Model (Weekly)": "By Model (Weekly)",
             "Sonnet": "Sonnet",
             "Opus": "Opus",

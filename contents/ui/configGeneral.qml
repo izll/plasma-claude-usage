@@ -19,7 +19,7 @@ KCM.SimpleKCM {
     property string cfg_panelStyle
     property bool cfg_showSession
     property bool cfg_showWeekly
-    property bool cfg_showSonnet
+    property bool cfg_showModel
     property string cfg_baseUrl
     property string cfg_apiKey
     property double cfg_backgroundOpacity
@@ -129,9 +129,9 @@ KCM.SimpleKCM {
         }
 
         QQC2.CheckBox {
-            text: tr("Sonnet")
-            checked: cfg_showSonnet
-            onCheckedChanged: cfg_showSonnet = checked
+            text: tr("Model (weekly)")
+            checked: cfg_showModel
+            onCheckedChanged: cfg_showModel = checked
         }
 
         RowLayout {

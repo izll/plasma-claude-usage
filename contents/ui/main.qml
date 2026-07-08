@@ -33,6 +33,12 @@ PlasmoidItem {
     property bool hasSonnetData: false
     property bool hasOpusData: false
     property var modelLimits: []
+    // Primary model shown in the compact panel (first breakdown entry, e.g. the
+    // scoped weekly model). The panel has room for a single model slot, matching
+    // the previous Sonnet-only behaviour.
+    readonly property var primaryModelLimit: root.modelLimits.length > 0 ? root.modelLimits[0] : null
+    readonly property real primaryModelPercent: root.primaryModelLimit ? root.primaryModelLimit.percent : 0
+    readonly property string primaryModelLabel: root.primaryModelLimit ? root.primaryModelLimit.label : ""
     property bool hasTokenError: false
     property bool hasRateLimitError: false
     property int rateLimitRetryCount: 0
@@ -510,27 +516,27 @@ PlasmoidItem {
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
             }
 
-            // Separator before sonnet (text)
+            // Separator before model (text)
             PlasmaComponents.Label {
-                visible: !root.isVerticalLayout && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && ((Plasmoid.configuration.showSession !== false) || (Plasmoid.configuration.showWeekly !== false)) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: !root.isVerticalLayout && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showModel === true) && root.modelLimits.length > 0 && ((Plasmoid.configuration.showSession !== false) || (Plasmoid.configuration.showWeekly !== false)) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 text: "|"
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.25 : root.isStale ? 0.35 : 0.5
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
             }
 
-            // Sonnet usage (text)
+            // Model usage (text)
             Rectangle {
-                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showModel === true) && root.modelLimits.length > 0 && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 10
                 Layout.preferredHeight: 10
                 radius: 5
-                color: getUsageColor(root.sonnetWeeklyPercent)
+                color: getUsageColor(root.primaryModelPercent)
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
             }
 
             PlasmaComponents.Label {
-                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
-                text: Math.round(root.sonnetWeeklyPercent) + "%"
+                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showModel === true) && root.modelLimits.length > 0 && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                text: Math.round(root.primaryModelPercent) + "%"
                 font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
                 font.bold: true
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
@@ -590,9 +596,9 @@ PlasmoidItem {
                 }
             }
 
-            // Sonnet (circular)
+            // Model (circular)
             Item {
-                visible: Plasmoid.configuration.panelStyle === "circular" && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: Plasmoid.configuration.panelStyle === "circular" && (Plasmoid.configuration.showModel === true) && root.modelLimits.length > 0 && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 28
                 Layout.preferredHeight: 28
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
@@ -601,16 +607,16 @@ PlasmoidItem {
                     anchors.fill: parent
                     onPaint: {
                         var ctx = getContext("2d")
-                        drawCircularProgress(ctx, width, height, root.sonnetWeeklyPercent)
+                        drawCircularProgress(ctx, width, height, root.primaryModelPercent)
                     }
-                    property real _percent: root.sonnetWeeklyPercent
+                    property real _percent: root.primaryModelPercent
                     on_PercentChanged: requestPaint()
                     Component.onCompleted: requestPaint()
                 }
 
                 PlasmaComponents.Label {
                     anchors.centerIn: parent
-                    text: Math.round(root.sonnetWeeklyPercent)
+                    text: Math.round(root.primaryModelPercent)
                     font.pixelSize: 9
                     font.bold: true
                 }
@@ -684,9 +690,9 @@ PlasmoidItem {
                 }
             }
 
-            // Sonnet (bar)
+            // Model (bar)
             Item {
-                visible: Plasmoid.configuration.panelStyle === "bar" && (Plasmoid.configuration.showSonnet === true) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                visible: Plasmoid.configuration.panelStyle === "bar" && (Plasmoid.configuration.showModel === true) && root.modelLimits.length > 0 && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
                 Layout.preferredWidth: 32
                 Layout.preferredHeight: parent.height
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
@@ -703,15 +709,15 @@ PlasmoidItem {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.margins: 1
-                        height: Math.max((parent.height - 2) * Math.min(root.sonnetWeeklyPercent / 100, 1), 1)
+                        height: Math.max((parent.height - 2) * Math.min(root.primaryModelPercent / 100, 1), 1)
                         radius: 2
-                        color: getUsageColor(root.sonnetWeeklyPercent)
+                        color: getUsageColor(root.primaryModelPercent)
                     }
                 }
 
                 PlasmaComponents.Label {
                     anchors.centerIn: parent
-                    text: Math.round(root.sonnetWeeklyPercent)
+                    text: Math.round(root.primaryModelPercent)
                     font.pixelSize: 9
                     font.bold: true
                 }
@@ -1160,8 +1166,8 @@ PlasmoidItem {
             parts.push(i18n.tr("Session (5hr)") + ": " + Math.round(root.sessionUsagePercent) + "%")
         if (Plasmoid.configuration.showWeekly !== false)
             parts.push(i18n.tr("Weekly (7day)") + ": " + Math.round(root.weeklyUsagePercent) + "%")
-        if (Plasmoid.configuration.showSonnet === true)
-            parts.push(i18n.tr("Sonnet") + ": " + Math.round(root.sonnetWeeklyPercent) + "%")
+        if (Plasmoid.configuration.showModel === true && root.modelLimits.length > 0)
+            parts.push(root.primaryModelLabel + ": " + Math.round(root.primaryModelPercent) + "%")
         return parts.join(" | ")
     }
 }
