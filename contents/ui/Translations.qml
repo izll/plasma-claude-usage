@@ -32,6 +32,8 @@ QtObject {
             "Token expired": "Token expired",
             "API error": "API error",
             "Run 'claude' to log in": "Run 'claude' to log in",
+            "Will retry automatically": "Will retry automatically",
+            "Network error - showing cached data": "Network error - showing cached data",
             "No model breakdown available": "No model breakdown available",
             "Language:": "Language:",
             "System default": "System default",
