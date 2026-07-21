@@ -63,7 +63,11 @@ QtObject {
             "Layout:": "Layout:",
             "Horizontal": "Horizontal",
             "Vertical": "Vertical",
-            "Background opacity (desktop):": "Background opacity (desktop):"
+            "Background opacity (desktop):": "Background opacity (desktop):",
+            "Authentication": "Authentication",
+            "Session refresh:": "Session refresh:",
+            "Automatically refresh expired session": "Automatically refresh expired session",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually."
         },
         "hu_HU": {
             "Claude Usage": "Claude használat",
@@ -112,7 +116,11 @@ QtObject {
             "Layout:": "Elrendezés:",
             "Horizontal": "Vízszintes",
             "Vertical": "Függőleges",
-            "Background opacity (desktop):": "Háttér átlátszóság (asztal):"
+            "Background opacity (desktop):": "Háttér átlátszóság (asztal):",
+            "Authentication": "Hitelesítés",
+            "Session refresh:": "Munkamenet frissítése:",
+            "Automatically refresh expired session": "Lejárt munkamenet automatikus frissítése",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Röviden újranyitja a claude-ot a háttérben (kb. 15 másodperc, látható ablak nélkül, üzenet küldése nélkül), hogy frissítse a munkamenetet, mielőtt kézi bejelentkezésre kérne."
         },
         "de_DE": {
             "Claude Usage": "Claude Nutzung",
@@ -161,7 +169,11 @@ QtObject {
             "Layout:": "Layout:",
             "Horizontal": "Horizontal",
             "Vertical": "Vertikal",
-            "Background opacity (desktop):": "Hintergrund-Deckkraft (Desktop):"
+            "Background opacity (desktop):": "Hintergrund-Deckkraft (Desktop):",
+            "Authentication": "Authentifizierung",
+            "Session refresh:": "Sitzungsaktualisierung:",
+            "Automatically refresh expired session": "Abgelaufene Sitzung automatisch aktualisieren",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Öffnet claude kurz im Hintergrund (etwa 15 Sekunden, kein sichtbares Fenster, keine Nachricht gesendet), um die Sitzung zu aktualisieren, bevor Sie zur manuellen Anmeldung aufgefordert werden."
         },
         "fr_FR": {
             "Claude Usage": "Utilisation Claude",
@@ -210,7 +222,11 @@ QtObject {
             "Layout:": "Disposition:",
             "Horizontal": "Horizontal",
             "Vertical": "Vertical",
-            "Background opacity (desktop):": "Opacité du fond (bureau):"
+            "Background opacity (desktop):": "Opacité du fond (bureau):",
+            "Authentication": "Authentification",
+            "Session refresh:": "Actualisation de session:",
+            "Automatically refresh expired session": "Actualiser automatiquement la session expirée",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Rouvre brièvement claude en arrière-plan (environ 15 secondes, sans fenêtre visible, sans message envoyé) pour actualiser la session avant de vous demander de vous connecter manuellement."
         },
         "es_ES": {
             "Claude Usage": "Uso de Claude",
@@ -259,7 +275,11 @@ QtObject {
             "Layout:": "Disposición:",
             "Horizontal": "Horizontal",
             "Vertical": "Vertical",
-            "Background opacity (desktop):": "Opacidad del fondo (escritorio):"
+            "Background opacity (desktop):": "Opacidad del fondo (escritorio):",
+            "Authentication": "Autenticación",
+            "Session refresh:": "Actualización de sesión:",
+            "Automatically refresh expired session": "Actualizar automáticamente la sesión expirada",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Reabre brevemente claude en segundo plano (unos 15 segundos, sin ventana visible, sin enviar mensajes) para actualizar la sesión antes de pedirte que inicies sesión manualmente."
         },
         "it_IT": {
             "Claude Usage": "Utilizzo Claude",
@@ -308,7 +328,11 @@ QtObject {
             "Layout:": "Disposizione:",
             "Horizontal": "Orizzontale",
             "Vertical": "Verticale",
-            "Background opacity (desktop):": "Opacità sfondo (desktop):"
+            "Background opacity (desktop):": "Opacità sfondo (desktop):",
+            "Authentication": "Autenticazione",
+            "Session refresh:": "Aggiornamento sessione:",
+            "Automatically refresh expired session": "Aggiorna automaticamente la sessione scaduta",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Riapre brevemente claude in background (circa 15 secondi, senza finestra visibile, senza inviare messaggi) per aggiornare la sessione prima di chiederti di accedere manualmente."
         },
         "pt_BR": {
             "Claude Usage": "Uso do Claude",
@@ -357,7 +381,11 @@ QtObject {
             "Layout:": "Layout:",
             "Horizontal": "Horizontal",
             "Vertical": "Vertical",
-            "Background opacity (desktop):": "Opacidade do fundo (área de trabalho):"
+            "Background opacity (desktop):": "Opacidade do fundo (área de trabalho):",
+            "Authentication": "Autenticação",
+            "Session refresh:": "Atualização de sessão:",
+            "Automatically refresh expired session": "Atualizar automaticamente a sessão expirada",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Reabre brevemente o claude em segundo plano (cerca de 15 segundos, sem janela visível, sem enviar mensagem) para atualizar a sessão antes de solicitar que você faça login manualmente."
         },
         "ru_RU": {
             "Claude Usage": "Использование Claude",
@@ -406,24 +434,28 @@ QtObject {
             "Layout:": "Расположение:",
             "Horizontal": "Горизонтально",
             "Vertical": "Вертикально",
-            "Background opacity (desktop):": "Прозрачность фона (рабочий стол):"
+            "Background opacity (desktop):": "Прозрачность фона (рабочий стол):",
+            "Authentication": "Аутентификация",
+            "Session refresh:": "Обновление сессии:",
+            "Automatically refresh expired session": "Автоматически обновлять истёкшую сессию",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Ненадолго открывает claude в фоновом режиме (около 15 секунд, без видимого окна, без отправки сообщений), чтобы обновить сессию перед запросом на ручной вход."
         },
         "pl_PL": {
             "Claude Usage": "Użycie Claude",
             "Session (5hr)": "Sesja (5h)",
             "Weekly (7day)": "Tygodniowo (7 dni)",
-            "By Model (Weekly)": "Wg modelu (Tygodniowo)",
+            "By Model (Weekly)": "Wg modelu (tygodniowo)",
             "Sonnet": "Sonnet",
             "Opus": "Opus",
-            "Resets at:": "Resetuje o:",
+            "Resets at:": "Resetuje się o:",
             "Resets:": "Resetuje:",
             "Updated:": "Zaktualizowano:",
             "Loading...": "Ładowanie...",
             "Refresh": "Odśwież",
-            "Not logged in": "Nie zalogowany",
+            "Not logged in": "Niezalogowany",
             "Token expired": "Token wygasł",
             "API error": "Błąd API",
-            "Run 'claude' to log in": "Uruchom 'claude' aby się zalogować",
+            "Run 'claude' to log in": "Uruchom 'claude', aby się zalogować",
             "No model breakdown available": "Brak podziału na modele",
             "Language:": "Język:",
             "System default": "Domyślny systemowy",
@@ -438,11 +470,11 @@ QtObject {
             "Custom API (optional)": "Własne API (opcjonalne)",
             "Base URL:": "Bazowy URL:",
             "API key:": "Klucz API:",
-            "Leave empty to use ~/.claude/.credentials.json (default)": "Pozostaw puste aby użyć ~/.claude/.credentials.json (domyślne)",
+            "Leave empty to use ~/.claude/.credentials.json (default)": "Pozostaw puste, aby użyć ~/.claude/.credentials.json (domyślne)",
             "Check base URL and API key in widget settings": "Sprawdź bazowy URL i klucz API w ustawieniach widgetu",
-            "API key not configured": "Klucz API nie skonfigurowany",
+            "API key not configured": "Klucz API nieskonfigurowany",
             "Invalid API key": "Nieprawidłowy klucz API",
-            "Endpoint not found": "Punkt końcowy nie znaleziony",
+            "Endpoint not found": "Punkt końcowy nieznaleziony",
             "Values under 5 min may cause rate limiting": "Wartości poniżej 5 min mogą powodować rate limiting",
             "Panel display": "Wyświetlanie panelu",
             "Show in panel:": "Pokaż w panelu:",
@@ -455,7 +487,11 @@ QtObject {
             "Layout:": "Układ:",
             "Horizontal": "Poziomy",
             "Vertical": "Pionowy",
-            "Background opacity (desktop):": "Przezroczystość tła (pulpit):"
+            "Background opacity (desktop):": "Przezroczystość tła (pulpit):",
+            "Authentication": "Uwierzytelnianie",
+            "Session refresh:": "Odświeżanie sesji:",
+            "Automatically refresh expired session": "Automatycznie odświeżaj wygasłą sesję",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Na krótko ponownie otwiera claude w tle (około 15 sekund, bez widocznego okna, bez wysyłania wiadomości), aby odświeżyć sesję przed poproszeniem o ręczne zalogowanie."
         },
         "nl_NL": {
             "Claude Usage": "Claude Gebruik",
@@ -504,7 +540,11 @@ QtObject {
             "Layout:": "Indeling:",
             "Horizontal": "Horizontaal",
             "Vertical": "Verticaal",
-            "Background opacity (desktop):": "Achtergrond dekking (bureaublad):"
+            "Background opacity (desktop):": "Achtergrond dekking (bureaublad):",
+            "Authentication": "Authenticatie",
+            "Session refresh:": "Sessievernieuwing:",
+            "Automatically refresh expired session": "Verlopen sessie automatisch vernieuwen",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Heropent claude kort op de achtergrond (ongeveer 15 seconden, geen zichtbaar venster, geen bericht verzonden) om de sessie te vernieuwen voordat u wordt gevraagd handmatig in te loggen."
         },
         "tr_TR": {
             "Claude Usage": "Claude Kullanımı",
@@ -553,7 +593,11 @@ QtObject {
             "Layout:": "Düzen:",
             "Horizontal": "Yatay",
             "Vertical": "Dikey",
-            "Background opacity (desktop):": "Arka plan opaklığı (masaüstü):"
+            "Background opacity (desktop):": "Arka plan opaklığı (masaüstü):",
+            "Authentication": "Kimlik doğrulama",
+            "Session refresh:": "Oturum yenileme:",
+            "Automatically refresh expired session": "Süresi dolan oturumu otomatik yenile",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Oturumu yenilemek için claude'u arka planda kısaca yeniden açar (yaklaşık 15 saniye, görünür pencere yok, mesaj gönderilmez), ardından sizden manuel giriş yapmanızı ister."
         },
         "ja_JP": {
             "Claude Usage": "Claude 使用状況",
@@ -602,7 +646,11 @@ QtObject {
             "Layout:": "レイアウト:",
             "Horizontal": "横",
             "Vertical": "縦",
-            "Background opacity (desktop):": "背景の不透明度（デスクトップ）:"
+            "Background opacity (desktop):": "背景の不透明度（デスクトップ）:",
+            "Authentication": "認証",
+            "Session refresh:": "セッション更新:",
+            "Automatically refresh expired session": "期限切れのセッションを自動更新",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "手動ログインを求める前に、バックグラウンドで claude を短時間再起動し（約15秒、ウィンドウ表示なし、メッセージ送信なし）、セッションを更新します。"
         },
         "ko_KR": {
             "Claude Usage": "Claude 사용량",
@@ -651,7 +699,11 @@ QtObject {
             "Layout:": "레이아웃:",
             "Horizontal": "가로",
             "Vertical": "세로",
-            "Background opacity (desktop):": "배경 불투명도 (데스크톱):"
+            "Background opacity (desktop):": "배경 불투명도 (데스크톱):",
+            "Authentication": "인증",
+            "Session refresh:": "세션 새로고침:",
+            "Automatically refresh expired session": "만료된 세션 자동 새로고침",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "수동 로그인을 요청하기 전에 백그라운드에서 claude를 잠시 다시 열어(약 15초, 표시되는 창 없음, 메시지 전송 없음) 세션을 새로고침합니다."
         },
         "zh_CN": {
             "Claude Usage": "Claude 使用情况",
@@ -700,7 +752,11 @@ QtObject {
             "Layout:": "布局:",
             "Horizontal": "水平",
             "Vertical": "垂直",
-            "Background opacity (desktop):": "背景不透明度（桌面）:"
+            "Background opacity (desktop):": "背景不透明度（桌面）:",
+            "Authentication": "身份验证",
+            "Session refresh:": "会话刷新:",
+            "Automatically refresh expired session": "自动刷新过期会话",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "在提示您手动登录之前，在后台短暂重新打开 claude（约15秒，无可见窗口，不发送消息）以刷新会话。"
         },
         "zh_TW": {
             "Claude Usage": "Claude 使用狀況",
@@ -749,7 +805,11 @@ QtObject {
             "Layout:": "佈局:",
             "Horizontal": "水平",
             "Vertical": "垂直",
-            "Background opacity (desktop):": "背景不透明度（桌面）:"
+            "Background opacity (desktop):": "背景不透明度（桌面）:",
+            "Authentication": "身份驗證",
+            "Session refresh:": "工作階段重新整理:",
+            "Automatically refresh expired session": "自動重新整理過期的工作階段",
+            "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "在提示您手動登入之前，在背景短暫重新開啟 claude（約15秒，無可見視窗，不發送訊息）以重新整理工作階段。"
         }
     })
 

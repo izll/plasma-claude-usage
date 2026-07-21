@@ -23,6 +23,7 @@ KCM.SimpleKCM {
     property string cfg_baseUrl
     property string cfg_apiKey
     property double cfg_backgroundOpacity
+    property bool cfg_autoRefreshSession
 
     // Translation helper
     Translations {
@@ -154,6 +155,27 @@ KCM.SimpleKCM {
                 text: Math.round(opacitySlider.value * 100) + "%"
                 Layout.preferredWidth: Kirigami.Units.gridUnit * 2
             }
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: tr("Authentication")
+        }
+
+        QQC2.CheckBox {
+            Kirigami.FormData.label: tr("Session refresh:")
+            text: tr("Automatically refresh expired session")
+            checked: cfg_autoRefreshSession
+            onCheckedChanged: cfg_autoRefreshSession = checked
+        }
+
+        QQC2.Label {
+            text: tr("Briefly reopens claude in the background to refresh the session before prompting you to log in manually.")
+            font.italic: true
+            opacity: 0.7
+            wrapMode: Text.WordWrap
+            Layout.fillWidth: true
+            Layout.preferredWidth: Kirigami.Units.gridUnit * 20
         }
 
         Kirigami.Separator {

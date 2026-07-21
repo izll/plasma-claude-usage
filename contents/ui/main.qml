@@ -27,6 +27,7 @@ PlasmoidItem {
     property string accessToken: ""
     property string apiKey: ""
     property string baseUrl: ""
+    readonly property string silentRefreshScriptPath: Qt.resolvedUrl("../scripts/silent-refresh.py").toString().replace("file://", "")
     property bool isLoading: false
     property var sessionResetTime: null
     property var weeklyResetTime: null
@@ -163,6 +164,19 @@ PlasmoidItem {
     }
 
     // Data source for reading credentials file
+    property int credentialsRetryCount: 0
+    readonly property int maxCredentialsRetries: 4
+
+    Timer {
+        id: credentialsRetryTimer
+        interval: 2000
+        repeat: false
+        onTriggered: {
+            console.log("Claude Usage: Retrying credentials read, attempt", root.credentialsRetryCount, "of", root.maxCredentialsRetries)
+            fileReader.connectSource("bash -c 'stat -c \"Claude Usage: credentials stat: %s bytes, mtime %Y\" \"$HOME/.claude/.credentials.json\" 1>&2 2>/dev/null; cat \"$HOME/.claude/.credentials.json\" 2>/dev/null'")
+        }
+    }
+
     Plasma5Support.DataSource {
         id: fileReader
         engine: "executable"
@@ -170,9 +184,13 @@ PlasmoidItem {
 
         onNewData: function(sourceName, data) {
             var stdout = data["stdout"] || ""
+            var stderr = data["stderr"] || ""
             disconnectSource(sourceName)
 
             console.log("Claude Usage: Got credentials, length:", stdout.length)
+            if (stderr.trim().length > 0) {
+                console.log(stderr.trim())
+            }
 
             if (stdout.length > 10) {
                 try {
@@ -192,42 +210,46 @@ PlasmoidItem {
                     console.log("Claude Usage: Token found, plan:", root.planName)
 
                     if (root.accessToken) {
-                        fetchUsageFromApi()
+                        root.credentialsRetryCount = 0
+                        // Proactive refresh: claude itself checks this same field on
+                        // startup and refreshes via the CLI's refresh-token grant
+                        // regardless of whether the server would still accept the old
+                        // token, so we can preempt a doomed API call and the resulting
+                        // "Token expired" flash instead of only reacting to a real 401.
+                        var expiresAt = oauth.expiresAt || 0
+                        var isLocallyExpired = expiresAt > 0 && Date.now() >= expiresAt
+                        if (isLocallyExpired && Plasmoid.configuration.autoRefreshSession && !root.autoRefreshAttempted) {
+                            root.autoRefreshAttempted = true
+                            console.log("Claude Usage: Session locally expired, attempting proactive silent refresh")
+                            silentRefreshRunner.connectSource("python3 " + JSON.stringify(root.silentRefreshScriptPath))
+                        } else {
+                            fetchUsageFromApi()
+                        }
                     } else {
                         root.errorMsg = i18n.tr("Not logged in")
                         root.isLoading = false
                     }
                 } catch (e) {
                     console.log("Claude Usage: Failed to parse credentials:", e)
+                    if (root.credentialsRetryCount < root.maxCredentialsRetries) {
+                        root.credentialsRetryCount++
+                        credentialsRetryTimer.start()
+                    } else {
+                        root.errorMsg = "Not logged in"
+                        root.isLoading = false
+                    }
+                }
+            } else {
+                // Possible cause: $HOME lives on a separate mount that isn't ready yet
+                // (e.g. right after boot/login). Retry a few times before giving up.
+                console.log("Claude Usage: No credentials file found")
+                if (root.credentialsRetryCount < root.maxCredentialsRetries) {
+                    root.credentialsRetryCount++
+                    credentialsRetryTimer.start()
+                } else {
                     root.errorMsg = "Not logged in"
                     root.isLoading = false
                 }
-            } else {
-                console.log("Claude Usage: No credentials file found")
-                root.errorMsg = "Not logged in"
-                root.isLoading = false
-            }
-        }
-    }
-
-    // Data source for detecting Claude Code version
-    property string claudeVersion: ""
-    property string userAgent: "claude-code/" + Qt.formatDateTime(new Date(), "yyyy.M.d")
-
-    Plasma5Support.DataSource {
-        id: versionReader
-        engine: "executable"
-        connectedSources: []
-
-        onNewData: function(sourceName, data) {
-            var stdout = (data["stdout"] || "").trim()
-            disconnectSource(sourceName)
-            // Output format: "2.1.81 (Claude Code)"
-            var match = stdout.match(/^(\d+\.\d+\.\d+)/)
-            if (match) {
-                root.claudeVersion = match[1]
-                root.userAgent = "claude-code/" + match[1]
-                console.log("Claude Usage: Detected version:", root.claudeVersion)
             }
         }
     }
@@ -241,6 +263,27 @@ PlasmoidItem {
         onNewData: function(sourceName, data) {
             disconnectSource(sourceName)
             console.log("Claude Usage: Terminal launched")
+        }
+    }
+
+    // Opt-in: silently reopen claude on a real pty (via a bundled helper script) to let
+    // it refresh the OAuth session as a side effect of loading, without ever sending an
+    // actual chat message. Confirmed to work: a real pty is required, piping/closing
+    // stdin makes claude fall back to non-interactive --print mode and never touches
+    // credentials at all.
+    property bool autoRefreshAttempted: false
+    property bool forceNextFetch: false
+
+    Plasma5Support.DataSource {
+        id: silentRefreshRunner
+        engine: "executable"
+        connectedSources: []
+
+        onNewData: function(sourceName, data) {
+            disconnectSource(sourceName)
+            console.log("Claude Usage: Silent refresh attempt finished, retrying")
+            root.forceNextFetch = true
+            loadCredentials()
         }
     }
 
@@ -269,11 +312,12 @@ PlasmoidItem {
 
     function fetchUsageFromApi(force) {
         var now = Date.now()
-        if (!force && root.lastFetchTime > 0 && (now - root.lastFetchTime) < root.minFetchIntervalMs) {
+        if (!force && !root.forceNextFetch && root.lastFetchTime > 0 && (now - root.lastFetchTime) < root.minFetchIntervalMs) {
             console.log("Claude Usage: Skipping fetch, too soon since last request")
             root.isLoading = false
             return
         }
+        root.forceNextFetch = false
         root.lastFetchTime = now
 
         var url = root.baseUrl
@@ -283,7 +327,6 @@ PlasmoidItem {
         var xhr = new XMLHttpRequest()
         xhr.open("GET", url)
         xhr.setRequestHeader("Content-Type", "application/json")
-        xhr.setRequestHeader("User-Agent", root.userAgent)
         xhr.setRequestHeader("anthropic-beta", "oauth-2025-04-20")
 
         if (root.baseUrl) {
@@ -329,6 +372,7 @@ PlasmoidItem {
                         root.hasRateLimitError = false
                         root.rateLimitRetryCount = 0
                         root.rateLimitRetryMs = 0
+                        root.autoRefreshAttempted = false
                         saveCache()
 
                         console.log("Claude Usage: API success - session:", root.sessionUsagePercent, "weekly:", root.weeklyUsagePercent)
@@ -337,9 +381,16 @@ PlasmoidItem {
                         root.errorMsg = "Parse error"
                     }
                 } else if (xhr.status === 401) {
+                    // Diagnostic: capture the real API response body so a genuine
+                    // 401 can be told apart from a misdiagnosed local issue
+                    console.log("Claude Usage: 401 response body:", xhr.responseText)
                     if (root.baseUrl) {
                         root.errorMsg = i18n.tr("Invalid API key")
                         console.log("Claude Usage: 401 Unauthorized - invalid API key")
+                    } else if (Plasmoid.configuration.autoRefreshSession && !root.autoRefreshAttempted) {
+                        root.autoRefreshAttempted = true
+                        console.log("Claude Usage: 401 Unauthorized, attempting silent session refresh")
+                        silentRefreshRunner.connectSource("python3 " + JSON.stringify(root.silentRefreshScriptPath))
                     } else {
                         console.log("Claude Usage: 401 Unauthorized - token expired")
                         root.hasTokenError = true
@@ -375,6 +426,7 @@ PlasmoidItem {
         root.hasRateLimitError = false
         root.rateLimitRetryCount = 0
         root.rateLimitRetryMs = 0
+        root.autoRefreshAttempted = false
         loadCredentials()
     }
 
@@ -1127,7 +1179,6 @@ PlasmoidItem {
         var iconSource = Qt.resolvedUrl("../icons/claude-usage-widget.svg").toString().replace("file://", "")
         iconInstaller.connectSource("bash -c 'ICON_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/icons/hicolor/scalable/apps && mkdir -p $ICON_DIR && cp \"" + iconSource + "\" $ICON_DIR/claude-usage-widget.svg && chmod 644 $ICON_DIR/claude-usage-widget.svg 2>/dev/null'")
         cacheReader.connectSource("cat $HOME/.local/share/claude-usage-cache.json 2>/dev/null")
-        versionReader.connectSource("claude --version 2>/dev/null")
         loadCredentials()
     }
 
