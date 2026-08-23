@@ -34,9 +34,13 @@
             <label>Show weekly (7day) usage in panel</label>
             <default>true</default>
         </entry>
-        <entry name="showModel" type="Bool">
-            <label>Show per-model weekly usage in panel</label>
-            <default>false</default>
+        <entry name="showModelLimits" type="String">
+            <label>Comma-separated list of model names to show in panel (from API limits)</label>
+            <default></default>
+        </entry>
+        <entry name="quickLinks" type="String">
+            <label>Quick links as JSON array [{name, url, icon}]</label>
+            <default>[]</default>
         </entry>
         <entry name="baseUrl" type="String">
             <label>Custom API base URL (leave empty to use ~/.claude/.credentials.json)</label>

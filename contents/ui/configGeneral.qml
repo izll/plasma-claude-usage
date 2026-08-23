@@ -8,6 +8,8 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
+import org.kde.plasma.plasma5support as Plasma5Support
+import org.kde.iconthemes as KIconThemes
 
 KCM.SimpleKCM {
     id: configPage
@@ -19,10 +21,19 @@ KCM.SimpleKCM {
     property string cfg_panelStyle
     property bool cfg_showSession
     property bool cfg_showWeekly
-    property bool cfg_showModel
+    property string cfg_showModelLimits
+    property string cfg_quickLinks
     property string cfg_baseUrl
     property string cfg_apiKey
     property double cfg_backgroundOpacity
+
+    property var availableModels: []
+    property var quickLinksModel: []
+
+    onCfg_quickLinksChanged: {
+        try { quickLinksModel = JSON.parse(cfg_quickLinks || "[]") }
+        catch (e) { quickLinksModel = [] }
+    }
 
     // Translation helper
     Translations {
@@ -31,6 +42,79 @@ KCM.SimpleKCM {
     }
 
     function tr(text) { return trans.tr(text); }
+
+    function isModelEnabled(name) {
+        var list = (cfg_showModelLimits || "").toString().split(",").filter(function(s) { return s.trim() !== "" })
+        return list.indexOf(name) >= 0
+    }
+
+    function setModelEnabled(name, enabled) {
+        var list = (cfg_showModelLimits || "").toString().split(",").filter(function(s) { return s.trim() !== "" })
+        var idx = list.indexOf(name)
+        if (enabled && idx < 0) list.push(name)
+        else if (!enabled && idx >= 0) list.splice(idx, 1)
+        cfg_showModelLimits = list.join(",")
+    }
+
+    Plasma5Support.DataSource {
+        id: cacheReader
+        engine: "executable"
+        connectedSources: []
+
+        onNewData: function(sourceName, data) {
+            var stdout = (data["stdout"] || "").trim()
+            disconnectSource(sourceName)
+            if (stdout.length > 10) {
+                try {
+                    var cache = JSON.parse(stdout)
+                    var models = cache.modelLimits || []
+                    var names = []
+                    for (var i = 0; i < models.length; i++) {
+                        if (models[i].name) names.push(models[i].name)
+                    }
+                    if (names.length > 0) configPage.availableModels = names
+                } catch (e) {
+                    console.log("Config: Cache parse error:", e)
+                }
+            }
+        }
+    }
+
+    function updateQuickLink(index, field, value) {
+        var links = quickLinksModel.slice()
+        if (index >= 0 && index < links.length) {
+            var link = Object.assign({}, links[index])
+            link[field] = value
+            links[index] = link
+            cfg_quickLinks = JSON.stringify(links)
+        }
+    }
+
+    function removeQuickLink(index) {
+        var links = quickLinksModel.slice()
+        links.splice(index, 1)
+        cfg_quickLinks = JSON.stringify(links)
+    }
+
+    function addQuickLink() {
+        var links = quickLinksModel.slice()
+        links.push({name: "", url: "", icon: "internet-web-browser"})
+        cfg_quickLinks = JSON.stringify(links)
+    }
+
+    property int iconEditIndex: -1
+
+    readonly property var defaultQuickLinks: [
+        {name: "Claude", url: "https://claude.ai", icon: "internet-web-browser"},
+        {name: "Usage", url: "https://claude.ai/#settings/usage", icon: "office-chart-bar"},
+        {name: "Console", url: "https://platform.claude.com/", icon: "utilities-terminal"}
+    ]
+
+    Component.onCompleted: {
+        cacheReader.connectSource("cat $HOME/.local/share/claude-usage-cache.json 2>/dev/null")
+        try { quickLinksModel = JSON.parse(cfg_quickLinks || "[]") }
+        catch (e) { quickLinksModel = [] }
+    }
 
     readonly property var languageValues: [
         "system", "en_US", "hu_HU", "de_DE", "fr_FR", "es_ES",
@@ -128,10 +212,22 @@ KCM.SimpleKCM {
             onCheckedChanged: cfg_showWeekly = checked
         }
 
-        QQC2.CheckBox {
-            text: tr("Model (weekly)")
-            checked: cfg_showModel
-            onCheckedChanged: cfg_showModel = checked
+        // Dynamic model checkboxes from cached API data
+        Repeater {
+            id: modelRepeater
+            model: configPage.availableModels
+            delegate: QQC2.CheckBox {
+                text: modelData
+                checked: configPage.isModelEnabled(modelData)
+                onCheckedChanged: configPage.setModelEnabled(modelData, checked)
+            }
+        }
+
+        QQC2.Label {
+            visible: configPage.availableModels.length === 0
+            text: tr("No model data yet")
+            font.italic: true
+            opacity: 0.6
         }
 
         RowLayout {
@@ -153,6 +249,88 @@ KCM.SimpleKCM {
             QQC2.Label {
                 text: Math.round(opacitySlider.value * 100) + "%"
                 Layout.preferredWidth: Kirigami.Units.gridUnit * 2
+            }
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: tr("Quick links")
+        }
+
+        QQC2.CheckBox {
+            Kirigami.FormData.label: tr("Quick links") + ":"
+            text: tr("Show quick links in popup")
+            checked: configPage.quickLinksModel.length > 0
+            onClicked: {
+                if (checked) {
+                    cfg_quickLinks = JSON.stringify(configPage.defaultQuickLinks)
+                } else {
+                    cfg_quickLinks = "[]"
+                }
+            }
+        }
+
+        ColumnLayout {
+            visible: configPage.quickLinksModel.length > 0
+            Kirigami.FormData.label: ""
+            Layout.fillWidth: true
+            spacing: Kirigami.Units.smallSpacing
+
+            Repeater {
+                model: configPage.quickLinksModel
+                delegate: RowLayout {
+                    Layout.fillWidth: true
+                    spacing: Kirigami.Units.smallSpacing
+
+                    QQC2.Button {
+                        icon.name: modelData.icon || "internet-web-browser"
+                        display: QQC2.AbstractButton.IconOnly
+                        Layout.preferredWidth: Kirigami.Units.gridUnit * 2
+                        Layout.preferredHeight: Kirigami.Units.gridUnit * 2
+                        onClicked: {
+                            configPage.iconEditIndex = index
+                            iconDialog.open()
+                        }
+                        QQC2.ToolTip.text: modelData.icon || ""
+                        QQC2.ToolTip.visible: hovered
+                    }
+
+                    QQC2.TextField {
+                        text: modelData.name || ""
+                        placeholderText: tr("Name")
+                        Layout.preferredWidth: Kirigami.Units.gridUnit * 5
+                        onTextChanged: configPage.updateQuickLink(index, "name", text)
+                    }
+
+                    QQC2.TextField {
+                        text: modelData.url || ""
+                        placeholderText: "https://..."
+                        Layout.fillWidth: true
+                        onTextChanged: configPage.updateQuickLink(index, "url", text)
+                    }
+
+                    QQC2.Button {
+                        icon.name: "edit-delete"
+                        display: QQC2.AbstractButton.IconOnly
+                        onClicked: configPage.removeQuickLink(index)
+                    }
+                }
+            }
+
+            QQC2.Button {
+                icon.name: "list-add"
+                text: tr("Add link")
+                onClicked: configPage.addQuickLink()
+            }
+        }
+
+        KIconThemes.IconDialog {
+            id: iconDialog
+            onIconNameChanged: {
+                if (iconName && configPage.iconEditIndex >= 0) {
+                    configPage.updateQuickLink(configPage.iconEditIndex, "icon", iconName)
+                    configPage.iconEditIndex = -1
+                }
             }
         }
 

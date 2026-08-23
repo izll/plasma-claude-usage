@@ -20,7 +20,6 @@ QtObject {
             "Claude Usage": "Claude Usage",
             "Session (5hr)": "Session (5hr)",
             "Weekly (7day)": "Weekly (7day)",
-            "Model (weekly)": "Model (weekly)",
             "By Model (Weekly)": "By Model (Weekly)",
             "Sonnet": "Sonnet",
             "Opus": "Opus",
@@ -64,7 +63,12 @@ QtObject {
             "Layout:": "Layout:",
             "Horizontal": "Horizontal",
             "Vertical": "Vertical",
-            "Background opacity (desktop):": "Background opacity (desktop):"
+            "Background opacity (desktop):": "Background opacity (desktop):",
+            "No model data yet": "No model data yet",
+            "Quick links": "Quick links",
+            "Add link": "Add link",
+            "Show quick links in popup": "Show quick links in popup",
+            "Name": "Name"
         },
         "hu_HU": {
             "Claude Usage": "Claude használat",
@@ -113,7 +117,12 @@ QtObject {
             "Layout:": "Elrendezés:",
             "Horizontal": "Vízszintes",
             "Vertical": "Függőleges",
-            "Background opacity (desktop):": "Háttér átlátszóság (asztal):"
+            "Background opacity (desktop):": "Háttér átlátszóság (asztal):",
+            "No model data yet": "Még nincs modell adat",
+            "Quick links": "Gyorslinkek",
+            "Add link": "Link hozzáadása",
+            "Show quick links in popup": "Gyorslinkek megjelenítése a felugró ablakban",
+            "Name": "Név"
         },
         "de_DE": {
             "Claude Usage": "Claude Nutzung",
@@ -162,7 +171,12 @@ QtObject {
             "Layout:": "Layout:",
             "Horizontal": "Horizontal",
             "Vertical": "Vertikal",
-            "Background opacity (desktop):": "Hintergrund-Deckkraft (Desktop):"
+            "Background opacity (desktop):": "Hintergrund-Deckkraft (Desktop):",
+            "No model data yet": "Noch keine Modelldaten",
+            "Quick links": "Schnelllinks",
+            "Add link": "Link hinzufügen",
+            "Show quick links in popup": "Schnelllinks im Popup anzeigen",
+            "Name": "Name"
         },
         "fr_FR": {
             "Claude Usage": "Utilisation Claude",
@@ -211,7 +225,12 @@ QtObject {
             "Layout:": "Disposition:",
             "Horizontal": "Horizontal",
             "Vertical": "Vertical",
-            "Background opacity (desktop):": "Opacité du fond (bureau):"
+            "Background opacity (desktop):": "Opacité du fond (bureau):",
+            "No model data yet": "Pas encore de données de modèle",
+            "Quick links": "Liens rapides",
+            "Add link": "Ajouter un lien",
+            "Show quick links in popup": "Afficher les liens rapides dans le popup",
+            "Name": "Nom"
         },
         "es_ES": {
             "Claude Usage": "Uso de Claude",
@@ -260,7 +279,12 @@ QtObject {
             "Layout:": "Disposición:",
             "Horizontal": "Horizontal",
             "Vertical": "Vertical",
-            "Background opacity (desktop):": "Opacidad del fondo (escritorio):"
+            "Background opacity (desktop):": "Opacidad del fondo (escritorio):",
+            "No model data yet": "Aún sin datos de modelo",
+            "Quick links": "Enlaces rápidos",
+            "Add link": "Agregar enlace",
+            "Show quick links in popup": "Mostrar enlaces rápidos en el popup",
+            "Name": "Nombre"
         },
         "it_IT": {
             "Claude Usage": "Utilizzo Claude",
@@ -309,7 +333,12 @@ QtObject {
             "Layout:": "Disposizione:",
             "Horizontal": "Orizzontale",
             "Vertical": "Verticale",
-            "Background opacity (desktop):": "Opacità sfondo (desktop):"
+            "Background opacity (desktop):": "Opacità sfondo (desktop):",
+            "No model data yet": "Nessun dato modello ancora",
+            "Quick links": "Link rapidi",
+            "Add link": "Aggiungi link",
+            "Show quick links in popup": "Mostra link rapidi nel popup",
+            "Name": "Nome"
         },
         "pt_BR": {
             "Claude Usage": "Uso do Claude",
@@ -358,7 +387,12 @@ QtObject {
             "Layout:": "Layout:",
             "Horizontal": "Horizontal",
             "Vertical": "Vertical",
-            "Background opacity (desktop):": "Opacidade do fundo (área de trabalho):"
+            "Background opacity (desktop):": "Opacidade do fundo (área de trabalho):",
+            "No model data yet": "Sem dados de modelo ainda",
+            "Quick links": "Links rápidos",
+            "Add link": "Adicionar link",
+            "Show quick links in popup": "Mostrar links rápidos no popup",
+            "Name": "Nome"
         },
         "ru_RU": {
             "Claude Usage": "Использование Claude",
@@ -407,7 +441,12 @@ QtObject {
             "Layout:": "Расположение:",
             "Horizontal": "Горизонтально",
             "Vertical": "Вертикально",
-            "Background opacity (desktop):": "Прозрачность фона (рабочий стол):"
+            "Background opacity (desktop):": "Прозрачность фона (рабочий стол):",
+            "No model data yet": "Данные моделей ещё не получены",
+            "Quick links": "Быстрые ссылки",
+            "Add link": "Добавить ссылку",
+            "Show quick links in popup": "Показать быстрые ссылки во всплывающем окне",
+            "Name": "Имя"
         },
         "pl_PL": {
             "Claude Usage": "Użycie Claude",
@@ -456,7 +495,12 @@ QtObject {
             "Layout:": "Układ:",
             "Horizontal": "Poziomy",
             "Vertical": "Pionowy",
-            "Background opacity (desktop):": "Przezroczystość tła (pulpit):"
+            "Background opacity (desktop):": "Przezroczystość tła (pulpit):",
+            "No model data yet": "Brak danych modeli",
+            "Quick links": "Szybkie linki",
+            "Add link": "Dodaj link",
+            "Show quick links in popup": "Pokaż szybkie linki w okienku",
+            "Name": "Nazwa"
         },
         "nl_NL": {
             "Claude Usage": "Claude Gebruik",
@@ -505,7 +549,12 @@ QtObject {
             "Layout:": "Indeling:",
             "Horizontal": "Horizontaal",
             "Vertical": "Verticaal",
-            "Background opacity (desktop):": "Achtergrond dekking (bureaublad):"
+            "Background opacity (desktop):": "Achtergrond dekking (bureaublad):",
+            "No model data yet": "Nog geen modelgegevens",
+            "Quick links": "Snelkoppelingen",
+            "Add link": "Link toevoegen",
+            "Show quick links in popup": "Snelkoppelingen in popup tonen",
+            "Name": "Naam"
         },
         "tr_TR": {
             "Claude Usage": "Claude Kullanımı",
@@ -554,7 +603,12 @@ QtObject {
             "Layout:": "Düzen:",
             "Horizontal": "Yatay",
             "Vertical": "Dikey",
-            "Background opacity (desktop):": "Arka plan opaklığı (masaüstü):"
+            "Background opacity (desktop):": "Arka plan opaklığı (masaüstü):",
+            "No model data yet": "Henüz model verisi yok",
+            "Quick links": "Hızlı bağlantılar",
+            "Add link": "Bağlantı ekle",
+            "Show quick links in popup": "Açılır pencerede hızlı bağlantıları göster",
+            "Name": "Ad"
         },
         "ja_JP": {
             "Claude Usage": "Claude 使用状況",
@@ -603,7 +657,12 @@ QtObject {
             "Layout:": "レイアウト:",
             "Horizontal": "横",
             "Vertical": "縦",
-            "Background opacity (desktop):": "背景の不透明度（デスクトップ）:"
+            "Background opacity (desktop):": "背景の不透明度（デスクトップ）:",
+            "No model data yet": "モデルデータなし",
+            "Quick links": "クイックリンク",
+            "Add link": "リンクを追加",
+            "Show quick links in popup": "ポップアップにクイックリンクを表示",
+            "Name": "名前"
         },
         "ko_KR": {
             "Claude Usage": "Claude 사용량",
@@ -652,7 +711,12 @@ QtObject {
             "Layout:": "레이아웃:",
             "Horizontal": "가로",
             "Vertical": "세로",
-            "Background opacity (desktop):": "배경 불투명도 (데스크톱):"
+            "Background opacity (desktop):": "배경 불투명도 (데스크톱):",
+            "No model data yet": "아직 모델 데이터 없음",
+            "Quick links": "빠른 링크",
+            "Add link": "링크 추가",
+            "Show quick links in popup": "팝업에 빠른 링크 표시",
+            "Name": "이름"
         },
         "zh_CN": {
             "Claude Usage": "Claude 使用情况",
@@ -701,7 +765,12 @@ QtObject {
             "Layout:": "布局:",
             "Horizontal": "水平",
             "Vertical": "垂直",
-            "Background opacity (desktop):": "背景不透明度（桌面）:"
+            "Background opacity (desktop):": "背景不透明度（桌面）:",
+            "No model data yet": "暂无模型数据",
+            "Quick links": "快捷链接",
+            "Add link": "添加链接",
+            "Show quick links in popup": "在弹出窗口中显示快捷链接",
+            "Name": "名称"
         },
         "zh_TW": {
             "Claude Usage": "Claude 使用狀況",
@@ -750,7 +819,12 @@ QtObject {
             "Layout:": "佈局:",
             "Horizontal": "水平",
             "Vertical": "垂直",
-            "Background opacity (desktop):": "背景不透明度（桌面）:"
+            "Background opacity (desktop):": "背景不透明度（桌面）:",
+            "No model data yet": "尚無模型資料",
+            "Quick links": "快速連結",
+            "Add link": "新增連結",
+            "Show quick links in popup": "在彈出視窗中顯示快速連結",
+            "Name": "名稱"
         }
     })
 

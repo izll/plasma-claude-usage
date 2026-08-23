@@ -33,12 +33,28 @@ PlasmoidItem {
     property bool hasSonnetData: false
     property bool hasOpusData: false
     property var modelLimits: []
-    // Primary model shown in the compact panel (first breakdown entry, e.g. the
-    // scoped weekly model). The panel has room for a single model slot, matching
-    // the previous Sonnet-only behaviour.
-    readonly property var primaryModelLimit: root.modelLimits.length > 0 ? root.modelLimits[0] : null
-    readonly property real primaryModelPercent: root.primaryModelLimit ? root.primaryModelLimit.percent : 0
-    readonly property string primaryModelLabel: root.primaryModelLimit ? root.primaryModelLimit.label : ""
+    property var parsedQuickLinks: []
+
+    function isModelShownInPanel(modelLabel) {
+        var shown = (Plasmoid.configuration.showModelLimits || "").toString()
+        if (!shown) return false
+        var list = shown.split(",")
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].trim() === modelLabel) return true
+        }
+        return false
+    }
+
+    function reloadQuickLinks() {
+        try { parsedQuickLinks = JSON.parse(Plasmoid.configuration.quickLinks || "[]") }
+        catch (e) { parsedQuickLinks = [] }
+    }
+
+    Connections {
+        target: Plasmoid.configuration
+        function onQuickLinksChanged() { root.reloadQuickLinks() }
+    }
+
     property bool hasTokenError: false
     property bool hasRateLimitError: false
     property int rateLimitRetryCount: 0
@@ -516,30 +532,34 @@ PlasmoidItem {
                 opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
             }
 
-            // Separator before model (text)
-            PlasmaComponents.Label {
-                visible: !root.isVerticalLayout && (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showModel === true) && root.modelLimits.length > 0 && ((Plasmoid.configuration.showSession !== false) || (Plasmoid.configuration.showWeekly !== false)) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
-                text: "|"
-                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.25 : root.isStale ? 0.35 : 0.5
-                font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
-            }
+            // Dynamic model limits (text)
+            Repeater {
+                model: root.modelLimits
+                delegate: Row {
+                    visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && root.isModelShownInPanel(modelData.label) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                    spacing: Kirigami.Units.smallSpacing
 
-            // Model usage (text)
-            Rectangle {
-                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showModel === true) && root.modelLimits.length > 0 && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
-                Layout.preferredWidth: 10
-                Layout.preferredHeight: 10
-                radius: 5
-                color: getUsageColor(root.primaryModelPercent)
-                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
-            }
+                    PlasmaComponents.Label {
+                        visible: !root.isVerticalLayout && ((Plasmoid.configuration.showSession !== false) || (Plasmoid.configuration.showWeekly !== false))
+                        text: "|"
+                        opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.25 : root.isStale ? 0.35 : 0.5
+                        font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
+                    }
 
-            PlasmaComponents.Label {
-                visible: (!Plasmoid.configuration.panelStyle || Plasmoid.configuration.panelStyle === "text") && (Plasmoid.configuration.showModel === true) && root.modelLimits.length > 0 && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
-                text: Math.round(root.primaryModelPercent) + "%"
-                font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
-                font.bold: true
-                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
+                    Rectangle {
+                        width: 10; height: 10; radius: 5
+                        color: getUsageColor(modelData.percent)
+                        opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    PlasmaComponents.Label {
+                        text: Math.round(modelData.percent) + "%"
+                        font.pixelSize: Kirigami.Theme.defaultFont.pixelSize
+                        font.bold: true
+                        opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
+                    }
+                }
             }
 
             // === CIRCULAR STYLE ===
@@ -596,29 +616,32 @@ PlasmoidItem {
                 }
             }
 
-            // Model (circular)
-            Item {
-                visible: Plasmoid.configuration.panelStyle === "circular" && (Plasmoid.configuration.showModel === true) && root.modelLimits.length > 0 && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
-                Layout.preferredWidth: 28
-                Layout.preferredHeight: 28
-                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
+            // Dynamic model limits (circular)
+            Repeater {
+                model: root.modelLimits
+                delegate: Item {
+                    visible: Plasmoid.configuration.panelStyle === "circular" && root.isModelShownInPanel(modelData.label) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                    Layout.preferredWidth: 28
+                    Layout.preferredHeight: 28
+                    opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
 
-                Canvas {
-                    anchors.fill: parent
-                    onPaint: {
-                        var ctx = getContext("2d")
-                        drawCircularProgress(ctx, width, height, root.primaryModelPercent)
+                    Canvas {
+                        anchors.fill: parent
+                        property real _percent: modelData.percent
+                        onPaint: {
+                            var ctx = getContext("2d")
+                            drawCircularProgress(ctx, width, height, _percent)
+                        }
+                        on_PercentChanged: requestPaint()
+                        Component.onCompleted: requestPaint()
                     }
-                    property real _percent: root.primaryModelPercent
-                    on_PercentChanged: requestPaint()
-                    Component.onCompleted: requestPaint()
-                }
 
-                PlasmaComponents.Label {
-                    anchors.centerIn: parent
-                    text: Math.round(root.primaryModelPercent)
-                    font.pixelSize: 9
-                    font.bold: true
+                    PlasmaComponents.Label {
+                        anchors.centerIn: parent
+                        text: Math.round(modelData.percent)
+                        font.pixelSize: 9
+                        font.bold: true
+                    }
                 }
             }
 
@@ -690,36 +713,39 @@ PlasmoidItem {
                 }
             }
 
-            // Model (bar)
-            Item {
-                visible: Plasmoid.configuration.panelStyle === "bar" && (Plasmoid.configuration.showModel === true) && root.modelLimits.length > 0 && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
-                Layout.preferredWidth: 32
-                Layout.preferredHeight: parent.height
-                opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
-
-                Rectangle {
-                    anchors.fill: parent
-                    radius: 3
-                    color: Kirigami.Theme.backgroundColor
-                    border.color: Kirigami.Theme.disabledTextColor
-                    border.width: 1
+            // Dynamic model limits (bar)
+            Repeater {
+                model: root.modelLimits
+                delegate: Item {
+                    visible: Plasmoid.configuration.panelStyle === "bar" && root.isModelShownInPanel(modelData.label) && (root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError)
+                    Layout.preferredWidth: 32
+                    Layout.preferredHeight: parent.height
+                    opacity: (root.hasTokenError || root.hasRateLimitError) ? 0.5 : root.isStale ? 0.6 : 1.0
 
                     Rectangle {
-                        anchors.bottom: parent.bottom
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.margins: 1
-                        height: Math.max((parent.height - 2) * Math.min(root.primaryModelPercent / 100, 1), 1)
-                        radius: 2
-                        color: getUsageColor(root.primaryModelPercent)
-                    }
-                }
+                        anchors.fill: parent
+                        radius: 3
+                        color: Kirigami.Theme.backgroundColor
+                        border.color: Kirigami.Theme.disabledTextColor
+                        border.width: 1
 
-                PlasmaComponents.Label {
-                    anchors.centerIn: parent
-                    text: Math.round(root.primaryModelPercent)
-                    font.pixelSize: 9
-                    font.bold: true
+                        Rectangle {
+                            anchors.bottom: parent.bottom
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.margins: 1
+                            height: Math.max((parent.height - 2) * Math.min(modelData.percent / 100, 1), 1)
+                            radius: 2
+                            color: getUsageColor(modelData.percent)
+                        }
+                    }
+
+                    PlasmaComponents.Label {
+                        anchors.centerIn: parent
+                        text: Math.round(modelData.percent)
+                        font.pixelSize: 9
+                        font.bold: true
+                    }
                 }
             }
 
@@ -1019,6 +1045,24 @@ PlasmoidItem {
 
             Item { Layout.fillHeight: true }
 
+            // Quick links
+            RowLayout {
+                Layout.fillWidth: true
+                visible: root.parsedQuickLinks.length > 0
+                spacing: Kirigami.Units.smallSpacing
+
+                Repeater {
+                    model: root.parsedQuickLinks
+                    delegate: PlasmaComponents.Button {
+                        icon.name: modelData.icon || "internet-web-browser"
+                        text: modelData.name
+                        font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                        onClicked: Qt.openUrlExternally(modelData.url)
+                    }
+                }
+                Item { Layout.fillWidth: true }
+            }
+
             // Footer
             Rectangle {
                 Layout.fillWidth: true
@@ -1134,6 +1178,7 @@ PlasmoidItem {
 
     Component.onCompleted: {
         console.log("Claude Usage: Widget loaded")
+        reloadQuickLinks()
         var iconSource = Qt.resolvedUrl("../icons/claude-usage-widget.svg").toString().replace("file://", "")
         iconInstaller.connectSource("bash -c 'ICON_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/icons/hicolor/scalable/apps && mkdir -p $ICON_DIR && cp \"" + iconSource + "\" $ICON_DIR/claude-usage-widget.svg && chmod 644 $ICON_DIR/claude-usage-widget.svg 2>/dev/null'")
         cacheReader.connectSource("cat $HOME/.local/share/claude-usage-cache.json 2>/dev/null")
@@ -1166,8 +1211,10 @@ PlasmoidItem {
             parts.push(i18n.tr("Session (5hr)") + ": " + Math.round(root.sessionUsagePercent) + "%")
         if (Plasmoid.configuration.showWeekly !== false)
             parts.push(i18n.tr("Weekly (7day)") + ": " + Math.round(root.weeklyUsagePercent) + "%")
-        if (Plasmoid.configuration.showModel === true && root.modelLimits.length > 0)
-            parts.push(root.primaryModelLabel + ": " + Math.round(root.primaryModelPercent) + "%")
+        for (var i = 0; i < root.modelLimits.length; i++) {
+            if (root.isModelShownInPanel(root.modelLimits[i].label))
+                parts.push(root.modelLimits[i].label + ": " + Math.round(root.modelLimits[i].percent) + "%")
+        }
         return parts.join(" | ")
     }
 }
