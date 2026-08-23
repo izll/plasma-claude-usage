@@ -42,6 +42,14 @@
             <label>Quick links as JSON array [{name, url, icon}]</label>
             <default>[]</default>
         </entry>
+        <entry name="processVisibility" type="String">
+            <label>Visibility mode when Claude is not running (always, hide_usage, or fully_hidden)</label>
+            <default>always</default>
+        </entry>
+        <entry name="processCheckInterval" type="Int">
+            <label>Process check interval in seconds</label>
+            <default>30</default>
+        </entry>
         <entry name="baseUrl" type="String">
             <label>Custom API base URL (leave empty to use ~/.claude/.credentials.json)</label>
             <default></default>

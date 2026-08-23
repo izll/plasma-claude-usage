@@ -68,7 +68,14 @@ QtObject {
             "Quick links": "Quick links",
             "Add link": "Add link",
             "Show quick links in popup": "Show quick links in popup",
-            "Name": "Name"
+            "Name": "Name",
+            "Visibility": "Visibility",
+            "When Claude is not running:": "When Claude is not running:",
+            "Always show full widget": "Always show full widget",
+            "Hide usage, only show icon": "Hide usage, only show icon",
+            "Fully hide widget": "Fully hide widget",
+            "Process check interval:": "Process check interval:",
+            "seconds": "seconds"
         },
         "hu_HU": {
             "Claude Usage": "Claude használat",
@@ -122,7 +129,14 @@ QtObject {
             "Quick links": "Gyorslinkek",
             "Add link": "Link hozzáadása",
             "Show quick links in popup": "Gyorslinkek megjelenítése a felugró ablakban",
-            "Name": "Név"
+            "Name": "Név",
+            "Visibility": "Láthatóság",
+            "When Claude is not running:": "Ha a Claude nem fut:",
+            "Always show full widget": "Mindig mutasd a teljes widgetet",
+            "Hide usage, only show icon": "Használat elrejtése, csak ikon",
+            "Fully hide widget": "Widget teljes elrejtése",
+            "Process check interval:": "Folyamat ellenőrzési időköz:",
+            "seconds": "másodperc"
         },
         "de_DE": {
             "Claude Usage": "Claude Nutzung",
@@ -176,7 +190,14 @@ QtObject {
             "Quick links": "Schnelllinks",
             "Add link": "Link hinzufügen",
             "Show quick links in popup": "Schnelllinks im Popup anzeigen",
-            "Name": "Name"
+            "Name": "Name",
+            "Visibility": "Sichtbarkeit",
+            "When Claude is not running:": "Wenn Claude nicht läuft:",
+            "Always show full widget": "Widget immer vollständig anzeigen",
+            "Hide usage, only show icon": "Nutzung ausblenden, nur Symbol zeigen",
+            "Fully hide widget": "Widget vollständig ausblenden",
+            "Process check interval:": "Prozessprüfintervall:",
+            "seconds": "Sekunden"
         },
         "fr_FR": {
             "Claude Usage": "Utilisation Claude",
@@ -230,7 +251,14 @@ QtObject {
             "Quick links": "Liens rapides",
             "Add link": "Ajouter un lien",
             "Show quick links in popup": "Afficher les liens rapides dans le popup",
-            "Name": "Nom"
+            "Name": "Nom",
+            "Visibility": "Visibilité",
+            "When Claude is not running:": "Quand Claude ne tourne pas:",
+            "Always show full widget": "Toujours afficher le widget complet",
+            "Hide usage, only show icon": "Masquer l'utilisation, afficher l'icône uniquement",
+            "Fully hide widget": "Masquer complètement le widget",
+            "Process check interval:": "Intervalle de vérification du processus:",
+            "seconds": "secondes"
         },
         "es_ES": {
             "Claude Usage": "Uso de Claude",
@@ -284,7 +312,14 @@ QtObject {
             "Quick links": "Enlaces rápidos",
             "Add link": "Agregar enlace",
             "Show quick links in popup": "Mostrar enlaces rápidos en el popup",
-            "Name": "Nombre"
+            "Name": "Nombre",
+            "Visibility": "Visibilidad",
+            "When Claude is not running:": "Cuando Claude no está en ejecución:",
+            "Always show full widget": "Mostrar siempre el widget completo",
+            "Hide usage, only show icon": "Ocultar uso, mostrar solo icono",
+            "Fully hide widget": "Ocultar completamente el widget",
+            "Process check interval:": "Intervalo de verificación de proceso:",
+            "seconds": "segundos"
         },
         "it_IT": {
             "Claude Usage": "Utilizzo Claude",
@@ -338,7 +373,14 @@ QtObject {
             "Quick links": "Link rapidi",
             "Add link": "Aggiungi link",
             "Show quick links in popup": "Mostra link rapidi nel popup",
-            "Name": "Nome"
+            "Name": "Nome",
+            "Visibility": "Visibilità",
+            "When Claude is not running:": "Quando Claude non è in esecuzione:",
+            "Always show full widget": "Mostra sempre il widget completo",
+            "Hide usage, only show icon": "Nascondi utilizzo, mostra solo icona",
+            "Fully hide widget": "Nascondi completamente il widget",
+            "Process check interval:": "Intervallo di controllo processo:",
+            "seconds": "secondi"
         },
         "pt_BR": {
             "Claude Usage": "Uso do Claude",
@@ -392,7 +434,14 @@ QtObject {
             "Quick links": "Links rápidos",
             "Add link": "Adicionar link",
             "Show quick links in popup": "Mostrar links rápidos no popup",
-            "Name": "Nome"
+            "Name": "Nome",
+            "Visibility": "Visibilidade",
+            "When Claude is not running:": "Quando o Claude não está em execução:",
+            "Always show full widget": "Sempre mostrar widget completo",
+            "Hide usage, only show icon": "Ocultar uso, mostrar apenas ícone",
+            "Fully hide widget": "Ocultar completamente o widget",
+            "Process check interval:": "Intervalo de verificação de processo:",
+            "seconds": "segundos"
         },
         "ru_RU": {
             "Claude Usage": "Использование Claude",
@@ -446,7 +495,14 @@ QtObject {
             "Quick links": "Быстрые ссылки",
             "Add link": "Добавить ссылку",
             "Show quick links in popup": "Показать быстрые ссылки во всплывающем окне",
-            "Name": "Имя"
+            "Name": "Имя",
+            "Visibility": "Видимость",
+            "When Claude is not running:": "Когда Claude не запущен:",
+            "Always show full widget": "Всегда показывать полный виджет",
+            "Hide usage, only show icon": "Скрыть использование, показать только значок",
+            "Fully hide widget": "Полностью скрыть виджет",
+            "Process check interval:": "Интервал проверки процесса:",
+            "seconds": "секунд"
         },
         "pl_PL": {
             "Claude Usage": "Użycie Claude",
@@ -500,7 +556,14 @@ QtObject {
             "Quick links": "Szybkie linki",
             "Add link": "Dodaj link",
             "Show quick links in popup": "Pokaż szybkie linki w okienku",
-            "Name": "Nazwa"
+            "Name": "Nazwa",
+            "Visibility": "Widoczność",
+            "When Claude is not running:": "Gdy Claude nie jest uruchomiony:",
+            "Always show full widget": "Zawsze pokazuj pełny widget",
+            "Hide usage, only show icon": "Ukryj użycie, pokaż tylko ikonę",
+            "Fully hide widget": "Całkowicie ukryj widget",
+            "Process check interval:": "Interwał sprawdzania procesu:",
+            "seconds": "sekund"
         },
         "nl_NL": {
             "Claude Usage": "Claude Gebruik",
@@ -554,7 +617,14 @@ QtObject {
             "Quick links": "Snelkoppelingen",
             "Add link": "Link toevoegen",
             "Show quick links in popup": "Snelkoppelingen in popup tonen",
-            "Name": "Naam"
+            "Name": "Naam",
+            "Visibility": "Zichtbaarheid",
+            "When Claude is not running:": "Wanneer Claude niet draait:",
+            "Always show full widget": "Widget altijd volledig tonen",
+            "Hide usage, only show icon": "Gebruik verbergen, alleen pictogram tonen",
+            "Fully hide widget": "Widget volledig verbergen",
+            "Process check interval:": "Procescontrole-interval:",
+            "seconds": "seconden"
         },
         "tr_TR": {
             "Claude Usage": "Claude Kullanımı",
@@ -608,7 +678,14 @@ QtObject {
             "Quick links": "Hızlı bağlantılar",
             "Add link": "Bağlantı ekle",
             "Show quick links in popup": "Açılır pencerede hızlı bağlantıları göster",
-            "Name": "Ad"
+            "Name": "Ad",
+            "Visibility": "Görünürlük",
+            "When Claude is not running:": "Claude çalışmıyorken:",
+            "Always show full widget": "Widget'ı her zaman tam göster",
+            "Hide usage, only show icon": "Kullanımı gizle, sadece simgeyi göster",
+            "Fully hide widget": "Widget'ı tamamen gizle",
+            "Process check interval:": "İşlem kontrol aralığı:",
+            "seconds": "saniye"
         },
         "ja_JP": {
             "Claude Usage": "Claude 使用状況",
@@ -662,7 +739,14 @@ QtObject {
             "Quick links": "クイックリンク",
             "Add link": "リンクを追加",
             "Show quick links in popup": "ポップアップにクイックリンクを表示",
-            "Name": "名前"
+            "Name": "名前",
+            "Visibility": "表示設定",
+            "When Claude is not running:": "Claudeが実行されていない時:",
+            "Always show full widget": "常にウィジェット全体を表示",
+            "Hide usage, only show icon": "使用状況を隠し、アイコンのみ表示",
+            "Fully hide widget": "ウィジェットを完全に非表示",
+            "Process check interval:": "プロセスチェック間隔:",
+            "seconds": "秒"
         },
         "ko_KR": {
             "Claude Usage": "Claude 사용량",
@@ -716,7 +800,14 @@ QtObject {
             "Quick links": "빠른 링크",
             "Add link": "링크 추가",
             "Show quick links in popup": "팝업에 빠른 링크 표시",
-            "Name": "이름"
+            "Name": "이름",
+            "Visibility": "가시성",
+            "When Claude is not running:": "Claude가 실행되지 않을 때:",
+            "Always show full widget": "항상 전체 위젯 표시",
+            "Hide usage, only show icon": "사용량 숨기기, 아이콘만 표시",
+            "Fully hide widget": "위젯 완전히 숨기기",
+            "Process check interval:": "프로세스 확인 간격:",
+            "seconds": "초"
         },
         "zh_CN": {
             "Claude Usage": "Claude 使用情况",
@@ -770,7 +861,14 @@ QtObject {
             "Quick links": "快捷链接",
             "Add link": "添加链接",
             "Show quick links in popup": "在弹出窗口中显示快捷链接",
-            "Name": "名称"
+            "Name": "名称",
+            "Visibility": "可见性",
+            "When Claude is not running:": "当Claude未运行时:",
+            "Always show full widget": "始终显示完整小部件",
+            "Hide usage, only show icon": "隐藏使用情况，仅显示图标",
+            "Fully hide widget": "完全隐藏小部件",
+            "Process check interval:": "进程检查间隔:",
+            "seconds": "秒"
         },
         "zh_TW": {
             "Claude Usage": "Claude 使用狀況",
@@ -824,7 +922,14 @@ QtObject {
             "Quick links": "快速連結",
             "Add link": "新增連結",
             "Show quick links in popup": "在彈出視窗中顯示快速連結",
-            "Name": "名稱"
+            "Name": "名稱",
+            "Visibility": "可見性",
+            "When Claude is not running:": "當Claude未執行時:",
+            "Always show full widget": "始終顯示完整小工具",
+            "Hide usage, only show icon": "隱藏使用狀況，僅顯示圖標",
+            "Fully hide widget": "完全隱藏小工具",
+            "Process check interval:": "程序檢查間隔:",
+            "seconds": "秒"
         }
     })
 
