@@ -35,6 +35,7 @@ KCM.SimpleKCM {
     property string cfg_apiKey
     property double cfg_backgroundOpacity
     property bool cfg_useTimeAwareColors
+    property bool cfg_scrollableContent
 
     property var availableModels: []
     property var quickLinksModel: []
@@ -246,6 +247,14 @@ KCM.SimpleKCM {
             onCurrentIndexChanged: cfg_popupStyle = currentIndex === 0 ? "classic" : "card"
         }
 
+        QQC2.CheckBox {
+            Kirigami.FormData.label: tr("Scrollable content:")
+            text: tr("Enable scrollable content")
+            checked: cfg_scrollableContent
+            onToggled: cfg_scrollableContent = checked
+            visible: cfg_popupStyle !== "classic"
+        }
+
         Kirigami.Separator {
             Kirigami.FormData.isSection: true
             Kirigami.FormData.label: tr("Popup cards")
@@ -410,8 +419,8 @@ KCM.SimpleKCM {
             }
 
             QQC2.Label {
-                text: Math.round(opacitySlider.value * 100) + "%"
-                Layout.preferredWidth: Kirigami.Units.gridUnit * 2
+                text: opacitySlider.value >= 1.0 ? tr("Theme") : Math.round(opacitySlider.value * 100) + "%"
+                Layout.preferredWidth: Kirigami.Units.gridUnit * 3
             }
         }
 

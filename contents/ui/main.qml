@@ -733,7 +733,7 @@ PlasmoidItem {
             : Kirigami.Units.gridUnit * 14
         Layout.minimumHeight: root.useCardPopup
             ? (cardLoader.item ? cardLoader.item.Layout.minimumHeight : Kirigami.Units.gridUnit * 16)
-            : classicColumn.implicitHeight + Kirigami.Units.largeSpacing * 2
+            : Math.min(classicColumn.implicitHeight + Kirigami.Units.largeSpacing * 2, Kirigami.Units.gridUnit * 24)
         Layout.preferredWidth: targetWidth
         Layout.preferredHeight: targetHeight
         Layout.maximumWidth: resizeForcer.running ? targetWidth : -1
@@ -750,12 +750,14 @@ PlasmoidItem {
         Loader {
             id: cardLoader
             anchors.fill: parent
+            anchors.margins: root.useCustomBackground ? Kirigami.Units.mediumSpacing : 0
             active: root.useCardPopup
             source: "FullView.qml"
         }
 
         Item {
             anchors.fill: parent
+            anchors.margins: root.useCustomBackground ? Kirigami.Units.mediumSpacing : 0
             visible: !root.useCardPopup
 
             ColumnLayout {
@@ -1309,14 +1311,24 @@ PlasmoidItem {
         || Plasmoid.location === PlasmaCore.Types.LeftEdge
         || Plasmoid.location === PlasmaCore.Types.RightEdge
 
-    Plasmoid.backgroundHints: isOnPanel ? PlasmaCore.Types.DefaultBackground : PlasmaCore.Types.NoBackground
+    readonly property bool useCustomBackground: !isOnPanel && Plasmoid.configuration.backgroundOpacity < 1.0
+
+    Plasmoid.backgroundHints: root.useCustomBackground ? PlasmaCore.Types.NoBackground : PlasmaCore.Types.DefaultBackground
 
     Rectangle {
-        visible: !root.isOnPanel
+        visible: root.useCustomBackground
         anchors.fill: parent
-        color: Kirigami.Theme.backgroundColor
-        opacity: Plasmoid.configuration.backgroundOpacity
+        color: "transparent"
         radius: Kirigami.Units.cornerRadius
+        border.color: Qt.alpha(Kirigami.Theme.textColor, 0.15)
+        border.width: 1
+
+        Rectangle {
+            anchors.fill: parent
+            radius: parent.radius
+            color: Kirigami.Theme.backgroundColor
+            opacity: Plasmoid.configuration.backgroundOpacity
+        }
     }
 
     Plasmoid.icon: "claude-usage-widget"

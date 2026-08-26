@@ -90,5 +90,9 @@
             <label>Background opacity (0.0 = transparent, 1.0 = opaque)</label>
             <default>1.0</default>
         </entry>
+        <entry name="scrollableContent" type="Bool">
+            <label>Enable scrollable content in card popup</label>
+            <default>false</default>
+        </entry>
     </group>
 </kcfg>

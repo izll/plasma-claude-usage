@@ -18,27 +18,6 @@ Item {
     readonly property color cardColor: Qt.alpha(Kirigami.Theme.textColor, 0.07)
 
     property double footerNow: Date.now()
-    property bool editMode: false
-    property int dragFromIndex: -1
-    property int dragOverIndex: -1
-
-    MouseArea {
-        anchors.fill: parent
-        acceptedButtons: Qt.RightButton
-        onClicked: function(mouse) {
-            if (mouse.button === Qt.RightButton && !full.editMode)
-                contextMenu.popup()
-        }
-    }
-
-    PlasmaComponents.Menu {
-        id: contextMenu
-        PlasmaComponents.MenuItem {
-            text: i18n.tr("Edit cards")
-            icon.name: "configure"
-            onClicked: full.editMode = true
-        }
-    }
 
     Timer {
         interval: 1000
@@ -46,6 +25,7 @@ Item {
         repeat: true
         onTriggered: full.footerNow = Date.now()
     }
+
 
     readonly property string statusText: {
         if (root.lastSuccessTime <= 0) return i18n.tr("Loading...")
@@ -65,21 +45,11 @@ Item {
 
     Layout.minimumWidth: Kirigami.Units.gridUnit * 19
     Layout.preferredWidth: Kirigami.Units.gridUnit * 21
-    Layout.minimumHeight: mainColumn.implicitHeight + Kirigami.Units.smallSpacing * 2
+    readonly property bool scrollable: Plasmoid.configuration.scrollableContent === true
+    Layout.minimumHeight: full.scrollable ? Kirigami.Units.gridUnit * 8 : (mainColumn.implicitHeight + Kirigami.Units.smallSpacing * 2)
     Layout.preferredHeight: mainColumn.implicitHeight + Kirigami.Units.smallSpacing * 2
 
     property var cardOrder: []
-
-    readonly property var cardNames: ({
-        "account": "Account",
-        "usage": "Session & Weekly",
-        "models": "By Model (Weekly)",
-        "extra": "Extra Usage",
-        "tokens": "Today's Tokens",
-        "trend": "7-day trend",
-        "installations": "Claude Code",
-        "links": "Quick links"
-    })
 
     function parseCardOrder() {
         try {
@@ -107,21 +77,18 @@ Item {
         function onCardOrderChanged() { full.parseCardOrder() }
     }
 
-    function moveCard(fromIdx, toIdx) {
-        if (fromIdx < 0 || toIdx < 0 || fromIdx >= cardOrder.length || toIdx >= cardOrder.length || fromIdx === toIdx) return
-        var list = cardOrder.slice()
-        var item = list.splice(fromIdx, 1)[0]
-        list.splice(toIdx, 0, item)
-        cardOrder = list
-        Plasmoid.configuration.cardOrder = JSON.stringify(list)
-    }
-
-    function toggleCard(idx) {
-        if (idx < 0 || idx >= cardOrder.length) return
-        var list = cardOrder.slice()
-        list[idx] = {id: list[idx].id, enabled: !list[idx].enabled}
-        cardOrder = list
-        Plasmoid.configuration.cardOrder = JSON.stringify(list)
+    function isCardContentVisible(cardId) {
+        switch (cardId) {
+            case "account": return root.accountEmail !== "" || root.planName !== ""
+            case "usage": return true
+            case "models": return root.modelUsage.length > 0 || root.modelLimits.length > 0
+            case "extra": return root.extraEnabled
+            case "tokens": return root.tokenStats.length > 0
+            case "trend": return root.usageSamples.length >= 2
+            case "installations": return root.installations.length > 0
+            case "links": return root.parsedQuickLinks.length > 0
+            default: return true
+        }
     }
 
     property var cardComponents: ({
@@ -529,6 +496,7 @@ Item {
 
         // ===== Header (always shown) =====
         RowLayout {
+            id: headerRow
             Layout.fillWidth: true
             spacing: Kirigami.Units.smallSpacing
 
@@ -548,13 +516,6 @@ Item {
 
             Item { Layout.fillWidth: true }
 
-            PlasmaComponents.ToolButton {
-                visible: full.editMode
-                icon.name: "dialog-ok-apply"
-                onClicked: full.editMode = false
-                PlasmaComponents.ToolTip { text: i18n.tr("Done") }
-            }
-
             Rectangle {
                 visible: root.planName !== ""
                 Layout.preferredWidth: planLabel.implicitWidth + Kirigami.Units.largeSpacing
@@ -572,214 +533,153 @@ Item {
             }
         }
 
-        // ===== Error cards =====
-        Rectangle {
-            visible: !full.editMode && root.errorMsg !== "" && !root.hasTokenError && !root.hasRateLimitError
+        // ===== Card content =====
+        Flickable {
+            id: cardFlickable
             Layout.fillWidth: true
-            radius: Kirigami.Units.cornerRadius
-            color: Qt.alpha(Kirigami.Theme.negativeTextColor, 0.12)
-            implicitHeight: errorColumn.implicitHeight + Kirigami.Units.largeSpacing * 2
+            Layout.fillHeight: full.scrollable
+            Layout.preferredHeight: full.scrollable ? -1 : scrollContent.implicitHeight
+            contentHeight: scrollContent.implicitHeight
+            clip: true
+            interactive: contentHeight > height
+            boundsBehavior: Flickable.StopAtBounds
+
+            PlasmaComponents.ScrollBar.vertical: PlasmaComponents.ScrollBar {
+                id: cardScrollBar
+                policy: cardFlickable.contentHeight > cardFlickable.height
+                    ? PlasmaComponents.ScrollBar.AsNeeded
+                    : PlasmaComponents.ScrollBar.AlwaysOff
+                leftInset: 0
+                rightInset: 0
+                rightPadding: 0
+            }
 
             ColumnLayout {
-                id: errorColumn
-                anchors.fill: parent
-                anchors.margins: Kirigami.Units.largeSpacing
+                id: scrollContent
+                width: cardFlickable.width - (cardScrollBar.visible ? cardScrollBar.width : 0)
                 spacing: Kirigami.Units.smallSpacing
 
-                PlasmaComponents.Label {
-                    text: "⚠ " + root.errorMsg
-                    color: Kirigami.Theme.negativeTextColor
-                    font.bold: true
-                }
-                PlasmaComponents.Label {
-                    text: root.baseUrl
-                        ? i18n.tr("Check base URL and API key in widget settings")
-                        : i18n.tr("Run 'claude' to log in")
-                    font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                    color: Kirigami.Theme.negativeTextColor
-                }
-            }
-        }
+                // ===== Error cards =====
+                Rectangle {
+                    visible: root.errorMsg !== "" && !root.hasTokenError && !root.hasRateLimitError
+                    Layout.fillWidth: true
+                    radius: Kirigami.Units.cornerRadius
+                    color: Qt.alpha(Kirigami.Theme.negativeTextColor, 0.12)
+                    implicitHeight: errorColumn.implicitHeight + Kirigami.Units.largeSpacing * 2
 
-        Rectangle {
-            visible: !full.editMode && root.hasTokenError
-            Layout.fillWidth: true
-            radius: Kirigami.Units.cornerRadius
-            color: Qt.alpha(Kirigami.Theme.negativeTextColor, 0.12)
-            implicitHeight: tokenErrorColumn.implicitHeight + Kirigami.Units.largeSpacing * 2
-
-            ColumnLayout {
-                id: tokenErrorColumn
-                anchors.fill: parent
-                anchors.margins: Kirigami.Units.largeSpacing
-                spacing: Kirigami.Units.smallSpacing
-
-                PlasmaComponents.Label {
-                    text: "⚠ " + i18n.tr("Re-login required")
-                    color: Kirigami.Theme.negativeTextColor
-                    font.bold: true
-                }
-
-                PlasmaComponents.Button {
-                    text: i18n.tr("Open Claude")
-                    icon.name: "utilities-terminal"
-                    onClicked: root.launchInTerminal("claude")
-                }
-            }
-        }
-
-        Rectangle {
-            visible: !full.editMode && root.hasRateLimitError
-            Layout.fillWidth: true
-            radius: Kirigami.Units.cornerRadius
-            color: Qt.alpha(Kirigami.Theme.negativeTextColor, 0.12)
-            implicitHeight: rateLimitColumn.implicitHeight + Kirigami.Units.largeSpacing * 2
-
-            ColumnLayout {
-                id: rateLimitColumn
-                anchors.fill: parent
-                anchors.margins: Kirigami.Units.largeSpacing
-                spacing: Kirigami.Units.smallSpacing
-
-                PlasmaComponents.Label {
-                    text: "⚠ " + i18n.tr("Rate limited")
-                    color: Kirigami.Theme.negativeTextColor
-                    font.bold: true
-                }
-                PlasmaComponents.Label {
-                    text: i18n.tr("Auto-retry in") + " " + Math.round(root.rateLimitBackoffMs / 60000) + " min"
-                    font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                    color: Kirigami.Theme.negativeTextColor
-                }
-            }
-        }
-
-        // ===== Dynamic cards from cardOrder =====
-        Repeater {
-            id: cardsRepeater
-            model: full.cardOrder
-
-            Item {
-                id: cardWrapper
-                required property var modelData
-                required property int index
-
-                Layout.fillWidth: true
-                implicitHeight: innerColumn.implicitHeight
-                visible: full.editMode
-                    || (modelData.enabled !== false
-                        && (!cardContent.item || cardContent.item.visible))
-
-                DropArea {
-                    anchors.fill: parent
-                    enabled: full.editMode
-                    onEntered: full.dragOverIndex = cardWrapper.index
-                }
-
-                ColumnLayout {
-                    id: innerColumn
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    spacing: 0
-
-                    // Edit mode bar
-                    RowLayout {
-                        id: editBar
-                        visible: full.editMode
-                        Layout.fillWidth: true
+                    ColumnLayout {
+                        id: errorColumn
+                        anchors.fill: parent
+                        anchors.margins: Kirigami.Units.largeSpacing
                         spacing: Kirigami.Units.smallSpacing
 
-                        Kirigami.Icon {
-                            source: "handle-sort"
-                            Layout.preferredWidth: Kirigami.Units.iconSizes.small
-                            Layout.preferredHeight: Kirigami.Units.iconSizes.small
-                            opacity: 0.5
-
-                            MouseArea {
-                                id: dragHandle
-                                anchors.fill: parent
-                                anchors.margins: -Kirigami.Units.smallSpacing
-                                cursorShape: Qt.SizeAllCursor
-                                drag.target: dragProxy
-                                drag.axis: Drag.YAxis
-
-                                onPressed: function(mouse) {
-                                    full.dragFromIndex = cardWrapper.index
-                                    var pos = dragHandle.mapToItem(full, 0, 0)
-                                    dragProxy.x = pos.x
-                                    dragProxy.y = pos.y
-                                    dragProxy.cardId = cardWrapper.modelData.id
-                                    dragProxy.visible = true
-                                    dragProxy.Drag.active = true
-                                }
-                                onReleased: {
-                                    dragProxy.Drag.drop()
-                                    dragProxy.visible = false
-                                    dragProxy.Drag.active = false
-                                    if (full.dragFromIndex >= 0 && full.dragOverIndex >= 0 && full.dragFromIndex !== full.dragOverIndex) {
-                                        full.moveCard(full.dragFromIndex, full.dragOverIndex)
-                                    }
-                                    full.dragFromIndex = -1
-                                    full.dragOverIndex = -1
-                                }
-                            }
-                        }
-
-                        PlasmaComponents.CheckBox {
-                            checked: cardWrapper.modelData.enabled !== false
-                            onToggled: full.toggleCard(cardWrapper.index)
-                        }
-
                         PlasmaComponents.Label {
-                            text: i18n.tr(full.cardNames[cardWrapper.modelData.id] || cardWrapper.modelData.id)
-                            Layout.fillWidth: true
-                            opacity: cardWrapper.modelData.enabled !== false ? 1.0 : 0.45
+                            text: "⚠ " + root.errorMsg
+                            color: Kirigami.Theme.negativeTextColor
+                            font.bold: true
                         }
-
-                        PlasmaComponents.ToolButton {
-                            icon.name: "go-up"
-                            enabled: cardWrapper.index > 0
-                            visible: full.editMode
-                            onClicked: full.moveCard(cardWrapper.index, cardWrapper.index - 1)
-                            Layout.preferredWidth: Kirigami.Units.iconSizes.small + Kirigami.Units.smallSpacing
-                            Layout.preferredHeight: Layout.preferredWidth
+                        PlasmaComponents.Label {
+                            text: root.baseUrl
+                                ? i18n.tr("Check base URL and API key in widget settings")
+                                : i18n.tr("Run 'claude' to log in")
+                            font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                            color: Kirigami.Theme.negativeTextColor
                         }
-                        PlasmaComponents.ToolButton {
-                            icon.name: "go-down"
-                            enabled: cardWrapper.index < full.cardOrder.length - 1
-                            visible: full.editMode
-                            onClicked: full.moveCard(cardWrapper.index, cardWrapper.index + 1)
-                            Layout.preferredWidth: Kirigami.Units.iconSizes.small + Kirigami.Units.smallSpacing
-                            Layout.preferredHeight: Layout.preferredWidth
-                        }
-
-                    }
-
-                    // Card content
-                    Loader {
-                        id: cardContent
-                        active: cardWrapper.modelData.enabled !== false
-                        Layout.fillWidth: true
-                        sourceComponent: full.cardComponents[cardWrapper.modelData.id] || null
-                        opacity: full.editMode ? 0.35 : 1.0
                     }
                 }
-            }
-        }
 
-        // Refresh-interval warning
-        PlasmaComponents.Label {
-            visible: !full.editMode && (Plasmoid.configuration.refreshInterval || 5) < 5
-            text: "⚠ " + i18n.tr("Values under 5 min may cause rate limiting")
-            font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-            color: Kirigami.Theme.neutralTextColor
-            font.italic: true
-            Layout.fillWidth: true; wrapMode: Text.WordWrap
+                Rectangle {
+                    visible: root.hasTokenError
+                    Layout.fillWidth: true
+                    radius: Kirigami.Units.cornerRadius
+                    color: Qt.alpha(Kirigami.Theme.negativeTextColor, 0.12)
+                    implicitHeight: tokenErrorColumn.implicitHeight + Kirigami.Units.largeSpacing * 2
+
+                    ColumnLayout {
+                        id: tokenErrorColumn
+                        anchors.fill: parent
+                        anchors.margins: Kirigami.Units.largeSpacing
+                        spacing: Kirigami.Units.smallSpacing
+
+                        PlasmaComponents.Label {
+                            text: "⚠ " + i18n.tr("Re-login required")
+                            color: Kirigami.Theme.negativeTextColor
+                            font.bold: true
+                        }
+
+                        PlasmaComponents.Button {
+                            text: i18n.tr("Open Claude")
+                            icon.name: "utilities-terminal"
+                            onClicked: root.launchInTerminal("claude")
+                        }
+                    }
+                }
+
+                Rectangle {
+                    visible: root.hasRateLimitError
+                    Layout.fillWidth: true
+                    radius: Kirigami.Units.cornerRadius
+                    color: Qt.alpha(Kirigami.Theme.negativeTextColor, 0.12)
+                    implicitHeight: rateLimitColumn.implicitHeight + Kirigami.Units.largeSpacing * 2
+
+                    ColumnLayout {
+                        id: rateLimitColumn
+                        anchors.fill: parent
+                        anchors.margins: Kirigami.Units.largeSpacing
+                        spacing: Kirigami.Units.smallSpacing
+
+                        PlasmaComponents.Label {
+                            text: "⚠ " + i18n.tr("Rate limited")
+                            color: Kirigami.Theme.negativeTextColor
+                            font.bold: true
+                        }
+                        PlasmaComponents.Label {
+                            text: i18n.tr("Auto-retry in") + " " + Math.round(root.rateLimitBackoffMs / 60000) + " min"
+                            font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                            color: Kirigami.Theme.negativeTextColor
+                        }
+                    }
+                }
+
+                // ===== Dynamic cards from cardOrder =====
+                Repeater {
+                    id: cardsRepeater
+                    model: full.cardOrder
+
+                    Item {
+                        id: cardWrapper
+                        required property var modelData
+                        required property int index
+
+                        Layout.fillWidth: true
+                        implicitHeight: cardContent.item ? cardContent.item.implicitHeight : 0
+                        visible: modelData.enabled !== false && full.isCardContentVisible(modelData.id)
+
+                        Loader {
+                            id: cardContent
+                            active: cardWrapper.modelData.enabled !== false
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            sourceComponent: full.cardComponents[cardWrapper.modelData.id] || null
+                        }
+                    }
+                }
+
+                // Refresh-interval warning
+                PlasmaComponents.Label {
+                    visible: (Plasmoid.configuration.refreshInterval || 5) < 5
+                    text: "⚠ " + i18n.tr("Values under 5 min may cause rate limiting")
+                    font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                    color: Kirigami.Theme.neutralTextColor
+                    font.italic: true
+                    Layout.fillWidth: true; wrapMode: Text.WordWrap
+                }
+            }
         }
 
         // ===== Footer =====
         RowLayout {
-            visible: !full.editMode
+            id: footerRow
             Layout.fillWidth: true
             spacing: Kirigami.Units.smallSpacing
 
@@ -822,29 +722,4 @@ Item {
         }
     }
 
-    // Drag proxy
-    Rectangle {
-        id: dragProxy
-        visible: false
-        width: mainColumn.width
-        height: Kirigami.Units.gridUnit * 1.5
-        radius: Kirigami.Units.cornerRadius
-        color: Qt.alpha(full.accent, 0.15)
-        border.color: full.accent
-        border.width: 1
-        z: 100
-
-        property string cardId: ""
-
-        Drag.hotSpot.x: width / 2
-        Drag.hotSpot.y: height / 2
-
-        PlasmaComponents.Label {
-            anchors.centerIn: parent
-            text: i18n.tr(full.cardNames[dragProxy.cardId] || dragProxy.cardId)
-            font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-            color: full.accent
-            font.bold: true
-        }
-    }
 }

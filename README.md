@@ -9,7 +9,7 @@ A KDE Plasma 6 widget that displays your Claude Code usage statistics in the tas
 - **3 Panel Styles**: Ring (anti-aliased progress rings), Text (percentage + dot), Bar (vertical bars with time marker)
   ![Panel](screenshots/panel.png)
 - **Time-Proportional Coloring**: Colors based on elapsed time vs usage ratio (configurable, can switch to fixed 50/80/100% thresholds)
-- **Card Popup**: Modern card-based popup with drag & drop reordering and edit mode (right-click → Edit cards)
+- **Card Popup**: Modern card-based popup with configurable card order and visibility (via settings)
   - Account info, session & weekly usage rings, per-model breakdown, extra usage, token stats, trend chart, installations, quick links
 - **Classic Popup**: Traditional layout with progress bars (switchable in settings)
 - **Desktop Notifications**: Alerts when usage crosses thresholds (50/80/95% session, 95% weekly, quota reset)
@@ -166,8 +166,16 @@ izll
 
 ## Version History
 
+### 2.1.1 (2026)
+- **System theme background**: Desktop widget uses Plasma's native background at 100% opacity (thanks @Hody, PR #16)
+- Custom background border and matching margins when opacity < 100%
+- Opacity slider shows "Theme" label at 100%
+- Scrollable content option for smaller desktop widgets (with scrollbar)
+- Card ordering moved to settings dialog
+- Desktop card visibility fix
+
 ### 2.1.0 (2026)
-- **V2 UI redesign**: Card-based popup with drag & drop reordering and edit mode
+- **V2 UI redesign**: Card-based popup with configurable card order
 - Ring panel style (default) with anti-aliased UsageRing component
 - Time-proportional color warnings with configurable toggle (vs fixed thresholds)
 - Bar style time-marker line showing elapsed period

@@ -104,6 +104,8 @@ QtObject {
             "Notifications:": "Notifications:",
             "Threshold and reset notifications": "Threshold and reset notifications",
             "Popup style:": "Popup style:",
+            "Scrollable content:": "Scrollable content:",
+            "Enable scrollable content": "Enable scrollable content",
             "Classic": "Classic",
             "Card": "Card",
             "Panel icon:": "Panel icon:",
@@ -114,6 +116,7 @@ QtObject {
             "Show Claude Code installations": "Show Claude Code installations",
             "Auto-retry in": "Auto-retry in",
             "Colors:": "Colors:",
+            "Theme": "Theme",
             "Time-proportional warnings": "Time-proportional warnings"
         },
         "hu_HU": {
@@ -204,6 +207,8 @@ QtObject {
             "Notifications:": "Értesítések:",
             "Threshold and reset notifications": "Küszöb- és visszaállítási értesítések",
             "Popup style:": "Felugró stílus:",
+            "Scrollable content:": "Görgethető tartalom:",
+            "Enable scrollable content": "Görgethető tartalom engedélyezése",
             "Classic": "Klasszikus",
             "Card": "Kártya",
             "Panel icon:": "Panel ikon:",
@@ -214,6 +219,7 @@ QtObject {
             "Show Claude Code installations": "Claude Code telepítések megjelenítése",
             "Auto-retry in": "Automatikus újrapróbálás",
             "Colors:": "Színek:",
+            "Theme": "Téma",
             "Time-proportional warnings": "Időarányos figyelmeztetések"
         },
         "de_DE": {
@@ -304,6 +310,8 @@ QtObject {
             "Notifications:": "Benachrichtigungen:",
             "Threshold and reset notifications": "Schwellenwert- und Reset-Benachrichtigungen",
             "Popup style:": "Popup-Stil:",
+            "Scrollable content:": "Scrollbarer Inhalt:",
+            "Enable scrollable content": "Scrollbaren Inhalt aktivieren",
             "Classic": "Klassisch",
             "Card": "Karte",
             "Panel icon:": "Panel-Symbol:",
@@ -314,6 +322,7 @@ QtObject {
             "Show Claude Code installations": "Claude Code Installationen anzeigen",
             "Auto-retry in": "Automatische Wiederholung in",
             "Colors:": "Farben:",
+            "Theme": "Thema",
             "Time-proportional warnings": "Zeitproportionale Warnungen"
         },
         "fr_FR": {
@@ -404,6 +413,8 @@ QtObject {
             "Notifications:": "Notifications :",
             "Threshold and reset notifications": "Notifications de seuil et réinitialisation",
             "Popup style:": "Style du popup :",
+            "Scrollable content:": "Contenu défilable :",
+            "Enable scrollable content": "Activer le contenu défilable",
             "Classic": "Classique",
             "Card": "Carte",
             "Panel icon:": "Icône du panneau :",
@@ -414,6 +425,7 @@ QtObject {
             "Show Claude Code installations": "Afficher les installations Claude Code",
             "Auto-retry in": "Nouvel essai auto dans",
             "Colors:": "Couleurs :",
+            "Theme": "Thème",
             "Time-proportional warnings": "Avertissements proportionnels au temps"
         },
         "es_ES": {
@@ -504,6 +516,8 @@ QtObject {
             "Notifications:": "Notificaciones:",
             "Threshold and reset notifications": "Notificaciones de umbral y restablecimiento",
             "Popup style:": "Estilo del popup:",
+            "Scrollable content:": "Contenido desplazable:",
+            "Enable scrollable content": "Habilitar contenido desplazable",
             "Classic": "Clásico",
             "Card": "Tarjeta",
             "Panel icon:": "Icono del panel:",
@@ -514,6 +528,7 @@ QtObject {
             "Show Claude Code installations": "Mostrar instalaciones de Claude Code",
             "Auto-retry in": "Reintento automático en",
             "Colors:": "Colores:",
+            "Theme": "Tema",
             "Time-proportional warnings": "Avisos proporcionales al tiempo"
         },
         "it_IT": {
@@ -604,6 +619,8 @@ QtObject {
             "Notifications:": "Notifiche:",
             "Threshold and reset notifications": "Notifiche di soglia e ripristino",
             "Popup style:": "Stile popup:",
+            "Scrollable content:": "Contenuto scorrevole:",
+            "Enable scrollable content": "Abilita contenuto scorrevole",
             "Classic": "Classico",
             "Card": "Scheda",
             "Panel icon:": "Icona pannello:",
@@ -614,6 +631,7 @@ QtObject {
             "Show Claude Code installations": "Mostra installazioni Claude Code",
             "Auto-retry in": "Riprova automatica tra",
             "Colors:": "Colori:",
+            "Theme": "Tema",
             "Time-proportional warnings": "Avvisi proporzionali al tempo"
         },
         "pt_BR": {
@@ -704,6 +722,8 @@ QtObject {
             "Notifications:": "Notificações:",
             "Threshold and reset notifications": "Notificações de limite e redefinição",
             "Popup style:": "Estilo do popup:",
+            "Scrollable content:": "Conteúdo rolável:",
+            "Enable scrollable content": "Ativar conteúdo rolável",
             "Classic": "Clássico",
             "Card": "Cartão",
             "Panel icon:": "Ícone do painel:",
@@ -714,6 +734,7 @@ QtObject {
             "Show Claude Code installations": "Mostrar instalações do Claude Code",
             "Auto-retry in": "Tentativa automática em",
             "Colors:": "Cores:",
+            "Theme": "Tema",
             "Time-proportional warnings": "Avisos proporcionais ao tempo"
         },
         "ru_RU": {
@@ -804,6 +825,8 @@ QtObject {
             "Notifications:": "Уведомления:",
             "Threshold and reset notifications": "Уведомления о пороге и сбросе",
             "Popup style:": "Стиль всплывающего окна:",
+            "Scrollable content:": "Прокручиваемое содержимое:",
+            "Enable scrollable content": "Включить прокручиваемое содержимое",
             "Classic": "Классический",
             "Card": "Карточка",
             "Panel icon:": "Значок панели:",
@@ -814,6 +837,7 @@ QtObject {
             "Show Claude Code installations": "Показать установки Claude Code",
             "Auto-retry in": "Автоповтор через",
             "Colors:": "Цвета:",
+            "Theme": "Тема",
             "Time-proportional warnings": "Пропорциональные времени предупреждения"
         },
         "pl_PL": {
@@ -904,6 +928,8 @@ QtObject {
             "Notifications:": "Powiadomienia:",
             "Threshold and reset notifications": "Powiadomienia o progach i resetach",
             "Popup style:": "Styl okienka:",
+            "Scrollable content:": "Przewijana treść:",
+            "Enable scrollable content": "Włącz przewijaną treść",
             "Classic": "Klasyczny",
             "Card": "Karta",
             "Panel icon:": "Ikona panelu:",
@@ -914,6 +940,7 @@ QtObject {
             "Show Claude Code installations": "Pokaż instalacje Claude Code",
             "Auto-retry in": "Automatyczne ponowienie za",
             "Colors:": "Kolory:",
+            "Theme": "Motyw",
             "Time-proportional warnings": "Ostrzeżenia proporcjonalne do czasu"
         },
         "nl_NL": {
@@ -1004,6 +1031,8 @@ QtObject {
             "Notifications:": "Meldingen:",
             "Threshold and reset notifications": "Drempelwaarde- en resetmeldingen",
             "Popup style:": "Popupstijl:",
+            "Scrollable content:": "Scrollbare inhoud:",
+            "Enable scrollable content": "Scrollbare inhoud inschakelen",
             "Classic": "Klassiek",
             "Card": "Kaart",
             "Panel icon:": "Paneelpictogram:",
@@ -1014,6 +1043,7 @@ QtObject {
             "Show Claude Code installations": "Claude Code installaties tonen",
             "Auto-retry in": "Automatisch opnieuw over",
             "Colors:": "Kleuren:",
+            "Theme": "Thema",
             "Time-proportional warnings": "Tijdsproportionele waarschuwingen"
         },
         "tr_TR": {
@@ -1104,6 +1134,8 @@ QtObject {
             "Notifications:": "Bildirimler:",
             "Threshold and reset notifications": "Eşik ve sıfırlama bildirimleri",
             "Popup style:": "Açılır pencere stili:",
+            "Scrollable content:": "Kaydırılabilir içerik:",
+            "Enable scrollable content": "Kaydırılabilir içeriği etkinleştir",
             "Classic": "Klasik",
             "Card": "Kart",
             "Panel icon:": "Panel simgesi:",
@@ -1114,6 +1146,7 @@ QtObject {
             "Show Claude Code installations": "Claude Code kurulumlarını göster",
             "Auto-retry in": "Otomatik yeniden deneme",
             "Colors:": "Renkler:",
+            "Theme": "Tema",
             "Time-proportional warnings": "Zamana orantılı uyarılar"
         },
         "ja_JP": {
@@ -1204,6 +1237,8 @@ QtObject {
             "Notifications:": "通知:",
             "Threshold and reset notifications": "しきい値とリセットの通知",
             "Popup style:": "ポップアップスタイル:",
+            "Scrollable content:": "スクロール可能なコンテンツ:",
+            "Enable scrollable content": "スクロール可能なコンテンツを有効にする",
             "Classic": "クラシック",
             "Card": "カード",
             "Panel icon:": "パネルアイコン:",
@@ -1214,6 +1249,7 @@ QtObject {
             "Show Claude Code installations": "Claude Codeのインストールを表示",
             "Auto-retry in": "自動リトライ",
             "Colors:": "色:",
+            "Theme": "テーマ",
             "Time-proportional warnings": "時間比例の警告"
         },
         "ko_KR": {
@@ -1304,6 +1340,8 @@ QtObject {
             "Notifications:": "알림:",
             "Threshold and reset notifications": "임계값 및 초기화 알림",
             "Popup style:": "팝업 스타일:",
+            "Scrollable content:": "스크롤 가능한 콘텐츠:",
+            "Enable scrollable content": "스크롤 가능한 콘텐츠 활성화",
             "Classic": "클래식",
             "Card": "카드",
             "Panel icon:": "패널 아이콘:",
@@ -1314,6 +1352,7 @@ QtObject {
             "Show Claude Code installations": "Claude Code 설치 표시",
             "Auto-retry in": "자동 재시도",
             "Colors:": "색상:",
+            "Theme": "테마",
             "Time-proportional warnings": "시간 비례 경고"
         },
         "zh_CN": {
@@ -1404,6 +1443,8 @@ QtObject {
             "Notifications:": "通知:",
             "Threshold and reset notifications": "阈值和重置通知",
             "Popup style:": "弹出样式:",
+            "Scrollable content:": "可滚动内容：",
+            "Enable scrollable content": "启用可滚动内容",
             "Classic": "经典",
             "Card": "卡片",
             "Panel icon:": "面板图标:",
@@ -1414,6 +1455,7 @@ QtObject {
             "Show Claude Code installations": "显示Claude Code安装",
             "Auto-retry in": "自动重试",
             "Colors:": "颜色:",
+            "Theme": "主题",
             "Time-proportional warnings": "时间比例警告"
         },
         "zh_TW": {
@@ -1504,6 +1546,8 @@ QtObject {
             "Notifications:": "通知:",
             "Threshold and reset notifications": "閾值和重置通知",
             "Popup style:": "彈出樣式:",
+            "Scrollable content:": "可捲動內容：",
+            "Enable scrollable content": "啟用可捲動內容",
             "Classic": "經典",
             "Card": "卡片",
             "Panel icon:": "面板圖標:",
@@ -1514,6 +1558,7 @@ QtObject {
             "Show Claude Code installations": "顯示Claude Code安裝",
             "Auto-retry in": "自動重試",
             "Colors:": "顏色:",
+            "Theme": "主題",
             "Time-proportional warnings": "時間比例警告"
         }
     })
