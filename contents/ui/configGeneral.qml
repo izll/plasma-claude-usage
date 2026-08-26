@@ -25,12 +25,76 @@ KCM.SimpleKCM {
     property string cfg_quickLinks
     property string cfg_processVisibility
     property int cfg_processCheckInterval
+    property string cfg_popupStyle
+    property string cfg_panelIcon
+    property bool cfg_enableNotifications
+    property bool cfg_enableUpdateCheck
+    property bool cfg_showInstallations
+    property string cfg_cardOrder
     property string cfg_baseUrl
     property string cfg_apiKey
     property double cfg_backgroundOpacity
+    property bool cfg_useTimeAwareColors
 
     property var availableModels: []
     property var quickLinksModel: []
+    property var cardOrderModel: []
+
+    readonly property var defaultCardOrder: [
+        {id: "account", enabled: true},
+        {id: "usage", enabled: true},
+        {id: "models", enabled: true},
+        {id: "extra", enabled: true},
+        {id: "tokens", enabled: true},
+        {id: "trend", enabled: true},
+        {id: "installations", enabled: true},
+        {id: "links", enabled: true}
+    ]
+
+    readonly property var cardNames: ({
+        "account": "Account",
+        "usage": "Session & Weekly",
+        "models": "By Model (Weekly)",
+        "extra": "Extra Usage",
+        "tokens": "Today's Tokens",
+        "trend": "7-day trend",
+        "installations": "Claude Code",
+        "links": "Quick links"
+    })
+
+    function cardDisplayName(cardId) {
+        return tr(cardNames[cardId] || cardId)
+    }
+
+    onCfg_cardOrderChanged: {
+        try { cardOrderModel = JSON.parse(cfg_cardOrder || "[]") }
+        catch (e) { cardOrderModel = defaultCardOrder.slice() }
+        if (cardOrderModel.length === 0) cardOrderModel = defaultCardOrder.slice()
+    }
+
+    function saveCardOrder() {
+        cfg_cardOrder = JSON.stringify(cardOrderModel)
+    }
+
+    function moveCard(index, direction) {
+        var list = cardOrderModel.slice()
+        var target = index + direction
+        if (target < 0 || target >= list.length) return
+        var tmp = list[index]
+        list[index] = list[target]
+        list[target] = tmp
+        cardOrderModel = list
+        saveCardOrder()
+    }
+
+    function toggleCard(index) {
+        var list = cardOrderModel.slice()
+        var item = Object.assign({}, list[index])
+        item.enabled = !item.enabled
+        list[index] = item
+        cardOrderModel = list
+        saveCardOrder()
+    }
 
     onCfg_quickLinksChanged: {
         try { quickLinksModel = JSON.parse(cfg_quickLinks || "[]") }
@@ -116,6 +180,9 @@ KCM.SimpleKCM {
         cacheReader.connectSource("cat $HOME/.local/share/claude-usage-cache.json 2>/dev/null")
         try { quickLinksModel = JSON.parse(cfg_quickLinks || "[]") }
         catch (e) { quickLinksModel = [] }
+        try { cardOrderModel = JSON.parse(cfg_cardOrder || "[]") }
+        catch (e) { cardOrderModel = defaultCardOrder.slice() }
+        if (cardOrderModel.length === 0) cardOrderModel = defaultCardOrder.slice()
     }
 
     readonly property var languageValues: [
@@ -172,6 +239,86 @@ KCM.SimpleKCM {
             Layout.fillWidth: true
         }
 
+        QQC2.ComboBox {
+            Kirigami.FormData.label: tr("Popup style:")
+            model: [tr("Classic"), tr("Card")]
+            currentIndex: cfg_popupStyle === "classic" ? 0 : 1
+            onCurrentIndexChanged: cfg_popupStyle = currentIndex === 0 ? "classic" : "card"
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: tr("Popup cards")
+            visible: cfg_popupStyle !== "classic"
+        }
+
+        ColumnLayout {
+            Kirigami.FormData.label: ""
+            visible: cfg_popupStyle !== "classic"
+            Layout.fillWidth: true
+            spacing: 2
+
+            Repeater {
+                model: configPage.cardOrderModel
+                delegate: RowLayout {
+                    Layout.fillWidth: true
+                    spacing: Kirigami.Units.smallSpacing
+
+                    QQC2.CheckBox {
+                        checked: modelData.enabled !== false
+                        onClicked: configPage.toggleCard(index)
+                    }
+
+                    QQC2.Label {
+                        text: configPage.cardDisplayName(modelData.id)
+                        Layout.fillWidth: true
+                        opacity: modelData.enabled !== false ? 1.0 : 0.5
+                    }
+
+                    QQC2.ToolButton {
+                        icon.name: "go-up"
+                        enabled: index > 0
+                        display: QQC2.AbstractButton.IconOnly
+                        onClicked: configPage.moveCard(index, -1)
+                        Layout.preferredWidth: Kirigami.Units.gridUnit * 1.5
+                        Layout.preferredHeight: Kirigami.Units.gridUnit * 1.5
+                    }
+
+                    QQC2.ToolButton {
+                        icon.name: "go-down"
+                        enabled: index < configPage.cardOrderModel.length - 1
+                        display: QQC2.AbstractButton.IconOnly
+                        onClicked: configPage.moveCard(index, 1)
+                        Layout.preferredWidth: Kirigami.Units.gridUnit * 1.5
+                        Layout.preferredHeight: Kirigami.Units.gridUnit * 1.5
+                    }
+                }
+            }
+
+            QQC2.Button {
+                text: tr("Reset to default")
+                icon.name: "edit-undo"
+                onClicked: {
+                    configPage.cardOrderModel = configPage.defaultCardOrder.slice()
+                    configPage.saveCardOrder()
+                }
+            }
+        }
+
+        QQC2.CheckBox {
+            Kirigami.FormData.label: tr("Notifications:")
+            text: tr("Threshold and reset notifications")
+            checked: cfg_enableNotifications
+            onCheckedChanged: cfg_enableNotifications = checked
+        }
+
+        QQC2.CheckBox {
+            Kirigami.FormData.label: tr("Update check")
+            text: tr("Check for Claude Code updates")
+            checked: cfg_enableUpdateCheck
+            onCheckedChanged: cfg_enableUpdateCheck = checked
+        }
+
         Kirigami.Separator {
             Kirigami.FormData.isSection: true
             Kirigami.FormData.label: tr("Panel display")
@@ -192,13 +339,27 @@ KCM.SimpleKCM {
         }
 
         QQC2.ComboBox {
+            Kirigami.FormData.label: tr("Panel icon:")
+            model: ["Claude", "Tile"]
+            currentIndex: (cfg_panelIcon || "claude") === "tile" ? 1 : 0
+            onCurrentIndexChanged: cfg_panelIcon = currentIndex === 1 ? "tile" : "claude"
+        }
+
+        QQC2.ComboBox {
             Kirigami.FormData.label: tr("Style:")
-            model: [tr("Text"), tr("Circular"), tr("Bar")]
-            currentIndex: cfg_panelStyle === "circular" ? 1 : cfg_panelStyle === "bar" ? 2 : 0
+            model: [tr("Ring"), tr("Text"), tr("Bar")]
+            currentIndex: cfg_panelStyle === "text" ? 1 : cfg_panelStyle === "bar" ? 2 : 0
             onCurrentIndexChanged: {
-                var styles = ["text", "circular", "bar"]
+                var styles = ["ring", "text", "bar"]
                 cfg_panelStyle = styles[currentIndex]
             }
+        }
+
+        QQC2.CheckBox {
+            Kirigami.FormData.label: tr("Colors:")
+            text: tr("Time-proportional warnings")
+            checked: cfg_useTimeAwareColors
+            onCheckedChanged: cfg_useTimeAwareColors = checked
         }
 
         QQC2.CheckBox {

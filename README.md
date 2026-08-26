@@ -6,20 +6,22 @@ A KDE Plasma 6 widget that displays your Claude Code usage statistics in the tas
 
 ## Features
 
-- **Compact Panel Display**: Shows session and weekly usage percentages right in your taskbar
+- **3 Panel Styles**: Ring (anti-aliased progress rings), Text (percentage + dot), Bar (vertical bars with time marker)
   ![Panel](screenshots/panel.png)
-- **Color-coded Indicators**: Green (<50%), Yellow (<80%), Red (≥80%)
-- **Detailed Popup**: Click to see full statistics
-  - Session and weekly usage with progress bars
-  - Reset times for both limits
-  - Per-model breakdown (Sonnet/Opus)
-  - Your subscription plan badge
+- **Time-Proportional Coloring**: Colors based on elapsed time vs usage ratio (configurable, can switch to fixed 50/80/100% thresholds)
+- **Card Popup**: Modern card-based popup with drag & drop reordering and edit mode (right-click → Edit cards)
+  - Account info, session & weekly usage rings, per-model breakdown, extra usage, token stats, trend chart, installations, quick links
+- **Classic Popup**: Traditional layout with progress bars (switchable in settings)
+- **Desktop Notifications**: Alerts when usage crosses thresholds (50/80/95% session, 95% weekly, quota reset)
+- **Update Checker**: Orange dot on panel icon when a new Claude Code version is available
+- **Process Visibility**: Hide widget or usage when Claude is not running
 - **Configurable Refresh**: Default 5 min polling (adjustable in settings)
 - **Smart Rate Limit Handling**: Uses `retry-after` header, exponential backoff, and token watcher for automatic recovery
 - **Local Cache**: Remembers last data on restart (up to 24h)
 - **Stale Detection**: Widget dims when data is outdated
 - **Error Handling**: Clear messages when not logged in, token expired, or rate limited
 - **Custom API Support**: Optional proxy/gateway with custom base URL and API key
+- **Configurable Background Opacity**: Adjustable transparency for desktop placement
 - **15 Languages**: EN, HU, DE, FR, ES, IT, PT, RU, PL, NL, TR, JA, KO, ZH-CN, ZH-TW
 - **No Dependencies**: Pure QML, no Python or external tools required
 
@@ -134,18 +136,24 @@ The base URL in the widget settings doesn't point to a valid API. Make sure you'
 
 ```
 claude-usage-widget/
-├── metadata.json           # Widget metadata
-├── install.sh              # Installation script
+├── metadata.json              # Widget metadata
+├── install.sh                 # Installation script
 ├── contents/
 │   ├── config/
-│   │   └── main.xml        # Configuration schema
+│   │   └── main.xml           # Configuration schema
 │   ├── ui/
-│   │   ├── main.qml        # Widget implementation
-│   │   ├── configGeneral.qml # Settings UI
-│   │   └── Translations.qml # i18n (15 languages)
+│   │   ├── main.qml           # Core logic, data, API
+│   │   ├── CompactView.qml    # Panel representation (text/bar/ring)
+│   │   ├── FullView.qml       # Card popup with drag & drop
+│   │   ├── UsageRing.qml      # Anti-aliased progress ring component
+│   │   ├── ModelRow.qml       # Model breakdown row component
+│   │   ├── TrendChart.qml     # 7-day trend chart component
+│   │   ├── configGeneral.qml  # Settings UI
+│   │   └── Translations.qml   # i18n (15 languages)
 │   └── icons/
-│       └── claude.svg      # Claude logo (orange)
-└── screenshots/            # Preview images
+│       ├── claude.svg         # Claude logo (orange)
+│       └── claude-tile.svg    # Claude tile icon
+└── screenshots/               # Preview images
 ```
 
 ## License
@@ -157,6 +165,23 @@ GPL-3.0-or-later
 izll
 
 ## Version History
+
+### 2.1.0 (2026)
+- **V2 UI redesign**: Card-based popup with drag & drop reordering and edit mode
+- Ring panel style (default) with anti-aliased UsageRing component
+- Time-proportional color warnings with configurable toggle (vs fixed thresholds)
+- Bar style time-marker line showing elapsed period
+- Desktop notifications for usage thresholds and quota resets
+- Update checker with orange indicator dot on panel icon
+- Process-dependent visibility (hide when Claude not running)
+- Per-model dynamic breakdown from API limits array
+- Extra usage (paid overage) tracking
+- 7-day trend chart, token stats, IDE installations detection
+- Account email and plan tier from credentials
+- Quick links card with customizable buttons
+- Separated panel code into CompactView.qml
+- Removed Circular style (replaced by Ring)
+- Bar style text outline for readability
 
 ### 1.3.6 (2026)
 - Vertical layout option for taller panels (thanks @nahall, issue #5)

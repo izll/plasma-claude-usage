@@ -24,7 +24,7 @@
         </entry>
         <entry name="panelStyle" type="String">
             <label>Panel display style (text or circular)</label>
-            <default>text</default>
+            <default>ring</default>
         </entry>
         <entry name="showSession" type="Bool">
             <label>Show session (5hr) usage in panel</label>
@@ -42,6 +42,30 @@
             <label>Quick links as JSON array [{name, url, icon}]</label>
             <default>[]</default>
         </entry>
+        <entry name="popupStyle" type="String">
+            <label>Popup display style (classic or card)</label>
+            <default>card</default>
+        </entry>
+        <entry name="panelIcon" type="String">
+            <label>Panel icon style (claude or tile)</label>
+            <default>tile</default>
+        </entry>
+        <entry name="enableNotifications" type="Bool">
+            <label>Send desktop notifications for usage thresholds and quota resets</label>
+            <default>true</default>
+        </entry>
+        <entry name="enableUpdateCheck" type="Bool">
+            <label>Check for Claude Code updates via npm registry</label>
+            <default>true</default>
+        </entry>
+        <entry name="showInstallations" type="Bool">
+            <label>Show Claude Code installations in popup</label>
+            <default>false</default>
+        </entry>
+        <entry name="cardOrder" type="String">
+            <label>Card visibility and order in popup as JSON array [{id, enabled}]</label>
+            <default>[{"id":"account","enabled":true},{"id":"usage","enabled":true},{"id":"models","enabled":true},{"id":"extra","enabled":true},{"id":"tokens","enabled":true},{"id":"trend","enabled":true},{"id":"installations","enabled":true},{"id":"links","enabled":true}]</default>
+        </entry>
         <entry name="processVisibility" type="String">
             <label>Visibility mode when Claude is not running (always, hide_usage, or fully_hidden)</label>
             <default>always</default>
@@ -57,6 +81,10 @@
         <entry name="apiKey" type="String">
             <label>API key (required when custom base URL is set)</label>
             <default></default>
+        </entry>
+        <entry name="useTimeAwareColors" type="Bool">
+            <label>Use time-proportional color thresholds instead of fixed 50/80/100%</label>
+            <default>true</default>
         </entry>
         <entry name="backgroundOpacity" type="Double">
             <label>Background opacity (0.0 = transparent, 1.0 = opaque)</label>
