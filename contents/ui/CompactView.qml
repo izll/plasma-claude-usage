@@ -41,11 +41,11 @@ Item {
             }
 
             Rectangle {
-                visible: root.hasTokenError || root.hasRateLimitError || root.updateAvailable
+                visible: root.hasTokenError || root.hasRateLimitError || root.hasNetworkError || root.updateAvailable
                 width: 8
                 height: 8
                 radius: 4
-                color: (root.hasTokenError || root.hasRateLimitError)
+                color: (root.hasTokenError || root.hasRateLimitError || root.hasNetworkError)
                     ? Kirigami.Theme.negativeTextColor
                     : "#D97757"
                 anchors.right: parent.right

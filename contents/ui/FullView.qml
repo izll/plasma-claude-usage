@@ -581,10 +581,31 @@ Item {
                         PlasmaComponents.Label {
                             text: root.baseUrl
                                 ? i18n.tr("Check base URL and API key in widget settings")
-                                : i18n.tr("Run 'claude' to log in")
+                                : (root.errorMsg === i18n.tr("Not logged in")
+                                    ? i18n.tr("Run 'claude' to log in")
+                                    : i18n.tr("Will retry automatically"))
                             font.pixelSize: Kirigami.Theme.smallFont.pixelSize
                             color: Kirigami.Theme.negativeTextColor
                         }
+                    }
+                }
+
+                // Network error notice (cached data still shown)
+                Rectangle {
+                    visible: root.hasNetworkError
+                    Layout.fillWidth: true
+                    radius: Kirigami.Units.cornerRadius
+                    color: Qt.alpha(Kirigami.Theme.neutralTextColor, 0.12)
+                    implicitHeight: cardNetErrorLabel.implicitHeight + Kirigami.Units.largeSpacing * 2
+
+                    PlasmaComponents.Label {
+                        id: cardNetErrorLabel
+                        anchors.fill: parent
+                        anchors.margins: Kirigami.Units.largeSpacing
+                        text: "⚠ " + i18n.tr("Network error - showing cached data")
+                        color: Kirigami.Theme.neutralTextColor
+                        font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                        wrapMode: Text.WordWrap
                     }
                 }
 

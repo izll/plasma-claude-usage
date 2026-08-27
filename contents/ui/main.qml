@@ -63,6 +63,7 @@ PlasmoidItem {
 
     property bool hasTokenError: false
     property bool hasRateLimitError: false
+    property bool hasNetworkError: false
     property int rateLimitRetryCount: 0
     property int rateLimitRetryMs: 0
     property double lastFetchTime: 0
@@ -80,7 +81,7 @@ PlasmoidItem {
     property string latestVersion: ""
     readonly property bool updateAvailable: root.claudeVersion !== "" && root.latestVersion !== ""
         && isNewerVersion(root.latestVersion, root.claudeVersion)
-    readonly property bool metricsVisible: root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError
+    readonly property bool metricsVisible: root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError || root.hasNetworkError
 
     property string accountTier: ""
     property string credsTier: ""
@@ -539,6 +540,34 @@ PlasmoidItem {
         }
     }
 
+    // Usage fetcher — runs fetch_usage.sh (curl) in a fresh subprocess.
+    // plasmashell's in-process QML network stack goes stale after
+    // suspend/resume and XHR then fails with status 0 until the shell
+    // restarts; a per-poll subprocess never inherits that state.
+    Plasma5Support.DataSource {
+        id: usageFetcher
+        engine: "executable"
+        connectedSources: []
+
+        onNewData: function(sourceName, data) {
+            disconnectSource(sourceName)
+            var stdout = data["stdout"] || ""
+
+            if (stdout.trim() === "NOCREDS") {
+                root.isLoading = false
+                root.errorMsg = i18n.tr("Not logged in")
+                return
+            }
+
+            var idx = stdout.lastIndexOf("\n")
+            var statusParts = (idx >= 0 ? stdout.substring(idx + 1) : "").trim().split(" ")
+            var body = idx >= 0 ? stdout.substring(0, idx) : ""
+            var status = parseInt(statusParts[0]) || 0
+            var retryAfter = parseInt(statusParts[1]) || 0
+            handleUsageResponse(status, body, retryAfter)
+        }
+    }
+
     function fetchUsageFromApi(force) {
         var now = Date.now()
         if (!force && root.lastFetchTime > 0 && (now - root.lastFetchTime) < root.minFetchIntervalMs) {
@@ -548,160 +577,173 @@ PlasmoidItem {
         }
         root.lastFetchTime = now
 
-        var url = root.baseUrl
-            ? root.baseUrl + "/api/oauth/usage"
-            : "https://api.anthropic.com/api/oauth/usage"
+        if (!root.baseUrl) {
+            var script = Qt.resolvedUrl("../scripts/fetch_usage.sh").toString().replace("file://", "")
+            usageFetcher.connectSource("sh '" + script + "'")
+            return
+        }
 
+        var url = root.baseUrl + "/api/oauth/usage"
         var xhr = new XMLHttpRequest()
         xhr.open("GET", url)
         xhr.setRequestHeader("Content-Type", "application/json")
-        xhr.setRequestHeader("User-Agent", root.userAgent)
         xhr.setRequestHeader("anthropic-beta", "oauth-2025-04-20")
-
-        if (root.baseUrl) {
-            xhr.setRequestHeader("x-api-key", root.apiKey)
-        } else {
-            xhr.setRequestHeader("Authorization", "Bearer " + root.accessToken)
-        }
+        xhr.setRequestHeader("x-api-key", root.apiKey)
 
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
-                root.isLoading = false
-
-                if (xhr.status === 200) {
-                    try {
-                        var data = JSON.parse(xhr.responseText)
-
-                        var fiveHour = data.five_hour || {}
-                        var sevenDay = data.seven_day || {}
-
-                        root.sessionUsagePercent = fiveHour.utilization || 0
-                        root.weeklyUsagePercent = sevenDay.utilization || 0
-
-                        // Model breakdown from limits array (newer API)
-                        var limits = []
-                        if (data.limits && data.limits.length > 0) {
-                            for (var i = 0; i < data.limits.length; i++) {
-                                var entry = data.limits[i]
-                                if (entry.kind === "session" || entry.kind === "weekly_all") continue
-                                var scope = entry.scope || {}
-                                var label = (scope.model && scope.model.display_name) || scope.surface || entry.kind
-                                limits.push({ label: label, percent: entry.percent || 0 })
-                            }
-                        } else {
-                            if (data.seven_day_sonnet) limits.push({ label: "Sonnet", percent: data.seven_day_sonnet.utilization || 0 })
-                            if (data.seven_day_opus) limits.push({ label: "Opus", percent: data.seven_day_opus.utilization || 0 })
-                        }
-                        root.modelLimits = limits
-
-                        // Model breakdown from seven_day_* keys (for card view)
-                        var nonModelKeys = ["oauth_apps", "cowork", "omelette"]
-                        var models = []
-                        for (var key in data) {
-                            var m = key.match(/^seven_day_(.+)$/)
-                            if (m && nonModelKeys.indexOf(m[1]) !== -1) continue
-                            if (m && data[key] && typeof data[key] === "object") {
-                                models.push({
-                                    key: m[1],
-                                    name: modelDisplayName(m[1]),
-                                    percent: data[key].utilization || 0
-                                })
-                            }
-                        }
-                        root.modelUsage = sortModels(models, "key")
-
-                        root.hasSonnetData = !!data.seven_day_sonnet
-                        root.hasOpusData = !!data.seven_day_opus
-                        root.sonnetWeeklyPercent = root.hasSonnetData ? (data.seven_day_sonnet.utilization || 0) : 0
-                        root.opusWeeklyPercent = root.hasOpusData ? (data.seven_day_opus.utilization || 0) : 0
-
-                        // Extra usage (paid overage budget)
-                        var extra = data.extra_usage || {}
-                        root.extraEnabled = !!extra.is_enabled && (extra.monthly_limit || 0) > 0
-                        root.extraUsedCents = extra.used_credits || 0
-                        root.extraLimitCents = extra.monthly_limit || 0
-
-                        if (fiveHour.resets_at) {
-                            root.sessionResetTime = new Date(fiveHour.resets_at)
-                            root.sessionReset = Qt.formatTime(root.sessionResetTime, "hh:mm")
-                        }
-                        if (sevenDay.resets_at) {
-                            root.weeklyResetTime = new Date(sevenDay.resets_at)
-                            root.weeklyReset = Qt.formatDateTime(root.weeklyResetTime, "MMM d, hh:mm")
-                        }
-
-                        root.lastUpdate = Qt.formatTime(new Date(), "hh:mm:ss")
-                        root.lastSuccessTime = Date.now()
-                        root.isStale = false
-                        root.errorMsg = ""
-                        root.hasTokenError = false
-                        root.hasRateLimitError = false
-                        root.rateLimitRetryCount = 0
-                        root.rateLimitRetryMs = 0
-
-                        // Trend history
-                        var samples = root.usageSamples.slice()
-                        var nowTs = Date.now()
-                        if (samples.length === 0 || nowTs - samples[samples.length - 1].t >= 900000) {
-                            samples.push({ t: nowTs, session: root.sessionUsagePercent, weekly: root.weeklyUsagePercent })
-                        }
-                        root.usageSamples = samples.filter(function(s) { return nowTs - s.t < 604800000 })
-
-                        root.nowTick = Date.now()
-                        checkAlerts()
-                        saveCache()
-
-                        console.log("Claude Usage: API success - session:", root.sessionUsagePercent, "weekly:", root.weeklyUsagePercent)
-                    } catch (e) {
-                        console.log("Claude Usage: JSON parse error:", e)
-                        root.errorMsg = "Parse error"
-                    }
-                } else if (xhr.status === 401) {
-                    if (root.baseUrl) {
-                        root.errorMsg = i18n.tr("Invalid API key")
-                        console.log("Claude Usage: 401 Unauthorized - invalid API key")
-                    } else {
-                        console.log("Claude Usage: 401 Unauthorized - token expired")
-                        root.hasTokenError = true
-                        root.hasRateLimitError = false
-                        root.errorMsg = ""
-                    }
-                } else if (xhr.status === 403) {
-                    console.log("Claude Usage: 403 Permission error - token lacks required scope (re-login needed)")
-                    root.hasTokenError = true
-                    root.hasRateLimitError = false
-                    root.rateLimitRetryCount = 0
-                    root.errorMsg = ""
-                } else if (xhr.status === 404) {
-                    root.errorMsg = root.baseUrl
-                        ? i18n.tr("Endpoint not found")
-                        : i18n.tr("API error") + " (404)"
-                    console.log("Claude Usage: 404 Not Found:", url)
-                } else if (xhr.status === 429) {
-                    var retryAfter = parseInt(xhr.getResponseHeader("retry-after") || "0")
-                    if (retryAfter > 0) {
-                        root.rateLimitRetryMs = retryAfter * 1000
-                    }
-                    root.rateLimitRetryCount++
-                    console.log("Claude Usage: 429 Rate limited (retry #" + root.rateLimitRetryCount + ", retry-after: " + retryAfter + "s, waiting: " + root.rateLimitBackoffMs/1000 + "s)")
-                    root.hasRateLimitError = true
-                    root.lastFetchTime = 0
-                    root.errorMsg = ""
-                } else {
-                    root.errorMsg = i18n.tr("API error") + " (" + xhr.status + ")"
-                    console.log("Claude Usage: API error:", xhr.status, xhr.statusText)
-                }
+                var retryAfter = parseInt(xhr.getResponseHeader("retry-after") || "0")
+                handleUsageResponse(xhr.status, xhr.responseText, retryAfter)
             }
         }
 
         xhr.send()
     }
 
+    function handleUsageResponse(status, responseText, retryAfterSec) {
+        root.isLoading = false
+
+        if (status === 200) {
+            try {
+                var data = JSON.parse(responseText)
+
+                var fiveHour = data.five_hour || {}
+                var sevenDay = data.seven_day || {}
+
+                root.sessionUsagePercent = fiveHour.utilization || 0
+                root.weeklyUsagePercent = sevenDay.utilization || 0
+
+                // Model breakdown from limits array (newer API)
+                var limits = []
+                if (data.limits && data.limits.length > 0) {
+                    for (var i = 0; i < data.limits.length; i++) {
+                        var entry = data.limits[i]
+                        if (entry.kind === "session" || entry.kind === "weekly_all") continue
+                        var scope = entry.scope || {}
+                        var label = (scope.model && scope.model.display_name) || scope.surface || entry.kind
+                        limits.push({ label: label, percent: entry.percent || 0 })
+                    }
+                } else {
+                    if (data.seven_day_sonnet) limits.push({ label: "Sonnet", percent: data.seven_day_sonnet.utilization || 0 })
+                    if (data.seven_day_opus) limits.push({ label: "Opus", percent: data.seven_day_opus.utilization || 0 })
+                }
+                root.modelLimits = limits
+
+                // Model breakdown from seven_day_* keys (for card view)
+                var nonModelKeys = ["oauth_apps", "cowork", "omelette"]
+                var models = []
+                for (var key in data) {
+                    var m = key.match(/^seven_day_(.+)$/)
+                    if (m && nonModelKeys.indexOf(m[1]) !== -1) continue
+                    if (m && data[key] && typeof data[key] === "object") {
+                        models.push({
+                            key: m[1],
+                            name: modelDisplayName(m[1]),
+                            percent: data[key].utilization || 0
+                        })
+                    }
+                }
+                root.modelUsage = sortModels(models, "key")
+
+                root.hasSonnetData = !!data.seven_day_sonnet
+                root.hasOpusData = !!data.seven_day_opus
+                root.sonnetWeeklyPercent = root.hasSonnetData ? (data.seven_day_sonnet.utilization || 0) : 0
+                root.opusWeeklyPercent = root.hasOpusData ? (data.seven_day_opus.utilization || 0) : 0
+
+                // Extra usage (paid overage budget)
+                var extra = data.extra_usage || {}
+                root.extraEnabled = !!extra.is_enabled && (extra.monthly_limit || 0) > 0
+                root.extraUsedCents = extra.used_credits || 0
+                root.extraLimitCents = extra.monthly_limit || 0
+
+                if (fiveHour.resets_at) {
+                    root.sessionResetTime = new Date(fiveHour.resets_at)
+                    root.sessionReset = Qt.formatTime(root.sessionResetTime, "hh:mm")
+                }
+                if (sevenDay.resets_at) {
+                    root.weeklyResetTime = new Date(sevenDay.resets_at)
+                    root.weeklyReset = Qt.formatDateTime(root.weeklyResetTime, "MMM d, hh:mm")
+                }
+
+                root.lastUpdate = Qt.formatTime(new Date(), "hh:mm:ss")
+                root.lastSuccessTime = Date.now()
+                root.isStale = false
+                root.errorMsg = ""
+                root.hasTokenError = false
+                root.hasRateLimitError = false
+                root.hasNetworkError = false
+                root.rateLimitRetryCount = 0
+                root.rateLimitRetryMs = 0
+
+                // Trend history
+                var samples = root.usageSamples.slice()
+                var nowTs = Date.now()
+                if (samples.length === 0 || nowTs - samples[samples.length - 1].t >= 900000) {
+                    samples.push({ t: nowTs, session: root.sessionUsagePercent, weekly: root.weeklyUsagePercent })
+                }
+                root.usageSamples = samples.filter(function(s) { return nowTs - s.t < 604800000 })
+
+                root.nowTick = Date.now()
+                checkAlerts()
+                saveCache()
+
+                console.log("Claude Usage: API success - session:", root.sessionUsagePercent, "weekly:", root.weeklyUsagePercent)
+            } catch (e) {
+                console.log("Claude Usage: JSON parse error:", e)
+                root.errorMsg = "Parse error"
+            }
+        } else if (status === 401) {
+            root.hasNetworkError = false
+            if (root.baseUrl) {
+                root.errorMsg = i18n.tr("Invalid API key")
+                console.log("Claude Usage: 401 Unauthorized - invalid API key")
+            } else {
+                console.log("Claude Usage: 401 Unauthorized - token expired")
+                root.hasTokenError = true
+                root.hasRateLimitError = false
+                root.errorMsg = ""
+            }
+        } else if (status === 403) {
+            root.hasNetworkError = false
+            console.log("Claude Usage: 403 Permission error - token lacks required scope (re-login needed)")
+            root.hasTokenError = true
+            root.hasRateLimitError = false
+            root.rateLimitRetryCount = 0
+            root.errorMsg = ""
+        } else if (status === 404) {
+            root.hasNetworkError = false
+            root.errorMsg = root.baseUrl
+                ? i18n.tr("Endpoint not found")
+                : i18n.tr("API error") + " (404)"
+            console.log("Claude Usage: 404 Not Found")
+        } else if (status === 429) {
+            root.hasNetworkError = false
+            if (retryAfterSec > 0) {
+                root.rateLimitRetryMs = retryAfterSec * 1000
+            }
+            root.rateLimitRetryCount++
+            console.log("Claude Usage: 429 Rate limited (retry #" + root.rateLimitRetryCount + ", retry-after: " + retryAfterSec + "s, waiting: " + root.rateLimitBackoffMs/1000 + "s)")
+            root.hasRateLimitError = true
+            root.lastFetchTime = 0
+            root.errorMsg = ""
+        } else if (status === 0) {
+            console.log("Claude Usage: Network error, keeping cached data")
+            root.hasNetworkError = true
+            root.errorMsg = ""
+            root.lastFetchTime = 0
+        } else {
+            root.errorMsg = i18n.tr("API error") + " (" + status + ")"
+            console.log("Claude Usage: API error:", status)
+        }
+    }
+
     function refresh() {
         root.hasTokenError = false
         root.hasRateLimitError = false
+        root.hasNetworkError = false
         root.rateLimitRetryCount = 0
         root.rateLimitRetryMs = 0
+        root.lastFetchTime = 0
         loadCredentials()
     }
 
@@ -839,10 +881,31 @@ PlasmoidItem {
                             PlasmaComponents.Label {
                                 text: root.baseUrl
                                     ? i18n.tr("Check base URL and API key in widget settings")
-                                    : i18n.tr("Run 'claude' to log in")
+                                    : (root.errorMsg === i18n.tr("Not logged in")
+                                        ? i18n.tr("Run 'claude' to log in")
+                                        : i18n.tr("Will retry automatically"))
                                 font.pixelSize: Kirigami.Theme.smallFont.pixelSize
                                 color: Kirigami.Theme.negativeTextColor
                             }
+                        }
+                    }
+
+                    // Network error notice (cached data still shown)
+                    Rectangle {
+                        visible: root.hasNetworkError
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: classicNetErrorLabel.implicitHeight + Kirigami.Units.largeSpacing
+                        radius: 5
+                        color: Kirigami.Theme.neutralBackgroundColor
+
+                        PlasmaComponents.Label {
+                            id: classicNetErrorLabel
+                            anchors.fill: parent
+                            anchors.margins: Kirigami.Units.smallSpacing
+                            text: "⚠ " + i18n.tr("Network error - showing cached data")
+                            color: Kirigami.Theme.neutralTextColor
+                            font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                            wrapMode: Text.WordWrap
                         }
                     }
 
