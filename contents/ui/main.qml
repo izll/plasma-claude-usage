@@ -81,7 +81,8 @@ PlasmoidItem {
     property var usageSamples: []
     property string accountEmail: ""
     property string latestVersion: ""
-    readonly property bool updateAvailable: root.claudeVersion !== "" && root.latestVersion !== ""
+    readonly property bool updateAvailable: Plasmoid.configuration.enableUpdateCheck !== false
+        && root.claudeVersion !== "" && root.latestVersion !== ""
         && isNewerVersion(root.latestVersion, root.claudeVersion)
     readonly property bool metricsVisible: root.errorMsg === "" || root.hasTokenError || root.hasRateLimitError || root.hasNetworkError
 
@@ -447,6 +448,7 @@ PlasmoidItem {
         running: Plasmoid.configuration.enableUpdateCheck !== false
         repeat: true
         onTriggered: checkForUpdate()
+        onRunningChanged: if (running) checkForUpdate()
     }
 
     // Token stats reader (pure QML, no python)
@@ -1406,16 +1408,29 @@ PlasmoidItem {
         return false
     }
 
+    Timer {
+        id: versionRecheckTimer
+        interval: 60000
+        running: root.updateAvailable && Plasmoid.configuration.enableUpdateCheck !== false
+        repeat: true
+        onTriggered: versionReader.connectSource("claude --version 2>/dev/null")
+        onRunningChanged: if (running) versionReader.connectSource("claude --version 2>/dev/null")
+    }
+
     function checkForUpdate() {
         if (Plasmoid.configuration.enableUpdateCheck === false) return
         var xhr = new XMLHttpRequest()
         xhr.open("GET", "https://registry.npmjs.org/@anthropic-ai/claude-code/latest")
         xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                try {
-                    root.latestVersion = JSON.parse(xhr.responseText).version || ""
-                    console.log("Claude Usage: latest version:", root.latestVersion)
-                } catch (e) { /* silent */ }
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    try {
+                        root.latestVersion = JSON.parse(xhr.responseText).version || ""
+                        console.log("Claude Usage: latest version:", root.latestVersion, "installed:", root.claudeVersion)
+                    } catch (e) { console.log("Claude Usage: update check parse error:", e) }
+                } else {
+                    console.log("Claude Usage: update check failed, status:", xhr.status)
+                }
             }
         }
         xhr.send()
