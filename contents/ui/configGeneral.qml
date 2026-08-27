@@ -242,10 +242,19 @@ KCM.SimpleKCM {
         }
 
         QQC2.ComboBox {
-            Kirigami.FormData.label: tr("Popup style:")
+            Kirigami.FormData.label: tr("Widget style:")
             model: [tr("Classic"), tr("Card")]
             currentIndex: cfg_popupStyle === "classic" ? 0 : 1
             onCurrentIndexChanged: cfg_popupStyle = currentIndex === 0 ? "classic" : "card"
+        }
+
+        QQC2.Label {
+            text: tr("You may need to resize the widget after switching styles")
+            font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+            color: Kirigami.Theme.disabledTextColor
+            font.italic: true
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
         }
 
         QQC2.CheckBox {
@@ -257,13 +266,11 @@ KCM.SimpleKCM {
 
         Kirigami.Separator {
             Kirigami.FormData.isSection: true
-            Kirigami.FormData.label: tr("Popup cards")
-            visible: cfg_popupStyle !== "classic"
+            Kirigami.FormData.label: tr("Sections")
         }
 
         ColumnLayout {
             Kirigami.FormData.label: ""
-            visible: cfg_popupStyle !== "classic"
             Layout.fillWidth: true
             spacing: 2
 

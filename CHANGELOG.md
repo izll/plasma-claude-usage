@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-08-27
+
+### Added
+
+- Classic popup now includes all sections from card view: extra usage, token stats, 7-day trend, installations, quick links
+- Section ordering and visibility settings now apply to both card and classic popup styles
+- Style switch hint in settings — reminds users to resize the widget after changing styles
+
+### Changed
+
+- "Popup style" renamed to "Widget style" in settings (applies to desktop widgets too, not just panel popups)
+- "Popup cards" section renamed to "Sections" and made visible in all styles
+
+### Fixed
+
+- Classic popup spacing — hidden sections (extra usage, tokens, etc.) no longer leave empty gaps
+- Classic popup footer (Updated/Refresh) now always visible outside the scrollable area
+
 ## [2.2.1] - 2026-08-27
 
 ### Added
@@ -169,6 +187,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configurable refresh interval
 - Error handling for login issues
 
+[2.3.0]: https://github.com/izll/plasma-claude-usage/compare/v2.2.1...v2.3.0
 [2.2.1]: https://github.com/izll/plasma-claude-usage/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/izll/plasma-claude-usage/compare/v2.1.1...v2.2.0
 [2.1.1]: https://github.com/izll/plasma-claude-usage/compare/v2.1.0...v2.1.1
