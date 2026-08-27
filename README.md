@@ -166,6 +166,11 @@ izll
 
 ## Version History
 
+### 2.2.1 (2026)
+- **Remaining time in tooltip**: Hovering the panel icon now shows reset countdown (e.g. `3h 12m`) alongside usage percentages
+- **Custom config directory**: Supports `$CLAUDE_CONFIG_DIR` for users who moved their Claude config from `~/.claude/` (issue #19)
+- **Account info refresh**: Email and plan tier update on every credentials cycle, no longer goes stale after switching accounts (issue #20)
+
 ### 2.2.0 (2026)
 - **Survive network failures**: API fetch via curl subprocess instead of QML XMLHttpRequest — immune to plasmashell's stale network state after suspend/resume (thanks @lockshore, PR #17)
 - **Silent session refresh**: Opt-in setting to automatically refresh expired OAuth token in the background using a pty, no manual re-login needed (thanks @bartekmp, PR #18)

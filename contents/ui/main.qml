@@ -234,7 +234,7 @@ PlasmoidItem {
         running: root.hasRateLimitError && !root.baseUrl
         repeat: true
         onTriggered: {
-            tokenWatcher.connectSource("cat $HOME/.claude/.credentials.json 2>/dev/null")
+            tokenWatcher.connectSource("cat ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.credentials.json 2>/dev/null")
         }
     }
 
@@ -325,6 +325,7 @@ PlasmoidItem {
 
                     if (root.accessToken) {
                         root.credentialsRetryCount = 0
+                        emailReader.connectSource("cat $HOME/.claude.json 2>/dev/null")
                         var expiresAt = oauth.expiresAt || 0
                         var isLocallyExpired = expiresAt > 0 && Date.now() >= expiresAt
                         if (isLocallyExpired && Plasmoid.configuration.autoRefreshSession && !root.autoRefreshAttempted) {
@@ -393,7 +394,7 @@ PlasmoidItem {
         repeat: false
         onTriggered: {
             console.log("Claude Usage: Retrying credentials read, attempt", root.credentialsRetryCount, "of", root.maxCredentialsRetries)
-            fileReader.connectSource("cat $HOME/.claude/.credentials.json 2>/dev/null")
+            fileReader.connectSource("cat ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.credentials.json 2>/dev/null")
         }
     }
 
@@ -554,7 +555,7 @@ PlasmoidItem {
 
     function refreshTokenStats() {
         var today = Qt.formatDateTime(new Date(), "yyyy-MM-dd")
-        var script = "bash -c 'find $HOME/.claude/projects -name \"*.jsonl\" -newer /tmp/.claude-token-stats-marker -o -name \"*.jsonl\" 2>/dev/null | head -50 | while read f; do grep -o '\\''\"model\":\"[^\"]*\".*\"input_tokens\":[0-9]*.*\"output_tokens\":[0-9]*'\\'' \"$f\" 2>/dev/null; done | grep '\\''\"" + today + "'\\'' | sed -E '\\''s/.*\"model\":\"([^\"]*)\".*\"input_tokens\":([0-9]+).*\"output_tokens\":([0-9]+).*/\\1|\\2|\\3|0|0/'\\'' 2>/dev/null; true'"
+        var script = "bash -c 'find ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/projects -name \"*.jsonl\" -newer /tmp/.claude-token-stats-marker -o -name \"*.jsonl\" 2>/dev/null | head -50 | while read f; do grep -o '\\''\"model\":\"[^\"]*\".*\"input_tokens\":[0-9]*.*\"output_tokens\":[0-9]*'\\'' \"$f\" 2>/dev/null; done | grep '\\''\"" + today + "'\\'' | sed -E '\\''s/.*\"model\":\"([^\"]*)\".*\"input_tokens\":([0-9]+).*\"output_tokens\":([0-9]+).*/\\1|\\2|\\3|0|0/'\\'' 2>/dev/null; true'"
         tokenStatsReader.connectSource(script)
     }
 
@@ -593,7 +594,7 @@ PlasmoidItem {
             root.baseUrl = ""
             root.apiKey = ""
             console.log("Claude Usage: No base URL configured, reading credentials file")
-            fileReader.connectSource("cat $HOME/.claude/.credentials.json 2>/dev/null")
+            fileReader.connectSource("cat ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.credentials.json 2>/dev/null")
         }
     }
 
@@ -1492,10 +1493,18 @@ PlasmoidItem {
     toolTipMainText: i18n.tr("Claude Usage")
     toolTipSubText: {
         var parts = []
-        if (Plasmoid.configuration.showSession !== false)
-            parts.push(i18n.tr("Session (5hr)") + ": " + Math.round(root.sessionUsagePercent) + "%")
-        if (Plasmoid.configuration.showWeekly !== false)
-            parts.push(i18n.tr("Weekly (7day)") + ": " + Math.round(root.weeklyUsagePercent) + "%")
+        if (Plasmoid.configuration.showSession !== false) {
+            var sessionStr = i18n.tr("Session (5hr)") + ": " + Math.round(root.sessionUsagePercent) + "%"
+            var sessionRemaining = formatTimeRemaining(root.sessionResetTime)
+            if (sessionRemaining) sessionStr += " (" + sessionRemaining + ")"
+            parts.push(sessionStr)
+        }
+        if (Plasmoid.configuration.showWeekly !== false) {
+            var weeklyStr = i18n.tr("Weekly (7day)") + ": " + Math.round(root.weeklyUsagePercent) + "%"
+            var weeklyRemaining = formatTimeRemaining(root.weeklyResetTime)
+            if (weeklyRemaining) weeklyStr += " (" + weeklyRemaining + ")"
+            parts.push(weeklyStr)
+        }
         for (var i = 0; i < root.modelLimits.length; i++) {
             if (root.isModelShownInPanel(root.modelLimits[i].label))
                 parts.push(root.modelLimits[i].label + ": " + Math.round(root.modelLimits[i].percent) + "%")

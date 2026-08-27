@@ -7,7 +7,7 @@
 # Output: response body, then a final line "<http_code> <retry_after>".
 # Prints "NOCREDS" if no access token is available.
 
-CREDS="$HOME/.claude/.credentials.json"
+CREDS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.credentials.json"
 
 TOKEN=$(grep -o '"accessToken"[[:space:]]*:[[:space:]]*"[^"]*"' "$CREDS" 2>/dev/null | sed 's/.*"accessToken"[[:space:]]*:[[:space:]]*"//;s/"$//')
 if [ -z "$TOKEN" ]; then
