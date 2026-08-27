@@ -1417,23 +1417,28 @@ PlasmoidItem {
         onRunningChanged: if (running) versionReader.connectSource("claude --version 2>/dev/null")
     }
 
-    function checkForUpdate() {
-        if (Plasmoid.configuration.enableUpdateCheck === false) return
-        var xhr = new XMLHttpRequest()
-        xhr.open("GET", "https://registry.npmjs.org/@anthropic-ai/claude-code/latest")
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    try {
-                        root.latestVersion = JSON.parse(xhr.responseText).version || ""
-                        console.log("Claude Usage: latest version:", root.latestVersion, "installed:", root.claudeVersion)
-                    } catch (e) { console.log("Claude Usage: update check parse error:", e) }
-                } else {
-                    console.log("Claude Usage: update check failed, status:", xhr.status)
-                }
+    Plasma5Support.DataSource {
+        id: updateChecker
+        engine: "executable"
+        connectedSources: []
+
+        onNewData: function(sourceName, data) {
+            var stdout = (data["stdout"] || "").trim()
+            disconnectSource(sourceName)
+            if (stdout.length > 2) {
+                try {
+                    root.latestVersion = JSON.parse(stdout).version || ""
+                    console.log("Claude Usage: latest version:", root.latestVersion, "installed:", root.claudeVersion)
+                } catch (e) { console.log("Claude Usage: update check parse error:", e) }
+            } else {
+                console.log("Claude Usage: update check failed, no response")
             }
         }
-        xhr.send()
+    }
+
+    function checkForUpdate() {
+        if (Plasmoid.configuration.enableUpdateCheck === false) return
+        updateChecker.connectSource("curl -sS --max-time 10 https://registry.npmjs.org/@anthropic-ai/claude-code/latest 2>/dev/null")
     }
 
     function formatTimeRemaining(resetTime) {
