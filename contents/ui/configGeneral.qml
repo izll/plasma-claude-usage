@@ -33,6 +33,7 @@ KCM.SimpleKCM {
     property string cfg_cardOrder
     property string cfg_baseUrl
     property string cfg_apiKey
+    property bool cfg_autoRefreshSession
     property double cfg_backgroundOpacity
     property bool cfg_useTimeAwareColors
     property bool cfg_scrollableContent
@@ -540,6 +541,27 @@ KCM.SimpleKCM {
             QQC2.Label {
                 text: tr("seconds")
             }
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: tr("Authentication")
+        }
+
+        QQC2.CheckBox {
+            Kirigami.FormData.label: tr("Session refresh:")
+            text: tr("Automatically refresh expired session")
+            checked: cfg_autoRefreshSession
+            onToggled: cfg_autoRefreshSession = checked
+        }
+
+        QQC2.Label {
+            text: tr("Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.")
+            font.italic: true
+            opacity: 0.7
+            wrapMode: Text.WordWrap
+            Layout.fillWidth: true
+            Layout.preferredWidth: Kirigami.Units.gridUnit * 20
         }
 
         Kirigami.Separator {

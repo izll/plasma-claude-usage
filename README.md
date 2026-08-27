@@ -166,6 +166,18 @@ izll
 
 ## Version History
 
+### 2.2.0 (2026)
+- **Survive network failures**: API fetch via curl subprocess instead of QML XMLHttpRequest — immune to plasmashell's stale network state after suspend/resume (thanks @lockshore, PR #17)
+- **Silent session refresh**: Opt-in setting to automatically refresh expired OAuth token in the background using a pty, no manual re-login needed (thanks @bartekmp, PR #18)
+- **Network error handling**: Status 0 treated as transient — cached data stays visible with neutral notice instead of "Not logged in"
+- **Credentials retry**: Retries credential reads up to 4 times on boot when file is empty or fails to parse
+- Refresh button bypasses the 55s fetch throttle
+- "Run 'claude' to log in" only shown when actually logged out
+- Red dot on panel icon for network errors
+- Scrollable content now available for both card and classic popups
+- Footer scrolls with content instead of being fixed
+- Removed unused User-Agent header and version detection dependency
+
 ### 2.1.1 (2026)
 - **System theme background**: Desktop widget uses Plasma's native background at 100% opacity (thanks @Hody, PR #16)
 - Custom background border and matching margins when opacity < 100%

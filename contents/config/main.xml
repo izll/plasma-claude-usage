@@ -86,6 +86,10 @@
             <label>Use time-proportional color thresholds instead of fixed 50/80/100%</label>
             <default>true</default>
         </entry>
+        <entry name="autoRefreshSession" type="Bool">
+            <label>Silently refresh expired session token in background</label>
+            <default>false</default>
+        </entry>
         <entry name="backgroundOpacity" type="Double">
             <label>Background opacity (0.0 = transparent, 1.0 = opaque)</label>
             <default>1.0</default>
