@@ -721,6 +721,8 @@ PlasmoidItem {
     fullRepresentation: Item {
         id: fullRepItem
 
+        readonly property bool classicScrollable: Plasmoid.configuration.scrollableContent === true
+
         property real targetWidth: root.useCardPopup
             ? (cardLoader.item ? cardLoader.item.Layout.preferredWidth : Kirigami.Units.gridUnit * 17)
             : Kirigami.Units.gridUnit * 16
@@ -733,7 +735,7 @@ PlasmoidItem {
             : Kirigami.Units.gridUnit * 14
         Layout.minimumHeight: root.useCardPopup
             ? (cardLoader.item ? cardLoader.item.Layout.minimumHeight : Kirigami.Units.gridUnit * 16)
-            : Math.min(classicColumn.implicitHeight + Kirigami.Units.largeSpacing * 2, Kirigami.Units.gridUnit * 24)
+            : fullRepItem.classicScrollable ? Kirigami.Units.gridUnit * 4 : Math.min(classicColumn.implicitHeight + Kirigami.Units.largeSpacing * 2, Kirigami.Units.gridUnit * 24)
         Layout.preferredWidth: targetWidth
         Layout.preferredHeight: targetHeight
         Layout.maximumWidth: resizeForcer.running ? targetWidth : -1
@@ -789,6 +791,32 @@ PlasmoidItem {
                             }
                         }
                     }
+
+                    // Scrollable middle content
+                    Flickable {
+                        id: classicFlickable
+                        Layout.fillWidth: true
+                        Layout.fillHeight: fullRepItem.classicScrollable
+                        Layout.preferredHeight: classicScrollContent.implicitHeight
+                        contentHeight: classicScrollContent.implicitHeight
+                        clip: true
+                        interactive: contentHeight > height
+                        boundsBehavior: Flickable.StopAtBounds
+
+                        PlasmaComponents.ScrollBar.vertical: PlasmaComponents.ScrollBar {
+                            id: classicScrollBar
+                            policy: classicFlickable.contentHeight > classicFlickable.height
+                                ? PlasmaComponents.ScrollBar.AsNeeded
+                                : PlasmaComponents.ScrollBar.AlwaysOff
+                            leftInset: 0
+                            rightInset: 0
+                            rightPadding: 0
+                        }
+
+                        ColumnLayout {
+                            id: classicScrollContent
+                            width: classicFlickable.width - (classicScrollBar.visible ? classicScrollBar.width : 0)
+                            spacing: Kirigami.Units.mediumSpacing
 
                     // Error message
                     Rectangle {
@@ -1031,8 +1059,6 @@ PlasmoidItem {
                         wrapMode: Text.WordWrap
                     }
 
-                    Item { Layout.fillHeight: true }
-
                     // Footer
                     Rectangle {
                         Layout.fillWidth: true
@@ -1083,6 +1109,12 @@ PlasmoidItem {
                             onClicked: root.refresh()
                         }
                     }
+
+                        }
+                    }
+
+                    Item { Layout.fillHeight: true }
+
                 }
             }
         }

@@ -46,7 +46,7 @@ Item {
     Layout.minimumWidth: Kirigami.Units.gridUnit * 19
     Layout.preferredWidth: Kirigami.Units.gridUnit * 21
     readonly property bool scrollable: Plasmoid.configuration.scrollableContent === true
-    Layout.minimumHeight: full.scrollable ? Kirigami.Units.gridUnit * 8 : (mainColumn.implicitHeight + Kirigami.Units.smallSpacing * 2)
+    Layout.minimumHeight: full.scrollable ? Kirigami.Units.gridUnit * 4 : (mainColumn.implicitHeight + Kirigami.Units.smallSpacing * 2)
     Layout.preferredHeight: mainColumn.implicitHeight + Kirigami.Units.smallSpacing * 2
 
     property var cardOrder: []
@@ -538,7 +538,7 @@ Item {
             id: cardFlickable
             Layout.fillWidth: true
             Layout.fillHeight: full.scrollable
-            Layout.preferredHeight: full.scrollable ? -1 : scrollContent.implicitHeight
+            Layout.preferredHeight: scrollContent.implicitHeight
             contentHeight: scrollContent.implicitHeight
             clip: true
             interactive: contentHeight > height
@@ -674,52 +674,54 @@ Item {
                     font.italic: true
                     Layout.fillWidth: true; wrapMode: Text.WordWrap
                 }
+
+                // ===== Footer =====
+                RowLayout {
+                    id: footerRow
+                    Layout.fillWidth: true
+                    spacing: Kirigami.Units.smallSpacing
+
+                    Rectangle {
+                        visible: root.updateAvailable
+                        Layout.preferredWidth: updateLabel.implicitWidth + Kirigami.Units.largeSpacing
+                        Layout.preferredHeight: updateLabel.implicitHeight + Kirigami.Units.smallSpacing
+                        radius: height / 2
+                        color: Qt.alpha(full.accent, 0.18)
+
+                        PlasmaComponents.Label {
+                            id: updateLabel
+                            anchors.centerIn: parent
+                            text: "⬆ " + root.latestVersion + " " + i18n.tr("available")
+                            font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                            font.bold: true; color: full.accent
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.launchInTerminal("claude update")
+                        }
+                    }
+
+                    PlasmaComponents.Label {
+                        text: full.statusText
+                        font.pixelSize: Kirigami.Theme.smallFont.pixelSize
+                        opacity: 0.65; elide: Text.ElideRight
+                        Layout.fillWidth: false
+                    }
+
+                    Item { Layout.fillWidth: true }
+
+                    PlasmaComponents.ToolButton {
+                        icon.name: "view-refresh"
+                        text: i18n.tr("Refresh")
+                        onClicked: root.refresh()
+                    }
+                }
             }
         }
 
-        // ===== Footer =====
-        RowLayout {
-            id: footerRow
-            Layout.fillWidth: true
-            spacing: Kirigami.Units.smallSpacing
-
-            Rectangle {
-                visible: root.updateAvailable
-                Layout.preferredWidth: updateLabel.implicitWidth + Kirigami.Units.largeSpacing
-                Layout.preferredHeight: updateLabel.implicitHeight + Kirigami.Units.smallSpacing
-                radius: height / 2
-                color: Qt.alpha(full.accent, 0.18)
-
-                PlasmaComponents.Label {
-                    id: updateLabel
-                    anchors.centerIn: parent
-                    text: "⬆ " + root.latestVersion + " " + i18n.tr("available")
-                    font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                    font.bold: true; color: full.accent
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: root.launchInTerminal("claude update")
-                }
-            }
-
-            PlasmaComponents.Label {
-                text: full.statusText
-                font.pixelSize: Kirigami.Theme.smallFont.pixelSize
-                opacity: 0.65; elide: Text.ElideRight
-                Layout.fillWidth: false
-            }
-
-            Item { Layout.fillWidth: true }
-
-            PlasmaComponents.ToolButton {
-                icon.name: "view-refresh"
-                text: i18n.tr("Refresh")
-                onClicked: root.refresh()
-            }
-        }
+        Item { Layout.fillHeight: true }
     }
 
 }

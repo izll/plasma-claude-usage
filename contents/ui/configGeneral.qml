@@ -252,7 +252,6 @@ KCM.SimpleKCM {
             text: tr("Enable scrollable content")
             checked: cfg_scrollableContent
             onToggled: cfg_scrollableContent = checked
-            visible: cfg_popupStyle !== "classic"
         }
 
         Kirigami.Separator {
