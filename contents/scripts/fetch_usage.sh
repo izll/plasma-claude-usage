@@ -9,11 +9,36 @@
 
 CREDS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.credentials.json"
 
-TOKEN=$(grep -o '"accessToken"[[:space:]]*:[[:space:]]*"[^"]*"' "$CREDS" 2>/dev/null | sed 's/.*"accessToken"[[:space:]]*:[[:space:]]*"//;s/"$//')
+# The credentials file also holds an mcpOAuth section, and every MCP server
+# entry there carries its own "accessToken". Scope the match to the
+# claudeAiOauth object so an MCP token is never picked up instead.
+JSON=$(tr -d '\n\r' < "$CREDS" 2>/dev/null)
+
+strip_key() {
+    sed 's/.*"accessToken"[[:space:]]*:[[:space:]]*"//;s/"$//'
+}
+
+TOKEN=$(printf '%s' "$JSON" \
+    | grep -o '"claudeAiOauth"[[:space:]]*:[[:space:]]*{[^{}]*}' \
+    | grep -o '"accessToken"[[:space:]]*:[[:space:]]*"[^"]*"' \
+    | head -n 1 | strip_key)
+
+# Fallback for a claudeAiOauth object we could not isolate (nested objects):
+# match on the OAuth token prefix, which MCP tokens do not use.
 if [ -z "$TOKEN" ]; then
-    echo "NOCREDS"
-    exit 0
+    TOKEN=$(printf '%s' "$JSON" \
+        | grep -o '"accessToken"[[:space:]]*:[[:space:]]*"sk-ant-[^"]*"' \
+        | head -n 1 | strip_key)
 fi
+
+# A token is a single opaque word. Anything else means extraction went wrong,
+# and passing it on would inject extra lines into the curl header block.
+case "$TOKEN" in
+    "" | *[!A-Za-z0-9_.=-]*)
+        echo "NOCREDS"
+        exit 0
+        ;;
+esac
 
 # Token passed via stdin (-H @-) so it never appears in process arguments.
 printf 'Authorization: Bearer %s\n' "$TOKEN" | curl -sS \
