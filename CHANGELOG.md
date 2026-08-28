@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Update check now uses curl subprocess — survives suspend/resume like the usage fetch
+- Update indicator clears within 1 minute after upgrading (was only checked at startup)
+- Toggling update check on/off immediately runs a version check and shows/hides the indicator
 - Classic popup spacing — hidden sections (extra usage, tokens, etc.) no longer leave empty gaps
 - Classic popup footer (Updated/Refresh) now always visible outside the scrollable area
 
