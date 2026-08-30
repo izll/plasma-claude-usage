@@ -22,6 +22,10 @@
             <label>Show Claude icon in panel</label>
             <default>true</default>
         </entry>
+        <entry name="iconSize" type="Int">
+            <label>Panel icon size (0 = auto)</label>
+            <default>0</default>
+        </entry>
         <entry name="panelStyle" type="String">
             <label>Panel display style (text or circular)</label>
             <default>ring</default>

@@ -7,6 +7,8 @@ import org.kde.kirigami as Kirigami
 Item {
     id: compact
 
+    readonly property int effectiveIconSize: Plasmoid.configuration.iconSize > 0 ? Plasmoid.configuration.iconSize : Kirigami.Units.iconSizes.smallMedium
+
     Layout.minimumWidth: usageRow.implicitWidth + Kirigami.Units.largeSpacing * 2
     Layout.minimumHeight: root.isVerticalLayout ? usageRow.implicitHeight + Kirigami.Units.largeSpacing * 2 : Kirigami.Units.iconSizes.medium
     Layout.preferredWidth: usageRow.implicitWidth + Kirigami.Units.largeSpacing * 2
@@ -29,15 +31,18 @@ Item {
         // Claude icon with error/update indicator
         Item {
             visible: Plasmoid.configuration.showIcon !== false
-            Layout.preferredWidth: Kirigami.Units.iconSizes.smallMedium
-            Layout.preferredHeight: Kirigami.Units.iconSizes.smallMedium
+            Layout.preferredWidth: compact.effectiveIconSize
+            Layout.preferredHeight: compact.effectiveIconSize
             Layout.rightMargin: Kirigami.Units.smallSpacing
 
-            Kirigami.Icon {
+            Image {
                 anchors.fill: parent
                 source: (Plasmoid.configuration.panelIcon || "claude") === "tile"
                     ? Qt.resolvedUrl("../icons/claude-tile.svg")
                     : Qt.resolvedUrl("../icons/claude.svg")
+                sourceSize: Qt.size(parent.width * Screen.devicePixelRatio, parent.height * Screen.devicePixelRatio)
+                fillMode: Image.PreserveAspectFit
+                smooth: true
             }
 
             Rectangle {

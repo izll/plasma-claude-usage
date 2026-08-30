@@ -37,6 +37,7 @@ KCM.SimpleKCM {
     property double cfg_backgroundOpacity
     property bool cfg_useTimeAwareColors
     property bool cfg_scrollableContent
+    property int cfg_iconSize
 
     property var availableModels: []
     property var quickLinksModel: []
@@ -359,6 +360,21 @@ KCM.SimpleKCM {
             model: ["Claude", "Tile"]
             currentIndex: (cfg_panelIcon || "claude") === "tile" ? 1 : 0
             onCurrentIndexChanged: cfg_panelIcon = currentIndex === 1 ? "tile" : "claude"
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: tr("Icon size:")
+            enabled: cfg_showIcon
+
+            QQC2.SpinBox {
+                from: 0
+                to: 64
+                stepSize: 2
+                value: cfg_iconSize
+                onValueChanged: cfg_iconSize = value
+                textFromValue: function(value) { return value === 0 ? tr("Auto") : value + "px" }
+                valueFromText: function(text) { return parseInt(text) || 0 }
+            }
         }
 
         QQC2.ComboBox {
