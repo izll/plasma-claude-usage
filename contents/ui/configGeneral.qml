@@ -387,18 +387,6 @@ KCM.SimpleKCM {
             }
         }
 
-        Kirigami.Separator {
-            Kirigami.FormData.isSection: true
-            Kirigami.FormData.label: tr("Colors")
-        }
-
-        QQC2.CheckBox {
-            Kirigami.FormData.label: tr("Colors:")
-            text: tr("Time-proportional warnings")
-            checked: cfg_useTimeAwareColors
-            onCheckedChanged: cfg_useTimeAwareColors = checked
-        }
-
         QQC2.CheckBox {
             Kirigami.FormData.label: tr("Show in panel:")
             text: tr("Session (5hr)")
@@ -428,6 +416,18 @@ KCM.SimpleKCM {
             text: tr("No model data yet")
             font.italic: true
             opacity: 0.6
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: tr("Colors")
+        }
+
+        QQC2.CheckBox {
+            Kirigami.FormData.label: tr("Colors:")
+            text: tr("Time-proportional warnings")
+            checked: cfg_useTimeAwareColors
+            onCheckedChanged: cfg_useTimeAwareColors = checked
         }
 
         RowLayout {
