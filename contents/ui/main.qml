@@ -946,6 +946,15 @@ PlasmoidItem {
                             radius: 5
                             color: root.getUsageColor(root.sessionUsagePercent, root.useTimeAware ? root.sessionTimePct : undefined)
                         }
+                        Rectangle {
+                            visible: root.useTimeAware && root.sessionTimePct >= 0
+                            x: parent.width * Math.min(root.sessionTimePct / 100, 1) - width / 2
+                            y: -2
+                            width: 2
+                            height: parent.height + 4
+                            color: Kirigami.Theme.textColor
+                            opacity: 0.6
+                        }
                     }
 
                     PlasmaComponents.Label {
@@ -986,6 +995,15 @@ PlasmoidItem {
                             height: parent.height
                             radius: 5
                             color: root.getUsageColor(root.weeklyUsagePercent, root.useTimeAware ? root.weeklyTimePct : undefined)
+                        }
+                        Rectangle {
+                            visible: root.useTimeAware && root.weeklyTimePct >= 0
+                            x: parent.width * Math.min(root.weeklyTimePct / 100, 1) - width / 2
+                            y: -2
+                            width: 2
+                            height: parent.height + 4
+                            color: Kirigami.Theme.textColor
+                            opacity: 0.6
                         }
                     }
 

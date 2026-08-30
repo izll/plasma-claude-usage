@@ -387,6 +387,11 @@ KCM.SimpleKCM {
             }
         }
 
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: tr("Colors")
+        }
+
         QQC2.CheckBox {
             Kirigami.FormData.label: tr("Colors:")
             text: tr("Time-proportional warnings")
