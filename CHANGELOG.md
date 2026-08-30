@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.1] - 2026-08-30
+
+### Fixed
+
+- "Rate limited" error when `.credentials.json` also contains an `mcpOAuth` section (OAuth MCP servers) — token parsing is now scoped to the `claudeAiOauth` object ([#21](https://github.com/izll/plasma-claude-usage/pull/21), thanks @OndraM)
+
 ## [2.3.0] - 2026-08-27
 
 ### Added
@@ -190,6 +196,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configurable refresh interval
 - Error handling for login issues
 
+[2.3.1]: https://github.com/izll/plasma-claude-usage/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/izll/plasma-claude-usage/compare/v2.2.1...v2.3.0
 [2.2.1]: https://github.com/izll/plasma-claude-usage/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/izll/plasma-claude-usage/compare/v2.1.1...v2.2.0
