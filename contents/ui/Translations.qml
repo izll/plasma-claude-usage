@@ -17,6 +17,7 @@ QtObject {
 
     readonly property var strings: ({
         "en_US": {
+            "weekly usage": "weekly usage",
             "Token Stats (Today)": "Token Stats (Today)",
             "Claude Usage": "Claude Usage",
             "Session (5hr)": "Session (5hr)",
@@ -141,6 +142,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually."
         },
         "hu_HU": {
+            "weekly usage": "heti használat",
             "Token Stats (Today)": "Token statisztika (ma)",
             "Claude Usage": "Claude használat",
             "Session (5hr)": "Munkamenet (5 óra)",
@@ -265,6 +267,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Röviden újranyitja a claude-ot a háttérben (kb. 15 másodperc, látható ablak nélkül, üzenet küldése nélkül), hogy frissítse a munkamenetet, mielőtt kézi bejelentkezésre kérne."
         },
         "de_DE": {
+            "weekly usage": "wöchentliche Nutzung",
             "Colors": "Farben",
             "Token Stats (Today)": "Token-Statistik (heute)",
             "Claude Usage": "Claude Nutzung",
@@ -382,6 +385,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Öffnet claude kurz im Hintergrund (etwa 15 Sekunden, kein sichtbares Fenster, keine Nachricht gesendet), um die Sitzung zu aktualisieren, bevor Sie zur manuellen Anmeldung aufgefordert werden."
         },
         "fr_FR": {
+            "weekly usage": "utilisation hebdomadaire",
             "Colors": "Couleurs",
             "Token Stats (Today)": "Statistiques de tokens (aujourd'hui)",
             "Claude Usage": "Utilisation Claude",
@@ -499,6 +503,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Rouvre brièvement claude en arrière-plan (environ 15 secondes, sans fenêtre visible, sans message envoyé) pour actualiser la session avant de vous demander de vous connecter manuellement."
         },
         "es_ES": {
+            "weekly usage": "uso semanal",
             "Colors": "Colores",
             "Token Stats (Today)": "Estadísticas de tokens (hoy)",
             "Claude Usage": "Uso de Claude",
@@ -616,6 +621,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Reabre brevemente claude en segundo plano (unos 15 segundos, sin ventana visible, sin enviar mensajes) para actualizar la sesión antes de pedirte que inicies sesión manualmente."
         },
         "it_IT": {
+            "weekly usage": "utilizzo settimanale",
             "Colors": "Colori",
             "Token Stats (Today)": "Statistiche token (oggi)",
             "Claude Usage": "Utilizzo Claude",
@@ -733,6 +739,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Riapre brevemente claude in background (circa 15 secondi, senza finestra visibile, senza inviare messaggi) per aggiornare la sessione prima di chiederti di accedere manualmente."
         },
         "pt_BR": {
+            "weekly usage": "uso semanal",
             "Colors": "Cores",
             "Token Stats (Today)": "Estatísticas de tokens (hoje)",
             "Claude Usage": "Uso do Claude",
@@ -850,6 +857,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Reabre brevemente o claude em segundo plano (cerca de 15 segundos, sem janela visível, sem enviar mensagem) para atualizar a sessão antes de solicitar que você faça login manualmente."
         },
         "ru_RU": {
+            "weekly usage": "недельное использование",
             "Colors": "Цвета",
             "Token Stats (Today)": "Статистика токенов (сегодня)",
             "Claude Usage": "Использование Claude",
@@ -967,6 +975,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Ненадолго открывает claude в фоновом режиме (около 15 секунд, без видимого окна, без отправки сообщений), чтобы обновить сессию перед запросом на ручной вход."
         },
         "pl_PL": {
+            "weekly usage": "tygodniowe użycie",
             "Colors": "Kolory",
             "Token Stats (Today)": "Statystyki tokenów (dzisiaj)",
             "Claude Usage": "Użycie Claude",
@@ -1084,6 +1093,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Na krótko ponownie otwiera claude w tle (około 15 sekund, bez widocznego okna, bez wysyłania wiadomości), aby odświeżyć sesję przed poproszeniem o ręczne zalogowanie."
         },
         "nl_NL": {
+            "weekly usage": "wekelijks gebruik",
             "Colors": "Kleuren",
             "Token Stats (Today)": "Tokenstatistieken (vandaag)",
             "Claude Usage": "Claude Gebruik",
@@ -1201,6 +1211,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Heropent claude kort op de achtergrond (ongeveer 15 seconden, geen zichtbaar venster, geen bericht verzonden) om de sessie te vernieuwen voordat u wordt gevraagd handmatig in te loggen."
         },
         "tr_TR": {
+            "weekly usage": "haftalık kullanım",
             "Colors": "Renkler",
             "Token Stats (Today)": "Jeton istatistikleri (bugün)",
             "Claude Usage": "Claude Kullanımı",
@@ -1318,6 +1329,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "Oturumu yenilemek için claude'u arka planda kısaca yeniden açar (yaklaşık 15 saniye, görünür pencere yok, mesaj gönderilmez), ardından sizden manuel giriş yapmanızı ister."
         },
         "ja_JP": {
+            "weekly usage": "週間使用量",
             "Colors": "色",
             "Token Stats (Today)": "トークン統計（今日）",
             "Claude Usage": "Claude 使用状況",
@@ -1435,6 +1447,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "手動ログインを求める前に、バックグラウンドで claude を短時間再起動し（約15秒、ウィンドウ表示なし、メッセージ送信なし）、セッションを更新します。"
         },
         "ko_KR": {
+            "weekly usage": "주간 사용량",
             "Colors": "색상",
             "Token Stats (Today)": "토큰 통계 (오늘)",
             "Claude Usage": "Claude 사용량",
@@ -1552,6 +1565,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "수동 로그인을 요청하기 전에 백그라운드에서 claude를 잠시 다시 열어(약 15초, 표시되는 창 없음, 메시지 전송 없음) 세션을 새로고침합니다."
         },
         "zh_CN": {
+            "weekly usage": "每周使用量",
             "Colors": "颜色",
             "Token Stats (Today)": "令牌统计（今日）",
             "Claude Usage": "Claude 使用情况",
@@ -1669,6 +1683,7 @@ QtObject {
             "Briefly reopens claude in the background (about 15 seconds, no visible window, no message sent) to refresh the session before prompting you to log in manually.": "在提示您手动登录之前，在后台短暂重新打开 claude（约15秒，无可见窗口，不发送消息）以刷新会话。"
         },
         "zh_TW": {
+            "weekly usage": "每週使用量",
             "Colors": "顏色",
             "Token Stats (Today)": "權杖統計（今日）",
             "Claude Usage": "Claude 使用狀況",

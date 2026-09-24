@@ -397,7 +397,7 @@ Item {
                         text: i18n.tr("7-day trend")
                     }
                     Item { Layout.fillWidth: true }
-                    PlasmaComponents.Label { text: i18n.tr("session usage"); font.pixelSize: Kirigami.Theme.smallFont.pixelSize; opacity: 0.55 }
+                    PlasmaComponents.Label { text: i18n.tr("weekly usage"); font.pixelSize: Kirigami.Theme.smallFont.pixelSize; opacity: 0.55 }
                 }
 
                 TrendChart {

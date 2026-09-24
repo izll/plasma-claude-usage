@@ -5,7 +5,7 @@
 
 import QtQuick
 
-// Sparkline (line + soft area fill) of session-usage samples.
+// Sparkline (line + soft area fill) of weekly-usage samples.
 // samples: array of {t: ms-epoch, session: percent, weekly: percent}
 Canvas {
     id: chart
@@ -29,7 +29,7 @@ Canvas {
         var span = Math.max(samples[samples.length - 1].t - t0, 1)
 
         function px(s) { return pad + (width - 2 * pad) * (s.t - t0) / span }
-        function py(s) { return height - pad - (height - 2 * pad) * Math.min(s.session, 100) / 100 }
+        function py(s) { return height - pad - (height - 2 * pad) * Math.min(s.weekly !== undefined ? s.weekly : s.session, 100) / 100 }
 
         // Area fill
         ctx.beginPath()
