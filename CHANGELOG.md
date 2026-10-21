@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Claude Desktop login as a fallback**: the widget now also works when only Claude Desktop is installed (no Claude Code CLI). If there is no Claude Code login it reads the access token cached by Claude Desktop (`~/.config/Claude/config.json`, decrypted read-only with `openssl` and the system keyring) through the new `contents/scripts/desktop_creds.sh`. The Claude Code login still takes precedence, a custom Credentials path disables the fallback, and Desktop's refresh token is never used
+- `desktop_creds.sh --diagnose` explains why no Desktop token was found (key names only, never token values)
+
+### Changed
+
+- When the login comes from Claude Desktop, "Open Claude" starts Claude Desktop instead of a terminal, and silent session refresh (a CLI feature) is skipped
+- The visibility option "hide when Claude is not running" also recognises the Claude Desktop process
+- The "not logged in" hint now mentions Claude Desktop
+
 ## [2.5.1] - 2026-10-19
 
 ### Added

@@ -25,6 +25,9 @@ PlasmoidItem {
     property string weeklyReset: ""
     property string errorMsg: ""
     property string accessToken: ""
+    // Where the current token came from: "cli" (~/.claude/.credentials.json)
+    // or "desktop" (Claude Desktop's cached login, see desktop_creds.sh).
+    property string credsSource: "cli"
     property string apiKey: ""
     property string baseUrl: ""
     property bool isLoading: false
@@ -213,6 +216,7 @@ PlasmoidItem {
             if (stdout.length > 10) {
                 try {
                     var creds = JSON.parse(stdout)
+                    root.credsSource = creds.source === "desktop" ? "desktop" : "cli"
                     var newToken = (creds.claudeAiOauth || {}).accessToken || ""
                     if (newToken && newToken !== root.accessToken) {
                         console.log("Claude Usage: New token detected! Resetting rate limit state.")
@@ -268,7 +272,8 @@ PlasmoidItem {
     }
 
     function checkClaudeProcess() {
-        processChecker.connectSource("pgrep -x claude 2>/dev/null")
+        // The CLI process is "claude", the Claude Desktop app "claude-desktop"
+        processChecker.connectSource("pgrep -x 'claude|claude-desktop' 2>/dev/null")
     }
 
     function updateProcessVisibility() {
@@ -384,8 +389,21 @@ PlasmoidItem {
         ? "\"$HOME/.local/share/claude-usage-cache-" + Plasmoid.id + ".json\""
         : "$HOME/.local/share/claude-usage-cache.json"
 
+    function desktopCredsScript() {
+        return Qt.resolvedUrl("../scripts/desktop_creds.sh").toString().replace("file://", "")
+    }
+
+    // Prints the credentials JSON. A configured credentialsPath is used
+    // exactly as given. By default the Claude Code login wins, and Claude
+    // Desktop's cached login is the fallback, so the widget also works when
+    // only Claude Desktop is installed. The helper emits the same JSON shape
+    // plus "source":"desktop".
     function readCredentialsCmd() {
-        return "cat -- " + credentialsFileExpr() + " 2>/dev/null"
+        var file = credentialsFileExpr()
+        if (root.configuredClaudePath)
+            return "cat -- " + file + " 2>/dev/null"
+        return "f=" + file + "; if [ -s \"$f\" ] && grep -q claudeAiOauth \"$f\" 2>/dev/null; "
+            + "then cat -- \"$f\"; else sh '" + desktopCredsScript() + "' 2>/dev/null; fi"
     }
 
     // Claude Code keeps the account file beside the config folder by default
@@ -416,6 +434,7 @@ PlasmoidItem {
                 try {
                     var creds = JSON.parse(stdout)
                     var oauth = creds.claudeAiOauth || {}
+                    root.credsSource = creds.source === "desktop" ? "desktop" : "cli"
                     root.accessToken = oauth.accessToken || ""
 
                     root.credsTier = oauth.rateLimitTier || ""
@@ -429,7 +448,10 @@ PlasmoidItem {
                         emailReader.connectSource(readAccountCmd())
                         var expiresAt = oauth.expiresAt || 0
                         var isLocallyExpired = expiresAt > 0 && Date.now() >= expiresAt
-                        if (isLocallyExpired && Plasmoid.configuration.autoRefreshSession && !root.autoRefreshAttempted) {
+                        // Silent refresh runs the claude CLI, so it doesn't apply to
+                        // a Claude Desktop login (Desktop refreshes that itself).
+                        if (isLocallyExpired && root.credsSource !== "desktop"
+                                && Plasmoid.configuration.autoRefreshSession && !root.autoRefreshAttempted) {
                             console.log("Claude Usage: Session locally expired, attempting proactive silent refresh")
                             startSilentRefresh()
                         } else {
@@ -688,6 +710,16 @@ PlasmoidItem {
         claudeLauncher.connectSource(claudeDirEnvPrefix() + "bash -c 'cd $HOME && if command -v konsole >/dev/null; then konsole --hold -e env -u CLAUDECODE bash -lc \"" + cmd + "\"; elif command -v gnome-terminal >/dev/null; then gnome-terminal -- env -u CLAUDECODE bash -lc \"" + cmd + "; exec bash\"; elif command -v xfce4-terminal >/dev/null; then xfce4-terminal --hold -e \"env -u CLAUDECODE bash -lc \\\"" + cmd + "\\\"\"; elif command -v xterm >/dev/null; then xterm -hold -e env -u CLAUDECODE bash -lc \"" + cmd + "\"; fi &'")
     }
 
+    // Opens whatever the current login belongs to: the Claude Desktop app when
+    // the token came from Desktop, the CLI in a terminal otherwise.
+    function launchClaude() {
+        if (root.credsSource === "desktop") {
+            claudeLauncher.connectSource("bash -c 'for c in claude-desktop claude-desktop-bin; do if command -v \"$c\" >/dev/null; then nohup \"$c\" >/dev/null 2>&1 & exit 0; fi; done; gtk-launch claude-desktop 2>/dev/null || gtk-launch claude 2>/dev/null || true'")
+        } else {
+            launchInTerminal("claude")
+        }
+    }
+
     function loadCredentials() {
         root.isLoading = true
         root.errorMsg = ""
@@ -750,7 +782,8 @@ PlasmoidItem {
 
         if (!root.baseUrl) {
             var script = Qt.resolvedUrl("../scripts/fetch_usage.sh").toString().replace("file://", "")
-            usageFetcher.connectSource("sh '" + script + "' " + credentialsFileExpr())
+            usageFetcher.connectSource("sh '" + script + "' " + credentialsFileExpr()
+                + (root.configuredClaudePath ? "" : " --desktop-fallback"))
             return
         }
 
@@ -869,7 +902,8 @@ PlasmoidItem {
             if (root.baseUrl) {
                 root.errorMsg = i18n.tr("Invalid API key")
                 console.log("Claude Usage: 401 Unauthorized - invalid API key")
-            } else if (Plasmoid.configuration.autoRefreshSession && !root.autoRefreshAttempted) {
+            } else if (root.credsSource !== "desktop"
+                    && Plasmoid.configuration.autoRefreshSession && !root.autoRefreshAttempted) {
                 console.log("Claude Usage: 401 Unauthorized, attempting silent session refresh")
                 startSilentRefresh()
             } else {
@@ -1438,7 +1472,7 @@ PlasmoidItem {
                                 text: root.baseUrl
                                     ? i18n.tr("Check base URL and API key in widget settings")
                                     : (root.errorMsg === i18n.tr("Not logged in")
-                                        ? i18n.tr("Run 'claude' to log in")
+                                        ? i18n.tr("Run 'claude' or sign in to Claude Desktop")
                                         : i18n.tr("Will retry automatically"))
                                 font.pixelSize: Kirigami.Theme.smallFont.pixelSize
                                 color: Kirigami.Theme.negativeTextColor
@@ -1488,7 +1522,7 @@ PlasmoidItem {
                             PlasmaComponents.Button {
                                 text: i18n.tr("Open Claude")
                                 icon.name: "utilities-terminal"
-                                onClicked: root.launchInTerminal("claude")
+                                onClicked: root.launchClaude()
                             }
                         }
                     }

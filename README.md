@@ -31,7 +31,9 @@ A KDE Plasma 6 widget that displays your Claude Code usage statistics in the tas
 ## Requirements
 
 - KDE Plasma 6.0 or later
-- Claude Code CLI installed and logged in
+- A Claude login from **either** of these (the widget uses whichever it finds, Claude Code first):
+  - Claude Code CLI, installed and logged in
+  - Claude Desktop, installed and signed in (see [Claude Desktop login](#claude-desktop-login-no-cli-needed))
 
 ## Installation
 
@@ -59,7 +61,7 @@ kpackagetool6 -t Plasma/Applet -i .
 
 ## Usage
 
-1. Make sure you're logged in to Claude Code (run `claude` in terminal)
+1. Make sure you're logged in to Claude Code (run `claude` in terminal) or signed in to Claude Desktop
 2. Add the widget to your panel
 3. Click the widget to see detailed usage statistics
 
@@ -87,6 +89,28 @@ A value ending in `.json` is treated as the file; anything else is treated as th
 That same folder is also used for the account file (`.claude.json`, for your e-mail address and plan) and for the `projects/` scan behind today's token stats, and it is passed as `CLAUDE_CONFIG_DIR` to the `claude` process started by the **Open Claude** button and by the silent session refresh — so pointing the widget at a second account moves the whole popup to that account, not just the token.
 
 Leave the field empty to go back to the default behaviour.
+
+### Claude Desktop login (no CLI needed)
+
+If there is no Claude Code login, the widget falls back to the login cached by Claude Desktop, so it works the same whether you use the CLI, the desktop app, or both. When both exist, the Claude Code login is used.
+
+Claude Desktop keeps its login in `~/.config/Claude/config.json`, encrypted with Electron's safeStorage. The widget decrypts it **read-only** with `contents/scripts/desktop_creds.sh`, which needs:
+
+- `openssl` 3.0 or newer (present on practically every current distribution)
+- if Claude Desktop stores its key in the system keyring: `secret-tool` (libsecret, GNOME Keyring and compatible) or `kwallet-query` (KWallet). KWallet may ask you once to allow access (Electron files the key under the product name, so the widget looks in both `Chromium Keys/Chromium Safe Storage` and `Claude Keys/Claude Safe Storage`); if the lookup fails or is refused the widget waits 30 minutes before asking again
+
+Things to know:
+
+- The widget never uses Desktop's refresh token (refresh tokens rotate, so using one would sign Desktop out). When the access token has expired the widget shows "Re-login required" with an **Open Claude** button that starts Claude Desktop, which refreshes the login itself.
+- Silent session refresh only applies to the CLI login.
+- Plan badge and account e-mail come from Claude Code's files and may be missing for a Desktop-only login.
+- A custom **Credentials path** disables the Desktop fallback: the path you set is used as-is.
+- Custom config folder: set `CLAUDE_DESKTOP_DIR` for plasmashell, e.g. in `~/.config/plasma-workspace/env/`.
+- To see why no Desktop token is found (key names only, never token values):
+  ```bash
+  sh ~/.local/share/plasma/plasmoids/org.kde.plasma.claudeusage/contents/scripts/desktop_creds.sh --diagnose
+  ```
+  Adjust the path if you installed the widget elsewhere.
 
 ### Custom API Base URL (optional)
 
@@ -123,6 +147,7 @@ Make sure you're logged in to Claude Code:
 ```bash
 claude
 ```
+or signed in to Claude Desktop. If you only use Claude Desktop and the widget still says "Not logged in", run the `--diagnose` command from [Claude Desktop login](#claude-desktop-login-no-cli-needed) to see which step fails (missing `openssl`, keyring key not readable, unexpected token format, ...).
 
 ### "Token expired" error
 
@@ -130,7 +155,7 @@ Your OAuth token has expired. Run Claude Code again to refresh it:
 ```bash
 claude
 ```
-The widget also has an "Open Claude" button for this.
+The widget also has an "Open Claude" button for this (it starts Claude Desktop instead of the CLI when the login comes from Claude Desktop).
 
 ### "Rate limited" error
 
@@ -164,6 +189,10 @@ claude-usage-widget/
 │   ├── config/
 │   │   ├── config.qml         # Settings tabs
 │   │   └── main.xml           # Configuration schema
+│   ├── scripts/
+│   │   ├── fetch_usage.sh     # Usage API call (curl subprocess)
+│   │   ├── desktop_creds.sh   # Read-only reader for the Claude Desktop login
+│   │   └── silent-refresh.sh  # Token refresh through the claude CLI
 │   ├── ui/
 │   │   ├── main.qml           # Core logic, data, API
 │   │   ├── CompactView.qml    # Panel representation (text/bar/ring)

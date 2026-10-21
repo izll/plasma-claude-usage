@@ -595,7 +595,7 @@ Item {
                             text: root.baseUrl
                                 ? i18n.tr("Check base URL and API key in widget settings")
                                 : (root.errorMsg === i18n.tr("Not logged in")
-                                    ? i18n.tr("Run 'claude' to log in")
+                                    ? i18n.tr("Run 'claude' or sign in to Claude Desktop")
                                     : i18n.tr("Will retry automatically"))
                             font.pixelSize: Kirigami.Theme.smallFont.pixelSize
                             color: Kirigami.Theme.negativeTextColor
@@ -644,7 +644,7 @@ Item {
                         PlasmaComponents.Button {
                             text: i18n.tr("Open Claude")
                             icon.name: "utilities-terminal"
-                            onClicked: root.launchInTerminal("claude")
+                            onClicked: root.launchClaude()
                         }
                     }
                 }

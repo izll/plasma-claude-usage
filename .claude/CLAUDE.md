@@ -71,6 +71,15 @@ The file looks like:
 }
 ```
 
+### Claude Desktop fallback
+
+Without a Claude Code login the widget falls back to Claude Desktop's cached login. `contents/scripts/desktop_creds.sh` reads `oauth:tokenCacheV2` (legacy `oauth:tokenCache`) from `${CLAUDE_DESKTOP_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/Claude}/config.json`, decrypts it (Chromium os_crypt on Linux: `v10` = fixed password `peanuts`, `v11` = key from libsecret/KWallet, where Electron names the entry after its product name: `Chromium Keys/Chromium Safe Storage` on Electron 44 + KWallet 6, possibly `Claude Keys/...` elsewhere, so both are tried and the padding check rejects a wrong one; AES-128-CBC, IV of 16 spaces, PBKDF2-HMAC-SHA1 with salt `saltysalt` and 1 iteration) and prints the same JSON shape as `.credentials.json` plus `"source":"desktop"`. That keeps `fileReader`, `tokenWatcher`, `fetch_usage.sh` and the plan logic unchanged; `root.credsSource` records which source was used.
+
+- `readCredentialsCmd()` and `fetch_usage.sh --desktop-fallback` apply the fallback only when no `credentialsPath` is configured, and the CLI file always wins.
+- Never use Desktop's refresh token (refresh tokens rotate; using it would sign Desktop out). Never write to Desktop's files.
+- Silent refresh runs the `claude` CLI, so it is skipped when `credsSource === "desktop"`; `launchClaude()` starts the Desktop app instead of the CLI.
+- Debug with `sh contents/scripts/desktop_creds.sh --diagnose` (prints key names and counts, never token values).
+
 ## Plan Tiers
 
 - `default_claude_pro` → "Pro"
