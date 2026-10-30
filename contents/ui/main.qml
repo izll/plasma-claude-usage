@@ -288,11 +288,17 @@ PlasmoidItem {
                     var newToken = (creds.claudeAiOauth || {}).accessToken || ""
                     if (newToken && newToken !== root.accessToken) {
                         console.log("Claude Usage: New token detected! Resetting rate limit state.")
-                        root.accessToken = newToken
-                        root.hasRateLimitError = false
-                        root.rateLimitRetryCount = 0
-                        root.lastFetchTime = 0
-                        fetchUsageFromApi(true)
+                        // Clearing hasRateLimitError disconnects this source, and
+                        // plasma5support deletes the relay that is delivering this
+                        // data. The relay writes to itself once this handler
+                        // returns, so the reset waits until then.
+                        Qt.callLater(function() {
+                            root.accessToken = newToken
+                            root.hasRateLimitError = false
+                            root.rateLimitRetryCount = 0
+                            root.lastFetchTime = 0
+                            fetchUsageFromApi(true)
+                        })
                     }
                 } catch (e) {
                     console.log("Claude Usage: Token watcher parse error:", e)
