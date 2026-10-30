@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.5.4] - 2026-10-30
 
 ### Fixed
 
-- **plasmashell crash after a token refresh while rate limited**: the token watcher cleared the rate limit state inside its own data handler, which disconnected its source while `plasma5support` was still delivering that data. `plasma5support` then wrote into the relay it had just deleted, and plasmashell later died with SIGSEGV in `QV4::ExecutableAllocator::allocate`. The reset now runs after the delivery
+- **plasmashell crash after a token refresh while rate limited**: the token watcher cleared the rate limit state inside its own data handler, which disconnected its source while `plasma5support` was still delivering that data. `plasma5support` then wrote into the relay it had just deleted, and plasmashell later died with SIGSEGV in `QV4::ExecutableAllocator::allocate`. The reset now runs after the delivery ([#32](https://github.com/izll/plasma-claude-usage/pull/32), thanks @noctuum)
 
 ## [2.5.3] - 2026-10-25
 
@@ -308,6 +308,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configurable refresh interval
 - Error handling for login issues
 
+[2.5.4]: https://github.com/izll/plasma-claude-usage/compare/v2.5.3...v2.5.4
 [2.5.3]: https://github.com/izll/plasma-claude-usage/compare/v2.5.2...v2.5.3
 [2.5.2]: https://github.com/izll/plasma-claude-usage/compare/v2.5.1...v2.5.2
 [2.5.1]: https://github.com/izll/plasma-claude-usage/compare/v2.5.0...v2.5.1
