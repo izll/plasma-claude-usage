@@ -106,11 +106,11 @@ Item {
             }
 
             Rectangle {
-                visible: root.hasTokenError || root.hasRateLimitError || root.hasNetworkError || root.updateAvailable
+                visible: root.hasTokenError || root.hasRateLimitError || root.hasNetworkError || root.serviceProblem || root.updateAvailable
                 width: Math.max(8, Math.round(compact.effectiveIconSize / 3))
                 height: width
                 radius: width / 2
-                color: (root.hasTokenError || root.hasRateLimitError || root.hasNetworkError)
+                color: (root.hasTokenError || root.hasRateLimitError || root.hasNetworkError || root.serviceProblem)
                     ? Kirigami.Theme.negativeTextColor
                     : "#D97757"
                 anchors.right: parent.right

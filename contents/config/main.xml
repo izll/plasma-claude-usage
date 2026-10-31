@@ -86,6 +86,10 @@
             <label>Check the KDE Store for a newer version of this widget</label>
             <default>true</default>
         </entry>
+        <entry name="enableStatusCheck" type="Bool">
+            <label>Check status.claude.com for Claude Code and API problems</label>
+            <default>true</default>
+        </entry>
         <entry name="showInstallations" type="Bool">
             <label>Show Claude Code installations in popup</label>
             <default>false</default>

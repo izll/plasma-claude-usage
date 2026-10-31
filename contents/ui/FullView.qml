@@ -675,6 +675,8 @@ Item {
                     }
                 }
 
+                ServiceStatusCard {}
+
                 // ===== Dynamic cards from cardOrder =====
                 Repeater {
                     id: cardsRepeater
