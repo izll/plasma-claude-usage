@@ -18,6 +18,7 @@ KCM.SimpleKCM {
     property bool cfg_enableNotifications
     property bool cfg_enableUpdateCheck
     property bool cfg_checkWidgetUpdates
+    property bool cfg_enableStatusCheck
     property bool cfg_useTimeAwareColors
     property string cfg_processVisibility
     property int cfg_processCheckInterval
@@ -184,6 +185,13 @@ KCM.SimpleKCM {
                 icon.name: "update-none"
                 onClicked: configPage.openWidgetUpdates()
             }
+        }
+
+        QQC2.CheckBox {
+            Kirigami.FormData.label: tr("Service status:")
+            text: tr("Check status.claude.com")
+            checked: cfg_enableStatusCheck
+            onCheckedChanged: cfg_enableStatusCheck = checked
         }
 
         Kirigami.Separator {

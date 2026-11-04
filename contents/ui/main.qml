@@ -1585,6 +1585,10 @@ PlasmoidItem {
                         }
                     }
 
+                    ServiceStatusCard {
+                        classic: true
+                    }
+
                     Rectangle {
                         Layout.fillWidth: true
                         height: 1
@@ -1870,6 +1874,85 @@ PlasmoidItem {
         return key === "fable" ? "#D97757" : getUsageColor(percent)
     }
 
+    // ===== Service status =====
+    // status.claude.com, read for the two components this widget's users
+    // depend on. The page headline covers every component, so a Cowork
+    // incident would show as a warning here while Claude Code and the API work.
+    readonly property var watchedComponents: ["Claude Code", "Claude API (api.anthropic.com)"]
+    property var serviceIssues: []
+    property string serviceIncident: ""
+    property double serviceCheckedAt: 0
+    // A state nobody has confirmed for a while is dropped instead of shown.
+    readonly property int serviceMaxAgeMs: Math.max(1800000, Math.max(Plasmoid.configuration.refreshInterval || 5, 1) * 180000)
+    readonly property bool serviceProblem: Plasmoid.configuration.enableStatusCheck !== false
+        && root.serviceIssues.length > 0
+        && root.nowTick - root.serviceCheckedAt <= root.serviceMaxAgeMs
+    readonly property bool serviceOutage: root.serviceProblem && root.serviceIssues.some(function(c) {
+        return c.status === "partial_outage" || c.status === "major_outage"
+    })
+
+    Plasma5Support.DataSource {
+        id: serviceStatusChecker
+        engine: "executable"
+        interval: Math.max(Plasmoid.configuration.refreshInterval || 5, 1) * 60000
+        connectedSources: Plasmoid.configuration.enableStatusCheck !== false
+            ? ["curl -sS --max-time 10 https://status.claude.com/api/v2/summary.json 2>/dev/null"] : []
+
+        // Only the service* properties change here. Nothing connectedSources
+        // depends on may change inside the handler (see tokenWatcher).
+        onNewData: function(sourceName, data) {
+            var stdout = (data["stdout"] || "").trim()
+            if (stdout === "") return
+            try {
+                root.applyServiceStatus(JSON.parse(stdout))
+            } catch (e) {
+                console.log("Claude Usage: service status parse error:", e)
+            }
+        }
+    }
+
+    // Maintenance is planned and announced in advance, so it is not shown.
+    // Every other status except "operational" is a problem, including values
+    // Statuspage adds later.
+    function applyServiceStatus(summary) {
+        var components = summary && Array.isArray(summary.components) ? summary.components : null
+        if (!components) return
+        var issues = []
+        var affected = []
+        for (var i = 0; i < components.length; i++) {
+            var c = components[i] || {}
+            if (root.watchedComponents.indexOf(c.name) >= 0
+                    && c.status !== "operational" && c.status !== "under_maintenance") {
+                affected.push(c.name)
+                // "Claude API (api.anthropic.com)" is shown as "Claude API".
+                issues.push({ name: String(c.name).replace(/\s*\(.*\)$/, ""), status: String(c.status) })
+            }
+        }
+        // The title of the first incident that names an affected component.
+        var incidents = Array.isArray(summary.incidents) ? summary.incidents : []
+        var incident = ""
+        for (var j = 0; j < incidents.length && affected.length > 0 && incident === ""; j++) {
+            var parts = (incidents[j] || {}).components
+            if (!Array.isArray(parts)) continue
+            for (var k = 0; k < parts.length; k++) {
+                if (affected.indexOf((parts[k] || {}).name) >= 0) {
+                    incident = String(incidents[j].name || "")
+                    break
+                }
+            }
+        }
+        root.serviceIssues = issues
+        root.serviceIncident = incident
+        root.serviceCheckedAt = Date.now()
+    }
+
+    function serviceStatusText(status) {
+        if (status === "degraded_performance") return i18n.tr("Degraded performance")
+        if (status === "partial_outage") return i18n.tr("Partial outage")
+        if (status === "major_outage") return i18n.tr("Major outage")
+        return i18n.tr("Service disruption")
+    }
+
     // ===== Widget update check =====
     // Asks the KDE Store (the same data Discover uses) for this widget's latest
     // version once a day. Only a low-key label in the popup footer shows it.
@@ -2055,6 +2138,10 @@ PlasmoidItem {
         for (var i = 0; i < root.modelLimits.length; i++) {
             if (root.isModelShownInPanel(root.modelLimits[i].label))
                 parts.push(root.modelLimits[i].label + ": " + Math.round(root.modelLimits[i].percent) + "%")
+        }
+        if (root.serviceProblem) {
+            for (var j = 0; j < root.serviceIssues.length; j++)
+                parts.push("⚠ " + root.serviceIssues[j].name + ": " + root.serviceStatusText(root.serviceIssues[j].status))
         }
         return parts.join(" | ")
     }

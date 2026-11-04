@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Claude service status**: the widget reads status.claude.com at the refresh interval. While the `Claude Code` or `Claude API (api.anthropic.com)` component is degraded or down, a card above the usage data shows the component, its status and the incident title, and a click opens the status page. The panel icon gets a red dot and the tooltip lists the problem. Maintenance and the other components on the status page are ignored. Can be turned off with "Check status.claude.com"
+
 ## [2.5.4] - 2026-10-30
 
 ### Fixed
