@@ -118,6 +118,10 @@
             <label>Model names seen in the usage data, for the settings page (internal)</label>
             <default></default>
         </entry>
+        <entry name="proxyUrl" type="String">
+            <label>Proxy for the widget's own network requests, e.g. socks5h://127.0.0.1:1080 (empty = direct)</label>
+            <default></default>
+        </entry>
         <entry name="credentialsPath" type="String">
             <label>Path to .credentials.json or the folder containing it (empty = $CLAUDE_CONFIG_DIR, else ~/.claude)</label>
             <default></default>

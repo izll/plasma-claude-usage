@@ -8,6 +8,10 @@
 # Falls back to $CLAUDE_CONFIG_DIR/.credentials.json, then ~/.claude, so the
 # script still works when run by hand with no argument.
 #
+# Optional: CLAUDE_USAGE_PROXY (the widget's "Proxy" setting, e.g.
+# socks5h://127.0.0.1:1080). Without it curl still honours HTTPS_PROXY and
+# ALL_PROXY from the environment.
+#
 # Output: response body, then a final line "<http_code> <retry_after>".
 # Prints "NOCREDS" if no access token is available.
 
@@ -51,4 +55,5 @@ printf 'Authorization: Bearer %s\n' "$TOKEN" | curl -sS \
     -H "anthropic-beta: oauth-2025-04-20" \
     -H "Content-Type: application/json" \
     -w '\n%{http_code} %header{retry-after}' \
+    ${CLAUDE_USAGE_PROXY:+--proxy "$CLAUDE_USAGE_PROXY"} \
     "https://api.anthropic.com/api/oauth/usage" 2>/dev/null

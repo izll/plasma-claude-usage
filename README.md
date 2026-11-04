@@ -24,6 +24,7 @@ A KDE Plasma 6 widget that displays your Claude Code usage statistics in the tas
 - **Stale Detection**: Widget dims when data is outdated
 - **Error Handling**: Clear messages when not logged in, token expired, or rate limited
 - **Custom API Support**: Optional proxy/gateway with custom base URL and API key
+- **Proxy Support**: Optional HTTP, HTTPS or SOCKS5 proxy for the widget's own requests (Account tab)
 - **Custom Credentials Location**: Point the widget at another `.credentials.json` or Claude config folder
 - **Configurable Background Opacity**: Adjustable transparency for desktop placement
 - **15 Languages**: EN, HU, DE, FR, ES, IT, PT, RU, PL, NL, TR, JA, KO, ZH-CN, ZH-TW
@@ -71,7 +72,7 @@ Right-click the widget and select **Configure...** to open the settings. They ar
 - **General**: language, refresh interval, notifications, update checks, service status, colors, visibility when Claude is not running
 - **Panel**: style, what to show, layout, metrics size, margin, ring center and logo size, window labels, icon
 - **Popup**: card or classic style, scrolling, desktop background opacity, card order, quick links
-- **Account**: credentials location, automatic session refresh, custom API
+- **Account**: credentials location, automatic session refresh, custom API, proxy
 
 ### Credentials Location (optional)
 

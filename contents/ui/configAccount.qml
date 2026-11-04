@@ -17,6 +17,7 @@ KCM.SimpleKCM {
     property bool cfg_autoRefreshSession
     property string cfg_baseUrl
     property string cfg_apiKey
+    property string cfg_proxyUrl
 
     // Translation helper
     Translations {
@@ -96,6 +97,29 @@ KCM.SimpleKCM {
             enabled: cfg_baseUrl !== ""
             onTextChanged: cfg_apiKey = text
             Layout.fillWidth: true
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: tr("Network")
+        }
+
+        QQC2.TextField {
+            id: proxyField
+            Kirigami.FormData.label: tr("Proxy:")
+            placeholderText: "socks5h://127.0.0.1:1080"
+            text: cfg_proxyUrl
+            onTextChanged: cfg_proxyUrl = text
+            Layout.fillWidth: true
+        }
+
+        QQC2.Label {
+            text: tr("Proxy for the widget's own requests (usage, service status, update checks), e.g. socks5h://127.0.0.1:1080 or http://proxy:8080. Leave empty to connect directly (curl still honours HTTPS_PROXY and ALL_PROXY). Not used with a custom base URL.")
+            font.italic: true
+            opacity: 0.7
+            wrapMode: Text.WordWrap
+            Layout.fillWidth: true
+            Layout.preferredWidth: Kirigami.Units.gridUnit * 20
         }
     }
 }

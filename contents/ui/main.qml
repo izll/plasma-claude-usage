@@ -409,6 +409,19 @@ PlasmoidItem {
         return quoted(p)
     }
 
+    // The "Proxy" setting, for the widget's own requests (usage, service
+    // status, update checks). The command text only changes with the
+    // setting, so it stays a constant executable source.
+    readonly property string proxyUrl: (Plasmoid.configuration.proxyUrl || "").trim()
+
+    function shQuote(s) {
+        return "'" + String(s).replace(/'/g, "'\\''") + "'"
+    }
+
+    function curlProxyArg() {
+        return root.proxyUrl ? " --proxy " + shQuote(root.proxyUrl) : ""
+    }
+
     function credentialsFileExpr() {
         var p = root.configuredClaudePath
         if (!p) return "\"${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.credentials.json\""
@@ -812,7 +825,8 @@ PlasmoidItem {
 
         if (!root.baseUrl) {
             var script = Qt.resolvedUrl("../scripts/fetch_usage.sh").toString().replace("file://", "")
-            usageFetcher.connectSource("sh '" + script + "' " + credentialsFileExpr())
+            var proxyEnv = root.proxyUrl ? "env CLAUDE_USAGE_PROXY=" + shQuote(root.proxyUrl) + " " : ""
+            usageFetcher.connectSource(proxyEnv + "sh '" + script + "' " + credentialsFileExpr())
             return
         }
 
@@ -1896,7 +1910,7 @@ PlasmoidItem {
         engine: "executable"
         interval: Math.max(Plasmoid.configuration.refreshInterval || 5, 1) * 60000
         connectedSources: Plasmoid.configuration.enableStatusCheck !== false
-            ? ["curl -sS --max-time 10 https://status.claude.com/api/v2/summary.json 2>/dev/null"] : []
+            ? ["curl -sS" + curlProxyArg() + " --max-time 10 https://status.claude.com/api/v2/summary.json 2>/dev/null"] : []
 
         // Only the service* properties change here. Nothing connectedSources
         // depends on may change inside the handler (see tokenWatcher).
@@ -1988,7 +2002,7 @@ PlasmoidItem {
         interval: 120000   // first check shortly after login, then daily
         running: Plasmoid.configuration.checkWidgetUpdates !== false
         repeat: true
-        onTriggered: widgetUpdateChecker.connectSource("curl -sS --max-time 10 https://api.kde-look.org/ocs/v1/content/data/" + root.storeProductId + " 2>/dev/null")
+        onTriggered: widgetUpdateChecker.connectSource("curl -sS" + curlProxyArg() + " --max-time 10 https://api.kde-look.org/ocs/v1/content/data/" + root.storeProductId + " 2>/dev/null")
     }
 
     Plasma5Support.DataSource {
@@ -2048,7 +2062,7 @@ PlasmoidItem {
 
     function checkForUpdate() {
         if (Plasmoid.configuration.enableUpdateCheck === false) return
-        updateChecker.connectSource("curl -sS --max-time 10 https://registry.npmjs.org/@anthropic-ai/claude-code/latest 2>/dev/null")
+        updateChecker.connectSource("curl -sS" + curlProxyArg() + " --max-time 10 https://registry.npmjs.org/@anthropic-ai/claude-code/latest 2>/dev/null")
     }
 
     function formatTimeRemaining(resetTime) {
