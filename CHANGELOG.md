@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.1] - 2026-11-04
+
+### Added
+
+- **Proxy setting** (Account tab → Network): an HTTP, HTTPS or SOCKS5 proxy for the widget's own requests (usage, service status, update checks), e.g. `socks5h://127.0.0.1:1080`. Empty keeps connecting directly, and curl still honours `HTTPS_PROXY` / `ALL_PROXY`. Not used with a custom base URL ([#34](https://github.com/izll/plasma-claude-usage/issues/34), thanks @navrocky)
+
 ## [2.6.0] - 2026-11-04
 
 ### Added
@@ -314,6 +320,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configurable refresh interval
 - Error handling for login issues
 
+[2.6.1]: https://github.com/izll/plasma-claude-usage/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/izll/plasma-claude-usage/compare/v2.5.4...v2.6.0
 [2.5.4]: https://github.com/izll/plasma-claude-usage/compare/v2.5.3...v2.5.4
 [2.5.3]: https://github.com/izll/plasma-claude-usage/compare/v2.5.2...v2.5.3
