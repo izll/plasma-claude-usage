@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.6.0] - 2026-11-04
 
 ### Added
 
-- **Claude service status**: the widget reads status.claude.com at the refresh interval. While the `Claude Code` or `Claude API (api.anthropic.com)` component is degraded or down, a card above the usage data shows the component, its status and the incident title, and a click opens the status page. The panel icon gets a red dot and the tooltip lists the problem. Maintenance and the other components on the status page are ignored. Can be turned off with "Check status.claude.com"
+- **Claude service status**: the widget reads status.claude.com at the refresh interval. While the `Claude Code` or `Claude API (api.anthropic.com)` component is degraded or down, a card above the usage data shows the component, its status and the incident title, and a click opens the status page. The panel icon gets a red dot and the tooltip lists the problem. Maintenance and the other components on the status page are ignored. Can be turned off with "Check status.claude.com" ([#33](https://github.com/izll/plasma-claude-usage/pull/33), thanks @noctuum)
 
 ## [2.5.4] - 2026-10-30
 
@@ -314,6 +314,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configurable refresh interval
 - Error handling for login issues
 
+[2.6.0]: https://github.com/izll/plasma-claude-usage/compare/v2.5.4...v2.6.0
 [2.5.4]: https://github.com/izll/plasma-claude-usage/compare/v2.5.3...v2.5.4
 [2.5.3]: https://github.com/izll/plasma-claude-usage/compare/v2.5.2...v2.5.3
 [2.5.2]: https://github.com/izll/plasma-claude-usage/compare/v2.5.1...v2.5.2
