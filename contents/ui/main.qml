@@ -1014,13 +1014,14 @@ PlasmoidItem {
     readonly property real metricsScale: Math.max(100, Math.min(Plasmoid.configuration.metricsScale || 100, 300)) / 100
     readonly property int classicBarHeight: Math.round(10 * metricsScale)
 
-    compactRepresentation: CompactView {}
+    compactRepresentation: CompactView { visible: !root.desktopHidden }
 
     // Full representation (popup) - switchable between classic and card
     readonly property bool useCardPopup: (Plasmoid.configuration.popupStyle || "card") === "card"
 
     fullRepresentation: Item {
         id: fullRepItem
+        visible: !root.desktopHidden
 
         readonly property bool classicScrollable: Plasmoid.configuration.scrollableContent === true
 
@@ -2115,10 +2116,16 @@ PlasmoidItem {
 
     readonly property bool useCustomBackground: !isOnPanel && Plasmoid.configuration.backgroundOpacity < 1.0
 
-    Plasmoid.backgroundHints: root.useCustomBackground ? PlasmaCore.Types.NoBackground : PlasmaCore.Types.DefaultBackground
+    // "Fully hide widget" sets HiddenStatus, which panels and the system tray honour but
+    // the desktop containment does not. On the desktop, hide content and background instead.
+    readonly property bool desktopHidden: !isOnPanel
+        && (Plasmoid.configuration.processVisibility || "always") === "fully_hidden"
+        && !root.claudeRunning
+
+    Plasmoid.backgroundHints: (root.useCustomBackground || root.desktopHidden) ? PlasmaCore.Types.NoBackground : PlasmaCore.Types.DefaultBackground
 
     Rectangle {
-        visible: root.useCustomBackground
+        visible: root.useCustomBackground && !root.desktopHidden
         anchors.fill: parent
         color: "transparent"
         radius: Kirigami.Units.cornerRadius
