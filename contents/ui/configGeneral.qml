@@ -216,9 +216,9 @@ KCM.SimpleKCM {
             Kirigami.FormData.label: tr("When Claude is not running:")
             model: [tr("Always show full widget"), tr("Hide usage, only show icon"), tr("Fully hide widget")]
             currentIndex: cfg_processVisibility === "hide_usage" ? 1 : cfg_processVisibility === "fully_hidden" ? 2 : 0
-            onCurrentIndexChanged: {
+            onActivated: function(index) {
                 var values = ["always", "hide_usage", "fully_hidden"]
-                cfg_processVisibility = values[currentIndex]
+                cfg_processVisibility = values[index]
             }
         }
 
