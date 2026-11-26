@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **A missing or expired Claude Code sign-in is shown as such.** When the credentials file holds no access token (never signed in, signed out, or the sign-in ended: Claude Code then leaves `"loginEnded": "time_limit"` next to an empty token), the popup says "Sign-in expired" or "Not logged in", explains that the desktop app's sign-in is separate, and has a **Sign in** button that runs `claude auth login` in a terminal. A notification is sent once when a working sign-in ends. While signed out the credentials file is checked every 30 seconds, so usage comes back by itself after signing in.
+
 ### Fixed
 
+- The "Not logged in" hint compared the message text with its translation, and two code paths set the untranslated text, so other languages showed "Will retry automatically" instead.
+- The tooltip no longer shows 0% for session and week while there is an error and no data.
 - **Popup layout loop (100% CPU, popup stops responding, memory grows)**: the content was made narrower while the scroll bar was visible. With wrapping text (the "Values under 5 min" warning) the narrower content could fit again, which hid the bar, widened the content and made it overflow again, without end. The content width no longer follows the bar: "Scrollable content" always keeps the strip free, otherwise the bar lies over the edge in the rare case it shows. Both popup styles.
 
 ## [2.6.1] - 2026-11-04

@@ -594,18 +594,29 @@ Item {
                         spacing: Kirigami.Units.smallSpacing
 
                         PlasmaComponents.Label {
+                            Layout.fillWidth: true
                             text: "⚠ " + root.errorMsg
                             color: Kirigami.Theme.negativeTextColor
                             font.bold: true
+                            wrapMode: Text.WordWrap
                         }
                         PlasmaComponents.Label {
+                            Layout.fillWidth: true
                             text: root.baseUrl
                                 ? i18n.tr("Check base URL and API key in widget settings")
-                                : (root.errorMsg === i18n.tr("Not logged in")
-                                    ? i18n.tr("Run 'claude' to log in")
+                                : (root.signedOut
+                                    ? root.signInHint
                                     : i18n.tr("Will retry automatically"))
                             font.pixelSize: Kirigami.Theme.smallFont.pixelSize
                             color: Kirigami.Theme.negativeTextColor
+                            wrapMode: Text.WordWrap
+                        }
+                        PlasmaComponents.Button {
+                            // claude can't be pointed at a standalone credentials file
+                            visible: root.signedOut && !root.baseUrl && !root.standaloneCredsFile
+                            text: i18n.tr("Sign in")
+                            icon.name: "utilities-terminal"
+                            onClicked: root.launchInTerminal("claude auth login")
                         }
                     }
                 }
