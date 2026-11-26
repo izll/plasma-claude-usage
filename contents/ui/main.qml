@@ -64,6 +64,12 @@ PlasmoidItem {
     property bool hasTokenError: false
     property bool hasRateLimitError: false
     property bool hasNetworkError: false
+    // Claude Code has no usable sign-in: never signed in, signed out, or the
+    // sign-in ended (the credentials file then keeps a "loginEnded" reason,
+    // e.g. "time_limit", next to an empty accessToken). The popup offers a
+    // "Sign in" button and tokenWatcher picks the new sign-in up by itself.
+    property bool signedOut: false
+    property string loginEndedReason: ""
     property bool autoRefreshAttempted: false
     property bool silentRefreshRunning: false
     property int rateLimitRetryCount: 0
@@ -75,6 +81,25 @@ PlasmoidItem {
     readonly property int staleThresholdMs: root.hasRateLimitError && root.rateLimitRetryMs > 0
         ? root.rateLimitRetryMs + 60000
         : Math.max(Plasmoid.configuration.refreshInterval || 1, 1) * 60000 * 3
+
+    // signedOut is part of tokenWatcher's connectedSources, and both functions
+    // are called from data handlers, so the flag changes after the delivery
+    // (see tokenWatcher).
+    function markSignedOut(reason, notify) {
+        root.loginEndedReason = reason || ""
+        root.accessToken = ""
+        root.errorMsg = root.loginEndedReason === "time_limit" ? i18n.tr("Sign-in expired") : i18n.tr("Not logged in")
+        root.isLoading = false
+        if (notify) sendNotification(root.errorMsg, root.signInHint)
+        if (!root.signedOut) Qt.callLater(function() { root.signedOut = true })
+    }
+
+    function markSignedIn() {
+        if (root.signedOut) Qt.callLater(function() { root.signedOut = false })
+        root.loginEndedReason = ""
+    }
+
+    readonly property string signInHint: i18n.tr("Sign in to Claude Code to see usage. The desktop app's sign-in is separate.")
 
     // v2.0: dynamic model breakdown, trend history, account email, update check
     property var modelUsage: []
@@ -272,13 +297,14 @@ PlasmoidItem {
     }
 
     // Token watcher
-    // Polled only while rate limited. A persistent source re-run by the
-    // engine, so plasma5support does not add and remove one every 30 s.
+    // Polled only while rate limited or signed out. A persistent source
+    // re-run by the engine, so plasma5support does not add and remove one
+    // every 30 s.
     Plasma5Support.DataSource {
         id: tokenWatcher
         engine: "executable"
         interval: 30000
-        connectedSources: root.hasRateLimitError && !root.baseUrl ? [readCredentialsCmd()] : []
+        connectedSources: (root.hasRateLimitError || root.signedOut) && !root.baseUrl ? [readCredentialsCmd()] : []
 
         onNewData: function(sourceName, data) {
             var stdout = (data["stdout"] || "").trim()
@@ -287,17 +313,16 @@ PlasmoidItem {
                     var creds = JSON.parse(stdout)
                     var newToken = (creds.claudeAiOauth || {}).accessToken || ""
                     if (newToken && newToken !== root.accessToken) {
-                        console.log("Claude Usage: New token detected! Resetting rate limit state.")
-                        // Clearing hasRateLimitError disconnects this source, and
-                        // plasma5support deletes the relay that is delivering this
-                        // data. The relay writes to itself once this handler
-                        // returns, so the reset waits until then.
+                        console.log("Claude Usage: New token detected, reloading")
+                        // Clearing hasRateLimitError or signedOut disconnects
+                        // this source, and plasma5support deletes the relay that
+                        // is delivering this data. The relay writes to itself
+                        // once this handler returns, so the reset waits until
+                        // then. refresh() re-reads the credentials (plan, expiry)
+                        // and fetches.
                         Qt.callLater(function() {
                             root.accessToken = newToken
-                            root.hasRateLimitError = false
-                            root.rateLimitRetryCount = 0
-                            root.lastFetchTime = 0
-                            fetchUsageFromApi(true)
+                            root.refresh()
                         })
                     }
                 } catch (e) {
@@ -485,55 +510,58 @@ PlasmoidItem {
             var stdout = data["stdout"] || ""
             disconnectSource(sourceName)
 
-            console.log("Claude Usage: Got credentials, length:", stdout.length)
-
             if (stdout.length > 10) {
+                var oauth = null
                 try {
-                    var creds = JSON.parse(stdout)
-                    var oauth = creds.claudeAiOauth || {}
-                    root.accessToken = oauth.accessToken || ""
-
-                    root.credsTier = oauth.rateLimitTier || ""
-                    root.credsSub = oauth.subscriptionType || ""
-                    updatePlanName()
-
-                    console.log("Claude Usage: Token found, plan:", root.planName)
-
-                    if (root.accessToken) {
-                        root.credentialsRetryCount = 0
-                        emailReader.connectSource(readAccountCmd())
-                        var expiresAt = oauth.expiresAt || 0
-                        var isLocallyExpired = expiresAt > 0 && Date.now() >= expiresAt
-                        if (isLocallyExpired && Plasmoid.configuration.autoRefreshSession && !root.autoRefreshAttempted) {
-                            console.log("Claude Usage: Session locally expired, attempting proactive silent refresh")
-                            startSilentRefresh()
-                        } else {
-                            fetchUsageFromApi()
-                        }
-                    } else {
-                        root.errorMsg = i18n.tr("Not logged in")
-                        root.isLoading = false
-                    }
+                    oauth = JSON.parse(stdout).claudeAiOauth || {}
                 } catch (e) {
                     console.log("Claude Usage: Failed to parse credentials:", e)
-                    if (root.credentialsRetryCount < root.maxCredentialsRetries) {
-                        root.credentialsRetryCount++
-                        credentialsRetryTimer.start()
+                }
+                if (oauth === null) {
+                    // Possibly read while Claude Code was rewriting the file
+                    retryCredentialsOrSignOut()
+                    return
+                }
+
+                var hadToken = root.accessToken !== ""
+                root.accessToken = oauth.accessToken || ""
+                root.credsTier = oauth.rateLimitTier || ""
+                root.credsSub = oauth.subscriptionType || ""
+                updatePlanName()
+                root.credentialsRetryCount = 0
+
+                if (root.accessToken) {
+                    markSignedIn()
+                    root.errorMsg = ""
+                    emailReader.connectSource(readAccountCmd())
+                    var expiresAt = oauth.expiresAt || 0
+                    var isLocallyExpired = expiresAt > 0 && Date.now() >= expiresAt
+                    if (isLocallyExpired && Plasmoid.configuration.autoRefreshSession && !root.autoRefreshAttempted) {
+                        console.log("Claude Usage: Session locally expired, attempting proactive silent refresh")
+                        startSilentRefresh()
                     } else {
-                        root.errorMsg = "Not logged in"
-                        root.isLoading = false
+                        fetchUsageFromApi()
                     }
+                } else {
+                    var reason = String(oauth.loginEnded || "")
+                    if (!root.signedOut)
+                        console.log("Claude Usage: No access token in the credentials file" + (reason ? " (sign-in ended: " + reason + ")" : ""))
+                    // Tell the user once, when a sign-in that worked ends
+                    markSignedOut(reason, hadToken)
                 }
             } else {
-                console.log("Claude Usage: No credentials file found")
-                if (root.credentialsRetryCount < root.maxCredentialsRetries) {
-                    root.credentialsRetryCount++
-                    credentialsRetryTimer.start()
-                } else {
-                    root.errorMsg = "Not logged in"
-                    root.isLoading = false
-                }
+                if (!root.signedOut) console.log("Claude Usage: No credentials file found")
+                retryCredentialsOrSignOut()
             }
+        }
+    }
+
+    function retryCredentialsOrSignOut() {
+        if (root.credentialsRetryCount < root.maxCredentialsRetries && !root.signedOut) {
+            root.credentialsRetryCount++
+            credentialsRetryTimer.start()
+        } else {
+            markSignedOut("", false)
         }
     }
 
@@ -765,9 +793,12 @@ PlasmoidItem {
 
     function loadCredentials() {
         root.isLoading = true
-        root.errorMsg = ""
         var configBaseUrl = (Plasmoid.configuration.baseUrl || "").trim()
+        // While signed out the message stays until a token turns up, instead
+        // of blinking at every poll.
+        if (configBaseUrl || !root.signedOut) root.errorMsg = ""
         if (configBaseUrl) {
+            markSignedIn()
             root.baseUrl = configBaseUrl.replace(/\/$/, "")
             root.apiKey = (Plasmoid.configuration.apiKey || "").trim()
             root.planName = "API Key"
@@ -800,8 +831,8 @@ PlasmoidItem {
             var stdout = data["stdout"] || ""
 
             if (stdout.trim() === "NOCREDS") {
-                root.isLoading = false
-                root.errorMsg = i18n.tr("Not logged in")
+                console.log("Claude Usage: fetch script found no access token")
+                markSignedOut(root.loginEndedReason, false)
                 return
             }
 
@@ -1491,7 +1522,8 @@ PlasmoidItem {
 
                         ColumnLayout {
                             id: classicScrollContent
-                            width: classicFlickable.width - (classicScrollBar.visible ? classicScrollBar.width : 0)
+                            // Not tied to the bar's visibility: see FullView.qml
+                            width: classicFlickable.width - (fullRepItem.classicScrollable ? classicScrollBar.width : 0)
                             spacing: 0
 
                     // Error message
@@ -1508,18 +1540,29 @@ PlasmoidItem {
                             anchors.margins: Kirigami.Units.smallSpacing
 
                             PlasmaComponents.Label {
+                                Layout.fillWidth: true
                                 text: "⚠ " + root.errorMsg
                                 color: Kirigami.Theme.negativeTextColor
                                 font.bold: true
+                                wrapMode: Text.WordWrap
                             }
                             PlasmaComponents.Label {
+                                Layout.fillWidth: true
                                 text: root.baseUrl
                                     ? i18n.tr("Check base URL and API key in widget settings")
-                                    : (root.errorMsg === i18n.tr("Not logged in")
-                                        ? i18n.tr("Run 'claude' to log in")
+                                    : (root.signedOut
+                                        ? root.signInHint
                                         : i18n.tr("Will retry automatically"))
                                 font.pixelSize: Kirigami.Theme.smallFont.pixelSize
                                 color: Kirigami.Theme.negativeTextColor
+                                wrapMode: Text.WordWrap
+                            }
+                            PlasmaComponents.Button {
+                                // claude can't be pointed at a standalone credentials file
+                                visible: root.signedOut && !root.baseUrl && !root.standaloneCredsFile
+                                text: i18n.tr("Sign in")
+                                icon.name: "utilities-terminal"
+                                onClicked: root.launchInTerminal("claude auth login")
                             }
                         }
                     }
@@ -2136,6 +2179,8 @@ PlasmoidItem {
     Plasmoid.icon: "claude-usage-widget"
     toolTipMainText: i18n.tr("Claude Usage")
     toolTipSubText: {
+        if (!root.metricsVisible)
+            return root.signedOut && !root.baseUrl ? root.errorMsg + " - " + root.signInHint : root.errorMsg
         var parts = []
         if (Plasmoid.configuration.showSession !== false) {
             var sessionStr = i18n.tr("Session (5hr)") + ": " + Math.round(root.sessionUsagePercent) + "%"

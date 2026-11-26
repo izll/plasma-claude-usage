@@ -569,7 +569,14 @@ Item {
 
             ColumnLayout {
                 id: scrollContent
-                width: cardFlickable.width - (cardScrollBar.visible ? cardScrollBar.width : 0)
+                // The width must not follow the scroll bar's visibility: with
+                // wrapping text the narrower content can fit again, the bar
+                // hides, the wider content overflows, the bar shows... a layout
+                // loop that never ends (100% CPU, the popup stops responding).
+                // "Scrollable content" keeps the strip free all the time;
+                // otherwise the popup grows with its content, and a bar that
+                // shows up on a screen too small for it lies over the edge.
+                width: cardFlickable.width - (full.scrollable ? cardScrollBar.width : 0)
                 spacing: Kirigami.Units.smallSpacing
 
                 // ===== Error cards =====
@@ -587,18 +594,29 @@ Item {
                         spacing: Kirigami.Units.smallSpacing
 
                         PlasmaComponents.Label {
+                            Layout.fillWidth: true
                             text: "⚠ " + root.errorMsg
                             color: Kirigami.Theme.negativeTextColor
                             font.bold: true
+                            wrapMode: Text.WordWrap
                         }
                         PlasmaComponents.Label {
+                            Layout.fillWidth: true
                             text: root.baseUrl
                                 ? i18n.tr("Check base URL and API key in widget settings")
-                                : (root.errorMsg === i18n.tr("Not logged in")
-                                    ? i18n.tr("Run 'claude' to log in")
+                                : (root.signedOut
+                                    ? root.signInHint
                                     : i18n.tr("Will retry automatically"))
                             font.pixelSize: Kirigami.Theme.smallFont.pixelSize
                             color: Kirigami.Theme.negativeTextColor
+                            wrapMode: Text.WordWrap
+                        }
+                        PlasmaComponents.Button {
+                            // claude can't be pointed at a standalone credentials file
+                            visible: root.signedOut && !root.baseUrl && !root.standaloneCredsFile
+                            text: i18n.tr("Sign in")
+                            icon.name: "utilities-terminal"
+                            onClicked: root.launchInTerminal("claude auth login")
                         }
                     }
                 }
