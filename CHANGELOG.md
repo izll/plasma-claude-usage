@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **Popup layout loop (100% CPU, popup stops responding, memory grows)**: the content was made narrower while the scroll bar was visible. With wrapping text (the "Values under 5 min" warning) the narrower content could fit again, which hid the bar, widened the content and made it overflow again, without end. The content width no longer follows the bar: "Scrollable content" always keeps the strip free, otherwise the bar lies over the edge in the rare case it shows. Both popup styles.
+
 ## [2.6.1] - 2026-11-04
 
 ### Added

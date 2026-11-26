@@ -569,7 +569,14 @@ Item {
 
             ColumnLayout {
                 id: scrollContent
-                width: cardFlickable.width - (cardScrollBar.visible ? cardScrollBar.width : 0)
+                // The width must not follow the scroll bar's visibility: with
+                // wrapping text the narrower content can fit again, the bar
+                // hides, the wider content overflows, the bar shows... a layout
+                // loop that never ends (100% CPU, the popup stops responding).
+                // "Scrollable content" keeps the strip free all the time;
+                // otherwise the popup grows with its content, and a bar that
+                // shows up on a screen too small for it lies over the edge.
+                width: cardFlickable.width - (full.scrollable ? cardScrollBar.width : 0)
                 spacing: Kirigami.Units.smallSpacing
 
                 // ===== Error cards =====
