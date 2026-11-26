@@ -1491,7 +1491,8 @@ PlasmoidItem {
 
                         ColumnLayout {
                             id: classicScrollContent
-                            width: classicFlickable.width - (classicScrollBar.visible ? classicScrollBar.width : 0)
+                            // Not tied to the bar's visibility: see FullView.qml
+                            width: classicFlickable.width - (fullRepItem.classicScrollable ? classicScrollBar.width : 0)
                             spacing: 0
 
                     // Error message
