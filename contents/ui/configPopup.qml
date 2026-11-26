@@ -135,7 +135,7 @@ KCM.SimpleKCM {
             Kirigami.FormData.label: tr("Widget style:")
             model: [tr("Classic"), tr("Card")]
             currentIndex: cfg_popupStyle === "classic" ? 0 : 1
-            onCurrentIndexChanged: cfg_popupStyle = currentIndex === 0 ? "classic" : "card"
+            onActivated: function(index) { cfg_popupStyle = index === 0 ? "classic" : "card" }
         }
 
         QQC2.CheckBox {

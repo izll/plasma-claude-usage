@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Settings: the combo boxes (process visibility, panel style, layout, ring centre, panel icon, popup style) wrote their setting on every index change, including while the page was being created ("Binding loop detected for property currentIndex" in the log). They now write only when the user picks an entry.
+
 ## [2.6.1] - 2026-11-04
 
 ### Added

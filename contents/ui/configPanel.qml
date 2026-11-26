@@ -64,9 +64,9 @@ KCM.SimpleKCM {
             Kirigami.FormData.label: tr("Style:")
             model: [tr("Ring"), tr("Text"), tr("Bar")]
             currentIndex: cfg_panelStyle === "text" ? 1 : cfg_panelStyle === "bar" ? 2 : 0
-            onCurrentIndexChanged: {
+            onActivated: function(index) {
                 var styles = ["ring", "text", "bar"]
-                cfg_panelStyle = styles[currentIndex]
+                cfg_panelStyle = styles[index]
             }
         }
 
@@ -105,7 +105,7 @@ KCM.SimpleKCM {
             Kirigami.FormData.label: tr("Layout:")
             model: [tr("Horizontal"), tr("Vertical")]
             currentIndex: cfg_panelLayout === "vertical" ? 1 : 0
-            onCurrentIndexChanged: cfg_panelLayout = currentIndex === 1 ? "vertical" : "horizontal"
+            onActivated: function(index) { cfg_panelLayout = index === 1 ? "vertical" : "horizontal" }
         }
 
         RowLayout {
@@ -158,7 +158,7 @@ KCM.SimpleKCM {
             enabled: configPage.ringStyle
             model: [tr("Percent"), tr("Logo"), tr("Logo + %")]
             currentIndex: cfg_ringCenter === "logo" ? 1 : cfg_ringCenter === "logo_percent" ? 2 : 0
-            onCurrentIndexChanged: cfg_ringCenter = ["percent", "logo", "logo_percent"][currentIndex]
+            onActivated: function(index) { cfg_ringCenter = ["percent", "logo", "logo_percent"][index] }
         }
 
         RowLayout {
@@ -210,7 +210,7 @@ KCM.SimpleKCM {
             Kirigami.FormData.label: tr("Panel icon:")
             model: ["Claude", "Tile"]
             currentIndex: (cfg_panelIcon || "claude") === "tile" ? 1 : 0
-            onCurrentIndexChanged: cfg_panelIcon = currentIndex === 1 ? "tile" : "claude"
+            onActivated: function(index) { cfg_panelIcon = index === 1 ? "tile" : "claude" }
             // also picks the logo shown inside the rings in the logo modes
             enabled: cfg_showIcon || configPage.logoInRing
         }
